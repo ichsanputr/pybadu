@@ -2,7 +2,7 @@
   <div>
     <!-- Editor Area -->
     <div class="min-h-screen">
-      <MatplotlibEditor 
+      <CodeEditor 
         libraryName="NumPy"
         :theme="theme" 
         :files="files"
@@ -39,47 +39,61 @@
     <!-- Information Section -->
     <LibraryInfoSection>
       <div class="text-center mb-12">
-        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-blue-600 mb-4">
-          <Icon icon="simple-icons:numpy" class="w-8 h-8 text-white" />
-        </div>
-        <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+        <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-6">
           About NumPy Playground
         </h2>
-        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          Scientific computing with powerful N-dimensional arrays and comprehensive mathematical functions.
-        </p>
-      </div>
+        
+        <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
+          <p class="text-lg leading-relaxed">
+            NumPy (Numerical Python) is the fundamental package for scientific computing in Python. Our dedicated NumPy 
+            playground provides a complete browser environment for working with large, multi-dimensional arrays and matrices, 
+            along with a comprehensive collection of mathematical functions to operate on these arrays.
+          </p>
+          
+          <p class="text-lg leading-relaxed">
+            This compiler includes <strong>NumPy 1.14+</strong> with full support for ndarray operations, linear algebra, 
+            Fourier transforms, and random number generation. Whether you're performing matrix operations, statistical 
+            analysis, or scientific computations, our NumPy playground offers instant execution without any setup.
+          </p>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <AnimatedCard>
-          <div class="text-center">
-            <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-              <Icon icon="ph:grid-four" class="w-7 h-7 text-white" />
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Array Computing</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Powerful multidimensional array objects</p>
-          </div>
-        </AnimatedCard>
-        
-        <AnimatedCard>
-          <div class="text-center">
-            <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-              <Icon icon="ph:function" class="w-7 h-7 text-white" />
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Linear Algebra</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Advanced mathematical operations</p>
-          </div>
-        </AnimatedCard>
-        
-        <AnimatedCard>
-          <div class="text-center">
-            <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-              <Icon icon="ph:lightning" class="w-7 h-7 text-white" />
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Fast Performance</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Optimized C-based computations</p>
-          </div>
-        </AnimatedCard>
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Core Capabilities</h3>
+          
+          <ul class="list-disc list-inside space-y-2 text-lg ml-4">
+            <li><strong>Array Operations:</strong> Create and manipulate N-dimensional arrays with powerful indexing and slicing</li>
+            <li><strong>Mathematical Functions:</strong> Comprehensive library of mathematical functions (trigonometric, exponential, logarithmic)</li>
+            <li><strong>Linear Algebra:</strong> Matrix operations, eigenvalues, singular value decomposition, and matrix decompositions</li>
+            <li><strong>Statistical Functions:</strong> Mean, median, standard deviation, percentiles, and correlation coefficients</li>
+            <li><strong>Random Number Generation:</strong> Various probability distributions for simulation and modeling</li>
+            <li><strong>Broadcasting:</strong> Efficient element-wise operations on arrays of different shapes</li>
+            <li><strong>Fourier Transforms:</strong> Fast Fourier Transform (FFT) operations for signal processing</li>
+          </ul>
+
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Topics Covered</h3>
+
+          <p class="text-lg leading-relaxed">
+            Our NumPy compiler comes with examples covering essential topics:
+          </p>
+
+          <ul class="list-disc list-inside space-y-2 text-lg ml-4">
+            <li><strong>Array Basics:</strong> Creating arrays, understanding array shapes, and basic operations</li>
+            <li><strong>Array Creation:</strong> zeros, ones, identity matrices, random arrays, arange, and linspace</li>
+            <li><strong>Matrix Operations:</strong> Matrix multiplication, transpose, determinant, and inverse operations</li>
+            <li><strong>Statistical Analysis:</strong> Computing statistics, percentiles, and correlation analysis</li>
+            <li><strong>Broadcasting Rules:</strong> Understanding and applying NumPy's broadcasting for efficient computations</li>
+            <li><strong>Linear Algebra:</strong> Solving linear equations, eigenvalue problems, and SVD decomposition</li>
+          </ul>
+
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Ideal For</h3>
+
+          <ul class="list-disc list-inside space-y-2 text-lg ml-4">
+            <li>Scientific computing and numerical analysis</li>
+            <li>Data preprocessing for machine learning</li>
+            <li>Statistical analysis and modeling</li>
+            <li>Signal and image processing</li>
+            <li>Physics and engineering simulations</li>
+            <li>Financial calculations and quantitative analysis</li>
+          </ul>
+        </div>
       </div>
     </LibraryInfoSection>
 
@@ -90,7 +104,7 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useHead } from '#app'
-import MatplotlibEditor from '~/components/matplotlib/MatplotlibEditor.vue'
+import CodeEditor from '~/components/CodeEditor.vue'
 import LibraryInfoSection from '~/components/LibraryInfoSection.vue'
 import AnimatedCard from '~/components/ui/AnimatedCard.vue'
 import AppFooter from '~/components/AppFooter.vue'

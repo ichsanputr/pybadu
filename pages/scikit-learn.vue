@@ -2,7 +2,7 @@
   <div>
     <!-- Editor Area -->
     <div class="min-h-screen">
-      <MatplotlibEditor 
+      <CodeEditor 
         libraryName="Scikit-learn"
         :theme="theme" 
         :files="files"
@@ -39,47 +39,74 @@
     <!-- Information Section -->
     <LibraryInfoSection>
       <div class="text-center mb-12">
-        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 mb-4">
-          <Icon icon="simple-icons:scikitlearn" class="w-8 h-8 text-white" />
-        </div>
-        <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+        <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-6">
           About Scikit-learn Playground
         </h2>
-        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          Build and train machine learning models with simple and efficient tools for predictive data analysis.
-        </p>
-      </div>
+        
+        <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
+          <p class="text-lg leading-relaxed">
+            Scikit-learn is Python's most accessible machine learning library, offering simple and efficient tools for 
+            predictive data analysis. Our dedicated Scikit-learn playground provides a complete browser environment for 
+            building, training, and evaluating machine learning models without any installation or setup requirements.
+          </p>
+          
+          <p class="text-lg leading-relaxed">
+            This compiler includes <strong>Scikit-learn 1.7+</strong> with <strong>NumPy</strong>, providing access to 
+            classification, regression, clustering, and dimensionality reduction algorithms. Whether you're learning machine 
+            learning fundamentals or prototyping ML models, our playground offers instant execution with comprehensive examples.
+          </p>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <AnimatedCard>
-          <div class="text-center">
-            <div class="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-              <Icon icon="ph:brain" class="w-7 h-7 text-white" />
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">ML Algorithms</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Classification & regression models</p>
-          </div>
-        </AnimatedCard>
-        
-        <AnimatedCard>
-          <div class="text-center">
-            <div class="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-              <Icon icon="ph:circles-three" class="w-7 h-7 text-white" />
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Clustering</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Unsupervised learning methods</p>
-          </div>
-        </AnimatedCard>
-        
-        <AnimatedCard>
-          <div class="text-center">
-            <div class="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-              <Icon icon="ph:chart-line" class="w-7 h-7 text-white" />
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Model Evaluation</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Metrics & cross-validation</p>
-          </div>
-        </AnimatedCard>
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Machine Learning Capabilities</h3>
+          
+          <ul class="list-disc list-inside space-y-2 text-lg ml-4">
+            <li><strong>Supervised Learning:</strong> Classification and regression algorithms for labeled data</li>
+            <li><strong>Unsupervised Learning:</strong> Clustering and dimensionality reduction for pattern discovery</li>
+            <li><strong>Model Selection:</strong> Cross-validation, grid search, and hyperparameter tuning</li>
+            <li><strong>Preprocessing:</strong> Data scaling, normalization, and feature engineering</li>
+            <li><strong>Feature Selection:</strong> Tools for selecting the most relevant features</li>
+            <li><strong>Ensemble Methods:</strong> Random Forests, Gradient Boosting, and voting classifiers</li>
+            <li><strong>Model Evaluation:</strong> Comprehensive metrics for assessing model performance</li>
+          </ul>
+
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Algorithms Covered</h3>
+
+          <p class="text-lg leading-relaxed">
+            Explore a wide range of machine learning algorithms through our interactive examples:
+          </p>
+
+          <ul class="list-disc list-inside space-y-2 text-lg ml-4">
+            <li><strong>Linear Regression:</strong> Predict continuous values and understand linear relationships</li>
+            <li><strong>Logistic Regression:</strong> Binary and multiclass classification problems</li>
+            <li><strong>K-Means Clustering:</strong> Group similar data points without labels</li>
+            <li><strong>Decision Trees:</strong> Interpretable models for classification and regression</li>
+            <li><strong>Random Forest:</strong> Ensemble learning with multiple decision trees</li>
+            <li><strong>Support Vector Machines:</strong> Powerful classification with maximum-margin hyperplanes</li>
+            <li><strong>Principal Component Analysis (PCA):</strong> Dimensionality reduction and feature extraction</li>
+          </ul>
+
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Learning Topics</h3>
+
+          <ul class="list-disc list-inside space-y-2 text-lg ml-4">
+            <li>Training and evaluating classification models</li>
+            <li>Regression analysis and prediction</li>
+            <li>Clustering and pattern recognition</li>
+            <li>Feature engineering and selection</li>
+            <li>Model evaluation metrics (accuracy, precision, recall, F1-score)</li>
+            <li>Cross-validation techniques</li>
+            <li>Handling overfitting and underfitting</li>
+          </ul>
+
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Ideal For</h3>
+
+          <ul class="list-disc list-inside space-y-2 text-lg ml-4">
+            <li>Machine learning beginners and students</li>
+            <li>Data scientists prototyping models</li>
+            <li>Researchers experimenting with algorithms</li>
+            <li>Educators teaching machine learning courses</li>
+            <li>Developers building predictive applications</li>
+            <li>Anyone interested in understanding ML fundamentals</li>
+          </ul>
+        </div>
       </div>
     </LibraryInfoSection>
 
@@ -90,7 +117,7 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useHead } from '#app'
-import MatplotlibEditor from '~/components/matplotlib/MatplotlibEditor.vue'
+import CodeEditor from '~/components/CodeEditor.vue'
 import LibraryInfoSection from '~/components/LibraryInfoSection.vue'
 import AnimatedCard from '~/components/ui/AnimatedCard.vue'
 import AppFooter from '~/components/AppFooter.vue'

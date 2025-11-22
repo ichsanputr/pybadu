@@ -1,7 +1,7 @@
 <template>
   <footer class="bg-gray-900 text-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
         <!-- Brand -->
         <div class="col-span-1 md:col-span-2">
           <div class="flex items-center space-x-3 mb-4">
@@ -19,9 +19,9 @@
           </p>
         </div>
 
-        <!-- Libraries -->
+        <!-- Default Libraries -->
         <div>
-          <h3 class="text-white font-semibold mb-4">Libraries</h3>
+          <h3 class="text-white font-semibold mb-4">Default Libraries</h3>
           <div class="space-y-2">
             <NuxtLink to="/matplotlib" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               Matplotlib
@@ -34,6 +34,31 @@
             </NuxtLink>
             <NuxtLink to="/scikit-learn" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               Scikit-learn
+            </NuxtLink>
+          </div>
+        </div>
+
+        <!-- Additional Libraries -->
+        <div>
+          <h3 class="text-white font-semibold mb-4">Additional Libraries</h3>
+          <div class="space-y-2">
+            <NuxtLink to="/scipy" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              SciPy
+            </NuxtLink>
+            <NuxtLink to="/beautifulsoup4" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              BeautifulSoup4
+            </NuxtLink>
+            <NuxtLink to="/pillow" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              Pillow
+            </NuxtLink>
+            <NuxtLink to="/nltk" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              NLTK
+            </NuxtLink>
+            <NuxtLink to="/regex" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              Regex
+            </NuxtLink>
+            <NuxtLink to="/pytz" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              PyTZ
             </NuxtLink>
           </div>
         </div>

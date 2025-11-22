@@ -197,7 +197,7 @@
           ]"
         >
           <Icon :icon="theme === 'dark' ? 'ph:sun' : 'ph:moon'" class="w-4 h-4" />
-          <span class="hidden sm:inline">Theme</span>
+          <span class="hidden sm:inline">{{ theme === 'dark' ? 'Light' : 'Dark' }}</span>
         </button>
       </div>
     </header>
@@ -382,7 +382,7 @@
       <!-- Editor & Output & Ads -->
       <main class="flex-1 flex flex-col lg:flex-row overflow-hidden">
         <!-- Code Editor -->
-        <section class="w-full lg:w-[50%]" :class="[
+        <section class="w-full lg:w-[35%] xl:w-[40%]" :class="[
           'flex flex-col border-r',
           theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
         ]">
@@ -440,7 +440,7 @@
         <!-- Output Panel -->
         <section :class="[
           'flex flex-col border-t lg:border-t-0 lg:border-l',
-          'w-full lg:w-[30%]',
+          'w-full lg:w-[35%] xl:w-[35%]',
           theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
         ]">
           <!-- Output Header -->
@@ -480,15 +480,43 @@
                 v-for="(item, index) in output"
                 :key="index"
                 :class="[
-                  'p-3 rounded-lg text-sm',
+                  'rounded-lg text-sm',
+                  item.type === 'image' ? 'p-0' : 'p-3',
                   item.type === 'error'
                     ? theme === 'dark' ? 'bg-red-900/30 text-red-300' : 'bg-red-50 text-red-700'
                     : item.type === 'success'
                       ? theme === 'dark' ? 'bg-green-900/30 text-green-300' : 'bg-green-50 text-green-700'
-                      : theme === 'dark' ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'
+                      : item.type === 'image'
+                        ? ''
+                        : theme === 'dark' ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'
                 ]"
               >
-                <div class="flex items-start justify-between">
+                <!-- Image output -->
+                <div v-if="item.type === 'image'" class="relative group">
+                  <img 
+                    :src="`data:image/png;base64,${item.content}`" 
+                    alt="Plot output" 
+                    class="w-full h-auto rounded-lg"
+                  />
+                  <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      @click="downloadImage(item.content, index)"
+                      :class="[
+                        'p-2 rounded-lg text-sm font-medium transition-colors',
+                        'bg-white/90 hover:bg-white text-gray-700 shadow-lg'
+                      ]"
+                      title="Download image"
+                    >
+                      <Icon icon="ph:download" class="w-4 h-4" />
+                    </button>
+                  </div>
+                  <span class="absolute bottom-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
+                    {{ item.timestamp }}
+                  </span>
+                </div>
+                
+                <!-- Text output -->
+                <div v-else class="flex items-start justify-between">
                   <pre class="whitespace-pre-wrap font-mono text-xs leading-relaxed flex-1">{{ item.content }}</pre>
                   <span class="text-xs opacity-60 ml-2 flex-shrink-0">{{ item.timestamp }}</span>
                 </div>
@@ -506,32 +534,32 @@
 
         <!-- Ads Panel -->
         <section :class="[
-          'hidden xl:flex flex-col border-l',
-          'w-[20%]',
+          'hidden lg:flex flex-col border-l',
+          'w-full lg:w-[30%] xl:w-[25%]',
           theme === 'dark' ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-gray-50'
         ]">
           <!-- Ads Content -->
-          <div class="flex-1 overflow-y-auto p-4">
+          <div class="flex-1 overflow-y-auto p-2 lg:p-4">
             <ClientOnly>
               <!-- Square Ad 1 -->
-              <div class="mb-4">
+              <div class="mb-4 flex justify-center">
                 <Adsense 
                   key="editor-ad-1"
                   client="ca-pub-1356911639243870" 
                   ad-slot="3430238458"
                   kind="square"
-                  :style="{ display: 'inline-block', width: '300px', height: '300px' }" 
+                  :style="{ display: 'inline-block', width: '100%', maxWidth: '300px', height: '300px' }" 
                 />
               </div>
 
               <!-- Square Ad 2 -->
-              <div class="mb-4">
+              <div class="mb-4 flex justify-center">
                 <Adsense 
                   key="editor-ad-2"
                   client="ca-pub-1356911639243870" 
                   ad-slot="4242301831"
                   kind="square"
-                  :style="{ display: 'inline-block', width: '300px', height: '300px' }" 
+                  :style="{ display: 'inline-block', width: '100%', maxWidth: '300px', height: '300px' }" 
                 />
               </div>
             </ClientOnly>
@@ -575,32 +603,80 @@
       :show="shareDialog.show"
       @close="shareDialog.show = false"
       size="md"
-      :title="'Share Code'"
-      :description="'Copy link to share your code'"
-      :icon="{ name: 'ph:share', color: 'blue' }"
+      :title="'Share Your Code'"
+      :description="'Share your Python code with the community'"
+      :icon="{ name: 'ph:share-network', color: 'blue' }"
     >
-      <div class="mb-4">
-        <label class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
-          Share URL
-        </label>
-        <div class="flex space-x-2">
-          <input
-            ref="shareUrlInput"
-            v-model="shareDialog.url"
-            readonly
-            class="flex-1 px-3 py-2 rounded-lg text-sm border bg-gray-50 border-gray-300 text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300"
-          />
+      <div class="space-y-4">
+        <!-- Social Media Buttons -->
+        <div class="grid grid-cols-2 gap-3">
           <button
-            @click="copyShareUrl"
-            :class="[
-              'px-3 py-2 rounded-lg text-sm font-medium transition-colors',
-              shareDialog.copied
-                ? 'bg-green-600 text-white'
-                : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300'
-            ]"
+            @click="shareToTwitter"
+            class="flex items-center justify-center space-x-2 px-4 py-3 rounded-lg bg-[#1DA1F2] hover:bg-[#1a8cd8] text-white font-medium transition-colors"
           >
-            {{ shareDialog.copied ? 'Copied!' : 'Copy' }}
+            <Icon icon="simple-icons:x" class="w-4 h-4" />
+            <span>Twitter</span>
           </button>
+          
+          <button
+            @click="shareToFacebook"
+            class="flex items-center justify-center space-x-2 px-4 py-3 rounded-lg bg-[#1877F2] hover:bg-[#0c63d4] text-white font-medium transition-colors"
+          >
+            <Icon icon="simple-icons:facebook" class="w-4 h-4" />
+            <span>Facebook</span>
+          </button>
+          
+          <button
+            @click="shareToLinkedIn"
+            class="flex items-center justify-center space-x-2 px-4 py-3 rounded-lg bg-[#0A66C2] hover:bg-[#004182] text-white font-medium transition-colors"
+          >
+            <Icon icon="simple-icons:linkedin" class="w-4 h-4" />
+            <span>LinkedIn</span>
+          </button>
+          
+          <button
+            @click="shareToWhatsApp"
+            class="flex items-center justify-center space-x-2 px-4 py-3 rounded-lg bg-[#25D366] hover:bg-[#1faa52] text-white font-medium transition-colors"
+          >
+            <Icon icon="simple-icons:whatsapp" class="w-4 h-4" />
+            <span>WhatsApp</span>
+          </button>
+        </div>
+
+        <!-- Divider -->
+        <div class="relative">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-2 bg-white dark:bg-gray-800 text-gray-500">or copy link</span>
+          </div>
+        </div>
+
+        <!-- Copy Link -->
+        <div>
+          <label class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
+            Share URL
+          </label>
+          <div class="flex space-x-2">
+            <input
+              ref="shareUrlInput"
+              v-model="shareDialog.url"
+              readonly
+              class="flex-1 px-3 py-2 rounded-lg text-sm border bg-gray-50 border-gray-300 text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 font-mono"
+            />
+            <button
+              @click="copyShareUrl"
+              :class="[
+                'px-4 py-2 rounded-lg text-sm font-medium transition-all',
+                shareDialog.copied
+                  ? 'bg-green-600 hover:bg-green-700 text-white'
+                  : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+              ]"
+            >
+              <Icon :icon="shareDialog.copied ? 'ph:check-circle' : 'ph:copy'" class="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
       
@@ -628,7 +704,7 @@ import Adsense from '~/components/Adsense.vue'
 import Toast from '~/components/ui/Toast.vue'
 
 defineOptions({
-  name: 'MatplotlibEditor'
+  name: 'CodeEditor'
 })
 
 const props = defineProps({
@@ -766,7 +842,9 @@ function handleFileUpload(event) {
 
 function startRenameFile(fileId, fileName) {
   editingFileId.value = fileId
-  editingFileName.value = fileName
+  // Extract filename without extension for editing
+  const dotIndex = fileName.lastIndexOf('.')
+  editingFileName.value = dotIndex > 0 ? fileName.substring(0, dotIndex) : fileName
 }
 
 function handleDoubleClick(fileId, fileName) {
@@ -774,13 +852,36 @@ function handleDoubleClick(fileId, fileName) {
 }
 
 function confirmRename(fileId) {
-  if (!editingFileName.value.trim()) {
+  const trimmedName = editingFileName.value.trim()
+  
+  if (!trimmedName) {
     showToast('File name cannot be empty', 'error')
+    cancelRename()
     return
   }
   
-  if (editingFileName.value.trim() !== props.files.find(f => f.id === fileId)?.name) {
-    emit('renameFile', { fileId, newName: editingFileName.value.trim() })
+  // Get original file
+  const originalFile = props.files.find(f => f.id === fileId)
+  if (!originalFile) {
+    cancelRename()
+    return
+  }
+  
+  // Extract and preserve the original extension
+  const originalName = originalFile.name
+  const dotIndex = originalName.lastIndexOf('.')
+  const extension = dotIndex > 0 ? originalName.substring(dotIndex) : '.py'
+  
+  // Ensure new name doesn't include extension
+  let newNameWithoutExt = trimmedName
+  if (newNameWithoutExt.includes('.')) {
+    newNameWithoutExt = newNameWithoutExt.substring(0, newNameWithoutExt.lastIndexOf('.'))
+  }
+  
+  const newName = newNameWithoutExt + extension
+  
+  if (newName !== originalName) {
+    emit('renameFile', { fileId, newName })
     showToast('File renamed successfully', 'success')
   }
   
@@ -816,6 +917,38 @@ function copyShareUrl() {
       shareDialog.value.copied = false
     }, 2000)
   }
+}
+
+function shareToTwitter() {
+  const url = encodeURIComponent(shareDialog.value.url)
+  const text = encodeURIComponent('Check out my Python code on Pybadu!')
+  window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=550,height=420')
+}
+
+function shareToFacebook() {
+  const url = encodeURIComponent(shareDialog.value.url)
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=550,height=420')
+}
+
+function shareToLinkedIn() {
+  const url = encodeURIComponent(shareDialog.value.url)
+  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank', 'width=550,height=420')
+}
+
+function shareToWhatsApp() {
+  const url = encodeURIComponent(shareDialog.value.url)
+  const text = encodeURIComponent('Check out my Python code on Pybadu!')
+  window.open(`https://wa.me/?text=${text}%20${url}`, '_blank')
+}
+
+function downloadImage(base64Data, index) {
+  const link = document.createElement('a')
+  link.href = `data:image/png;base64,${base64Data}`
+  link.download = `plot_${index + 1}_${Date.now()}.png`
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  showToast('Image downloaded successfully', 'success')
 }
 </script>
 

@@ -2,7 +2,7 @@
   <div>
     <!-- Editor Area -->
     <div class="min-h-screen">
-      <MatplotlibEditor 
+      <CodeEditor 
         libraryName="Pandas"
         :theme="theme" 
         :files="files"
@@ -39,47 +39,63 @@
     <!-- Information Section -->
     <LibraryInfoSection>
       <div class="text-center mb-12">
-        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 mb-4">
-          <Icon icon="simple-icons:pandas" class="w-8 h-8 text-white" />
-        </div>
-        <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+        <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-6">
           About Pandas Playground
         </h2>
-        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          Master data analysis with powerful DataFrames and comprehensive data manipulation tools.
-        </p>
-      </div>
+        
+        <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
+          <p class="text-lg leading-relaxed">
+            Pandas is Python's premier library for data analysis and manipulation. Our dedicated Pandas playground provides 
+            a complete browser-based environment for working with structured data using powerful DataFrame and Series objects. 
+            Built on top of NumPy, Pandas offers high-performance, easy-to-use data structures perfect for real-world data analysis.
+          </p>
+          
+          <p class="text-lg leading-relaxed">
+            This compiler includes <strong>Pandas 2.x</strong> with <strong>NumPy</strong>, enabling you to perform complex 
+            data operations instantly. From data cleaning and transformation to statistical analysis and time series manipulation, 
+            our Pandas playground provides all the tools you need for comprehensive data analysis without any installation.
+          </p>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <AnimatedCard>
-          <div class="text-center">
-            <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-              <Icon icon="ph:table" class="w-7 h-7 text-white" />
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">DataFrames</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Powerful tabular data structures</p>
-          </div>
-        </AnimatedCard>
-        
-        <AnimatedCard>
-          <div class="text-center">
-            <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-              <Icon icon="ph:funnel" class="w-7 h-7 text-white" />
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Data Manipulation</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Filter, group, and transform easily</p>
-          </div>
-        </AnimatedCard>
-        
-        <AnimatedCard>
-          <div class="text-center">
-            <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-              <Icon icon="ph:chart-line-up" class="w-7 h-7 text-white" />
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Data Analysis</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Statistical operations & insights</p>
-          </div>
-        </AnimatedCard>
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Core Features</h3>
+          
+          <ul class="list-disc list-inside space-y-2 text-lg ml-4">
+            <li><strong>DataFrames:</strong> Two-dimensional labeled data structures with columns of potentially different types</li>
+            <li><strong>Series:</strong> One-dimensional labeled arrays capable of holding any data type</li>
+            <li><strong>Data Selection:</strong> Powerful indexing, slicing, and filtering capabilities for data access</li>
+            <li><strong>GroupBy Operations:</strong> Split-apply-combine functionality for aggregating data</li>
+            <li><strong>Missing Data Handling:</strong> Tools for detecting, removing, and filling missing values</li>
+            <li><strong>Merging & Joining:</strong> SQL-like operations for combining multiple datasets</li>
+            <li><strong>Time Series:</strong> Specialized functionality for date/time data and resampling</li>
+            <li><strong>Data Import/Export:</strong> Reading from and writing to various file formats (CSV, JSON, etc.)</li>
+          </ul>
+
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Data Operations Covered</h3>
+
+          <p class="text-lg leading-relaxed">
+            Master essential data manipulation techniques with our comprehensive examples:
+          </p>
+
+          <ul class="list-disc list-inside space-y-2 text-lg ml-4">
+            <li><strong>DataFrame Basics:</strong> Creating, viewing, and understanding DataFrame structures and operations</li>
+            <li><strong>Data Selection:</strong> Multiple methods for selecting, filtering, and accessing data</li>
+            <li><strong>GroupBy & Aggregation:</strong> Grouping data by categories and applying aggregate functions</li>
+            <li><strong>Missing Data:</strong> Detecting null values, filling missing data, and dropping incomplete rows</li>
+            <li><strong>Data Merging:</strong> Combining datasets using merge, join, and concatenate operations</li>
+            <li><strong>Time Series Analysis:</strong> Working with datetime data, resampling, and rolling window calculations</li>
+          </ul>
+
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Perfect For</h3>
+
+          <ul class="list-disc list-inside space-y-2 text-lg ml-4">
+            <li>Data analysts working with structured datasets</li>
+            <li>Data scientists preprocessing data for machine learning</li>
+            <li>Business intelligence and reporting tasks</li>
+            <li>Financial data analysis and portfolio management</li>
+            <li>ETL (Extract, Transform, Load) operations</li>
+            <li>Statistical analysis and data exploration</li>
+            <li>Students learning data analysis with Python</li>
+          </ul>
+        </div>
       </div>
     </LibraryInfoSection>
 
@@ -90,7 +106,7 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useHead } from '#app'
-import MatplotlibEditor from '~/components/matplotlib/MatplotlibEditor.vue'
+import CodeEditor from '~/components/CodeEditor.vue'
 import LibraryInfoSection from '~/components/LibraryInfoSection.vue'
 import AnimatedCard from '~/components/ui/AnimatedCard.vue'
 import AppFooter from '~/components/AppFooter.vue'

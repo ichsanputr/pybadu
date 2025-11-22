@@ -2,7 +2,7 @@
   <div>
     <!-- Editor Area -->
     <div class="min-h-screen">
-      <MatplotlibEditor 
+      <CodeEditor 
         libraryName="Matplotlib"
         :theme="theme" 
         :files="files"
@@ -40,69 +40,62 @@
     <LibraryInfoSection>
       <!-- Header -->
       <div class="text-center mb-12">
-        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 mb-4">
-          <Icon icon="simple-icons:matplotlib" class="w-8 h-8 text-white" />
-        </div>
-        <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+        <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-6">
           About Matplotlib Playground
         </h2>
-        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          Create stunning data visualizations with Python's most popular plotting library. Run matplotlib code directly in your browser with zero setup.
-        </p>
-      </div>
-
-      <!-- Features -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <AnimatedCard>
-          <div class="text-center">
-            <div class="w-14 h-14 bg-gradient-to-br from-python-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-              <Icon icon="ph:chart-line" class="w-7 h-7 text-white" />
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Interactive Plotting</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Create 2D and 3D visualizations with instant preview and real-time updates</p>
-          </div>
-        </AnimatedCard>
         
-        <AnimatedCard>
-          <div class="text-center">
-            <div class="w-14 h-14 bg-gradient-to-br from-python-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-              <Icon icon="ph:files" class="w-7 h-7 text-white" />
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Multi-File Support</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Organize your code across multiple files like a professional IDE</p>
-          </div>
-        </AnimatedCard>
-        
-        <AnimatedCard>
-          <div class="text-center">
-            <div class="w-14 h-14 bg-gradient-to-br from-python-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-              <Icon icon="ph:rocket-launch" class="w-7 h-7 text-white" />
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Instant Execution</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">No installation needed - powered by Pyodide WebAssembly</p>
-          </div>
-        </AnimatedCard>
-      </div>
+        <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
+          <p class="text-lg leading-relaxed">
+            Matplotlib is Python's most comprehensive library for creating static, animated, and interactive visualizations. 
+            Our dedicated Matplotlib playground provides a complete browser-based environment where you can experiment with 
+            data visualization techniques without any installation or setup required.
+          </p>
+          
+          <p class="text-lg leading-relaxed">
+            This compiler comes pre-configured with <strong>Matplotlib 3.x</strong> and <strong>NumPy</strong>, allowing you to 
+            create publication-quality figures, complex multi-subplot layouts, and 3D visualizations instantly. Whether you're 
+            learning data visualization, prototyping charts for presentations, or teaching Python data science, our Matplotlib 
+            playground offers a seamless coding experience powered by Pyodide WebAssembly technology.
+          </p>
 
-      <!-- Example Code -->
-      <div class="mb-12 overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-800">
-        <div class="bg-gradient-to-r from-python-blue-600 to-blue-600 px-6 py-3">
-          <p class="text-white font-semibold">Quick Example</p>
-        </div>
-        <div class="bg-gray-900 p-6">
-          <pre class="text-sm text-gray-300 overflow-x-auto"><code>import matplotlib.pyplot as plt
-import numpy as np
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">What You Can Create</h3>
+          
+          <p class="text-lg leading-relaxed">
+            With our Matplotlib compiler, you can explore a wide range of visualization types including:
+          </p>
 
-x = np.linspace(0, 10, 100)
-y = np.sin(x)
+          <ul class="list-disc list-inside space-y-2 text-lg ml-4">
+            <li><strong>Line Plots & Scatter Plots:</strong> Perfect for time series data and correlation analysis</li>
+            <li><strong>Bar Charts & Histograms:</strong> Ideal for categorical data and distribution visualization</li>
+            <li><strong>Pie Charts & Subplots:</strong> Create complex multi-chart layouts with ease</li>
+            <li><strong>3D Surface & Contour Plots:</strong> Visualize three-dimensional mathematical functions</li>
+            <li><strong>Heatmaps & Statistical Plots:</strong> Advanced visualization for data analysis</li>
+            <li><strong>Custom Styling & Annotations:</strong> Full control over colors, labels, and plot elements</li>
+          </ul>
 
-plt.figure(figsize=(10, 6))
-plt.plot(x, y, 'b-', linewidth=2)
-plt.title('Sine Wave')
-plt.grid(True, alpha=0.3)
-plt.show()</code></pre>
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Key Features</h3>
+
+          <ul class="list-disc list-inside space-y-2 text-lg ml-4">
+            <li><strong>Real-time Preview:</strong> See your plots instantly as you write code</li>
+            <li><strong>Multi-file Projects:</strong> Organize complex visualizations across multiple Python files</li>
+            <li><strong>Example Gallery:</strong> Learn from 6+ pre-built examples covering different plot types</li>
+            <li><strong>Auto-save:</strong> Your work is automatically saved to browser localStorage</li>
+            <li><strong>Dark Mode:</strong> Comfortable coding environment for extended sessions</li>
+            <li><strong>Export Capabilities:</strong> Download your code files for use in other environments</li>
+          </ul>
+
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Perfect For</h3>
+
+          <ul class="list-disc list-inside space-y-2 text-lg ml-4">
+            <li>Data scientists prototyping visualizations</li>
+            <li>Students learning Python data visualization</li>
+            <li>Educators teaching data science courses</li>
+            <li>Researchers creating publication-ready figures</li>
+            <li>Developers sharing interactive visualization demos</li>
+          </ul>
         </div>
       </div>
+
     </LibraryInfoSection>
 
     <!-- Footer -->
@@ -113,7 +106,7 @@ plt.show()</code></pre>
 <script setup>
 import { onMounted } from 'vue'
 import { useHead } from '#app'
-import MatplotlibEditor from '~/components/matplotlib/MatplotlibEditor.vue'
+import CodeEditor from '~/components/CodeEditor.vue'
 import LibraryInfoSection from '~/components/LibraryInfoSection.vue'
 import AnimatedCard from '~/components/ui/AnimatedCard.vue'
 import AppFooter from '~/components/AppFooter.vue'

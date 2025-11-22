@@ -174,6 +174,9 @@ export function useLibraryPlayground(config = {}) {
     if (!pyodideReady.value || !currentFileContent.value.trim()) return
     
     isLoading.value = true
+    
+    // Add minimum 1 second delay for better UX
+    const minDelay = 1000
     const startTime = Date.now()
     
     try {
@@ -197,6 +200,46 @@ sys.stdout = sys.__stdout__
 captured_output
       `)
       
+      // Handle matplotlib plots
+      if (packageName.includes('matplotlib')) {
+        try {
+          const canvas = pyodide.value.runPython(`
+import matplotlib.pyplot as plt
+import io
+import base64
+
+# Get all figures
+figs = [plt.figure(n) for n in plt.get_fignums()]
+images = []
+
+for fig in figs:
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png', bbox_inches='tight', dpi=100)
+    buf.seek(0)
+    img_str = base64.b64encode(buf.read()).decode()
+    images.append(img_str)
+    buf.close()
+
+','.join(images) if images else ''
+          `)
+          
+          if (canvas && canvas.trim()) {
+            const images = canvas.split(',')
+            for (const imgData of images) {
+              if (imgData) {
+                output.value.push({
+                  type: 'image',
+                  content: imgData,
+                  timestamp: new Date().toLocaleTimeString()
+                })
+              }
+            }
+          }
+        } catch (plotError) {
+          console.warn('No plots generated or error capturing plots:', plotError)
+        }
+      }
+      
       const executionTime = Date.now() - startTime
       
       if (stdout && stdout.trim()) {
@@ -207,14 +250,28 @@ captured_output
         })
       }
       
+      // Wait for minimum delay before finishing
+      const elapsed = Date.now() - startTime
+      if (elapsed < minDelay) {
+        await new Promise(resolve => setTimeout(resolve, minDelay - elapsed))
+      }
+      
+      const totalTime = Date.now() - startTime
       output.value.push({
         type: 'success', 
-        content: `✓ Code executed successfully in ${executionTime}ms`,
+        content: `✓ Code executed successfully in ${totalTime}ms`,
         timestamp: new Date().toLocaleTimeString()
       })
       
     } catch (error) {
       console.error('Error running Python code:', error)
+      
+      // Wait for minimum delay even on error
+      const elapsed = Date.now() - startTime
+      if (elapsed < minDelay) {
+        await new Promise(resolve => setTimeout(resolve, minDelay - elapsed))
+      }
+      
       output.value.push({
         type: 'error',
         content: `Error: ${error.message}`,

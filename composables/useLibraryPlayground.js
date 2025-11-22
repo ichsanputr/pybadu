@@ -9,8 +9,46 @@ export function useLibraryPlayground(config = {}) {
     setupCode = ''
   } = config
 
-  // Reactive state
-  const files = ref([
+  // LocalStorage key based on package name
+  const storageKey = `pybadu_${packageName}_files`
+  
+  // Load files from localStorage or use default
+  function loadFilesFromStorage() {
+    if (typeof window === 'undefined') return null
+    
+    try {
+      const stored = localStorage.getItem(storageKey)
+      if (stored) {
+        const parsed = JSON.parse(stored)
+        if (parsed.files && parsed.files.length > 0) {
+          return parsed
+        }
+      }
+    } catch (error) {
+      console.error('Error loading from localStorage:', error)
+    }
+    return null
+  }
+
+  // Save files to localStorage
+  function saveFilesToStorage() {
+    if (typeof window === 'undefined') return
+    
+    try {
+      const data = {
+        files: files.value,
+        activeFileId: activeFileId.value,
+        timestamp: Date.now()
+      }
+      localStorage.setItem(storageKey, JSON.stringify(data))
+    } catch (error) {
+      console.error('Error saving to localStorage:', error)
+    }
+  }
+
+  // Initialize files from storage or default
+  const storedData = loadFilesFromStorage()
+  const files = ref(storedData?.files || [
     {
       id: 1,
       name: 'main.py',
@@ -18,13 +56,22 @@ export function useLibraryPlayground(config = {}) {
     }
   ])
 
-  const activeFileId = ref(1)
+  const activeFileId = ref(storedData?.activeFileId || 1)
   const output = ref([])
   const isLoading = ref(false)
   const pyodideReady = ref(false)
   const pyodide = ref(null)
   const loaderVisible = ref(false)
   const theme = ref('dark')
+
+  // Auto-save files when they change
+  watch(files, () => {
+    saveFilesToStorage()
+  }, { deep: true })
+
+  watch(activeFileId, () => {
+    saveFilesToStorage()
+  })
 
   // File management
   const currentFileContent = computed({
@@ -44,13 +91,19 @@ export function useLibraryPlayground(config = {}) {
     currentFileContent.value = content
   }
 
-  function createNewFile() {
-    const newId = Math.max(...files.value.map(f => f.id)) + 1
-    const newFile = {
+  function createNewFile(fileData = null) {
+    const newId = Math.max(...files.value.map(f => f.id), 0) + 1
+    
+    const newFile = fileData ? {
+      id: newId,
+      name: fileData.name || `file${newId}.py`,
+      content: fileData.content || ''
+    } : {
       id: newId,
       name: `file${newId}.py`,
       content: `# New Python file\nimport ${packageName}\n\n# Your code here...\n`
     }
+    
     files.value.push(newFile)
     activeFileId.value = newId
   }
@@ -67,6 +120,17 @@ export function useLibraryPlayground(config = {}) {
     if (activeFileId.value === fileId) {
       activeFileId.value = files.value[0].id
     }
+  }
+
+  function renameFile({ fileId, newName }) {
+    const file = files.value.find(f => f.id === fileId)
+    if (file) {
+      file.name = newName
+    }
+  }
+
+  function saveToStorage() {
+    saveFilesToStorage()
   }
 
   const monacoTheme = computed(() => (theme.value === 'dark' ? 'vs-dark' : 'vs-light'))
@@ -238,6 +302,8 @@ captured_output
     createNewFile,
     selectFile,
     deleteFile,
+    renameFile,
+    saveToStorage,
     toggleTheme,
     runCode,
     clearCode,

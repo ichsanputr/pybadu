@@ -18,7 +18,7 @@
           </NuxtLink>
         </div>
 
-        <!-- Navigation -->
+        <!-- Navigation - Moved to Right -->
         <nav class="hidden md:flex items-center space-x-8">
           <NuxtLink to="/matplotlib" :class="['font-medium transition-colors', transparent ? 'text-gray-700 hover:text-python-blue-600' : 'text-gray-700 hover:text-python-blue-600']">
             Matplotlib
@@ -36,13 +36,6 @@
             BudiBadu ↗
           </a>
         </nav>
-
-        <!-- CTA Button -->
-        <div class="hidden sm:flex items-center space-x-4">
-          <NuxtLink to="/matplotlib" class="bg-python-blue-600 hover:bg-python-blue-700 text-white px-6 py-2.5 rounded-xl font-semibold transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105">
-            Start Coding
-          </NuxtLink>
-        </div>
 
         <!-- Mobile Menu Button -->
         <div class="md:hidden">
@@ -70,9 +63,6 @@
           <a href="https://budibadu.com" target="_blank" class="block text-gray-700 hover:text-python-yellow-600 font-medium transition-colors">
             BudiBadu ↗
           </a>
-          <NuxtLink to="/matplotlib" class="block bg-python-blue-600 hover:bg-python-blue-700 text-white px-4 py-2 rounded-xl font-semibold text-center transition-colors">
-            Start Coding
-          </NuxtLink>
         </div>
       </div>
     </div>

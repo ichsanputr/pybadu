@@ -21,7 +21,9 @@
         @loadExample="loadExample"
         @newFile="createNewFile"
         @selectFile="selectFile"
-        @deleteFile="deleteFile" />
+        @deleteFile="deleteFile"
+        @renameFile="renameFile"
+        @saveToStorage="saveToStorage" />
 
       <!-- Loading Transition (client-only) -->
       <ClientOnly>
@@ -356,6 +358,8 @@ const {
   createNewFile,
   selectFile,
   deleteFile,
+  renameFile,
+  saveToStorage,
   toggleTheme,
   runCode,
   clearCode,

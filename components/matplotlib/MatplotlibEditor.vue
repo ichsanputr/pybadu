@@ -1,6 +1,6 @@
 <template>
   <div :class="[
-    'h-screen flex flex-col',
+    'min-h-screen flex flex-col',
     theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'
   ]">
     <!-- Top Bar -->
@@ -16,14 +16,14 @@
           <img 
             :src="theme === 'dark' ? '/logo-light.png' : '/logo.png'" 
             alt="Pybadu Logo" 
-            class="w-8 h-8 rounded-lg" 
+            class="w-6 h-6 rounded-lg" 
           />
         </NuxtLink>
         <div class="hidden sm:flex items-center space-x-2">
           <span :class="[
             'font-semibold',
             theme === 'dark' ? 'text-white' : 'text-gray-900'
-          ]">{{ libraryName }} Playground</span>
+          ]">BudiBadu</span>
         </div>
 
         <!-- File Tabs (moved beside logo) -->
@@ -47,14 +47,14 @@
             <span>{{ file.name }}</span>
             <button
               v-if="files.length > 1"
-              @click.stop="confirmDelete(file.id, file.name)"
+              @click.stop="handleDeleteFile(file.id, file.name)"
               class="opacity-0 group-hover:opacity-100 hover:bg-red-500/20 rounded p-0.5"
             >
               <Icon icon="ph:x" class="w-3 h-3" />
             </button>
           </button>
           <button
-            @click="$emit('newFile')"
+            @click="handleNewFile"
             :class="[
               'p-1.5 rounded-md transition-colors',
               theme === 'dark'
@@ -124,7 +124,7 @@
               </button>
               <hr :class="theme === 'dark' ? 'border-gray-700' : 'border-gray-200'" class="my-1" />
               <button
-                @click="$emit('newFile'); showFileDropdown = false"
+                @click="handleNewFile(); showFileDropdown = false"
                 :class="[
                   'w-full flex items-center space-x-2 px-2 py-1.5 rounded text-sm',
                   theme === 'dark'
@@ -158,18 +158,6 @@
           <span class="hidden sm:inline">Run</span>
         </button>
 
-        <button
-          @click="$emit('toggleTheme')"
-          :class="[
-            'p-1.5 rounded-md transition-colors',
-            theme === 'dark'
-              ? 'text-yellow-400 hover:bg-gray-700'
-              : 'text-gray-600 hover:bg-gray-100'
-          ]"
-        >
-          <Icon :icon="theme === 'dark' ? 'ph:sun' : 'ph:moon'" class="w-4 h-4" />
-        </button>
-
         <!-- Save Button -->
         <button
           @click="saveFile"
@@ -180,7 +168,7 @@
               : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
           ]"
         >
-          <Icon icon="ph:download" class="w-4 h-4" />
+          <Icon icon="uil:save" class="w-4 h-4" />
           <span class="hidden sm:inline">Save</span>
         </button>
 
@@ -197,11 +185,25 @@
           <Icon icon="ph:share" class="w-4 h-4" />
           <span class="hidden sm:inline">Share</span>
         </button>
+
+        <!-- Theme Toggle - Moved to End -->
+        <button
+          @click="$emit('toggleTheme')"
+          :class="[
+            'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+            theme === 'dark'
+              ? 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+              : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+          ]"
+        >
+          <Icon :icon="theme === 'dark' ? 'ph:sun' : 'ph:moon'" class="w-4 h-4" />
+          <span class="hidden sm:inline">Theme</span>
+        </button>
       </div>
     </header>
 
     <!-- Main Layout -->
-    <div class="flex-1 flex overflow-hidden">
+    <div class="flex-1 flex overflow-hidden h-[calc(100vh-64px)]">
       <!-- Sidebar (Desktop) -->
       <aside 
         v-if="showSidebar"
@@ -216,7 +218,7 @@
         <!-- Sidebar Header -->
         <div class="flex items-center justify-between p-3 border-b" :class="theme === 'dark' ? 'border-gray-700' : 'border-gray-200'">
           <h3 v-if="!sidebarCollapsed" :class="['font-medium text-sm', theme === 'dark' ? 'text-white' : 'text-gray-900']">
-            Explorer
+            {{ libraryName }}
           </h3>
           <button
             @click="sidebarCollapsed = !sidebarCollapsed"
@@ -250,7 +252,7 @@
                     <Icon icon="ph:upload" class="w-3 h-3" />
                   </button>
                   <button
-                    @click="$emit('newFile')"
+                    @click="handleNewFile"
                     :class="[
                       'p-0.5 rounded transition-colors',
                       theme === 'dark' ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-100 text-gray-600'
@@ -269,10 +271,9 @@
                 class="hidden"
               />
               <div class="space-y-1">
-                <button
+                <div
                   v-for="file in files"
                   :key="file.id"
-                  @click="$emit('selectFile', file.id)"
                   :class="[
                     'w-full flex items-center justify-between p-2 rounded-md text-sm transition-colors group',
                     activeFileId === file.id
@@ -284,18 +285,45 @@
                         : 'text-gray-700 hover:bg-gray-100'
                   ]"
                 >
-                  <div class="flex items-center space-x-2 min-w-0">
-                    <Icon icon="ph:file-py" class="w-4 h-4 flex-shrink-0" />
-                    <span class="truncate">{{ file.name }}</span>
-                  </div>
-                  <button
-                    v-if="files.length > 1"
-                    @click.stop="$emit('deleteFile', file.id)"
-                    class="opacity-0 group-hover:opacity-100 p-0.5 rounded hover:bg-red-500/20 transition-all"
+                  <div 
+                    class="flex items-center space-x-2 min-w-0 flex-1 cursor-pointer"
+                    @click="$emit('selectFile', file.id)"
+                    @dblclick="handleDoubleClick(file.id, file.name)"
                   >
-                    <Icon icon="ph:trash" class="w-3 h-3" />
-                  </button>
-                </button>
+                    <Icon icon="ph:file-py" class="w-4 h-4 flex-shrink-0" />
+                    <input
+                      v-if="editingFileId === file.id"
+                      v-model="editingFileName"
+                      @keyup.enter="confirmRename(file.id)"
+                      @keyup.esc="cancelRename"
+                      @blur="confirmRename(file.id)"
+                      @click.stop
+                      :class="[
+                        'flex-1 bg-transparent border rounded px-1 outline-none',
+                        theme === 'dark' ? 'border-gray-600' : 'border-gray-300'
+                      ]"
+                      autofocus
+                    />
+                    <span v-else class="truncate">{{ file.name }}</span>
+                  </div>
+                  <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100">
+                    <button
+                      @click.stop="startRenameFile(file.id, file.name)"
+                      class="p-0.5 rounded hover:bg-blue-500/20 transition-all"
+                      title="Rename file"
+                    >
+                      <Icon icon="ph:pencil-simple" class="w-3 h-3" />
+                    </button>
+                    <button
+                      v-if="files.length > 1"
+                      @click.stop="handleDeleteFile(file.id, file.name)"
+                      class="p-0.5 rounded hover:bg-red-500/20 transition-all"
+                      title="Delete file"
+                    >
+                      <Icon icon="ph:trash" class="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -354,8 +382,8 @@
       <!-- Editor & Output & Ads -->
       <main class="flex-1 flex flex-col lg:flex-row overflow-hidden">
         <!-- Code Editor -->
-        <section :class="[
-          'flex-1 flex flex-col border-r',
+        <section class="w-full lg:w-[50%]" :class="[
+          'flex flex-col border-r',
           theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
         ]">
           <!-- Editor Header -->
@@ -371,27 +399,6 @@
             </div>
             
             <div class="flex items-center space-x-2">
-              <!-- Upload File -->
-              <input
-                ref="fileInput"
-                type="file"
-                accept=".py,.txt"
-                @change="handleFileUpload"
-                class="hidden"
-              />
-              <button
-                @click="$refs.fileInput?.click()"
-                :class="[
-                  'text-xs px-2 py-1 rounded transition-colors flex items-center space-x-1',
-                  theme === 'dark'
-                    ? 'hover:bg-gray-700 text-gray-400'
-                    : 'hover:bg-gray-200 text-gray-600'
-                ]"
-              >
-                <Icon icon="ph:upload" class="w-3 h-3" />
-                <span>Upload</span>
-              </button>
-
               <button
                 @click="$emit('clearCode')"
                 :class="[
@@ -403,20 +410,11 @@
               >
                 Clear
               </button>
-              
-              <!-- Mobile Sidebar Toggle -->
-              <button
-                @click="showSidebar = !showSidebar"
-                class="md:hidden p-1 rounded"
-                :class="theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-200'"
-              >
-                <Icon icon="ph:sidebar-simple" class="w-4 h-4" />
-              </button>
             </div>
           </div>
 
           <!-- Monaco Editor -->
-          <div class="flex-1 min-h-0">
+          <div class="flex-1 overflow-hidden">
             <MonacoEditor
               :model-value="code"
               @update:model-value="$emit('update:code', $event)"
@@ -433,6 +431,7 @@
                 tabSize: 4,
                 insertSpaces: true
               }"
+              height="100%"
               class="h-full w-full"
             />
           </div>
@@ -441,7 +440,7 @@
         <!-- Output Panel -->
         <section :class="[
           'flex flex-col border-t lg:border-t-0 lg:border-l',
-          'w-full lg:w-2/5',
+          'w-full lg:w-[30%]',
           theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
         ]">
           <!-- Output Header -->
@@ -502,6 +501,40 @@
               <Icon icon="ph:terminal" class="w-8 h-8 mx-auto mb-2 opacity-50" />
               <p>Run your Python code to see output here</p>
             </div>
+          </div>
+        </section>
+
+        <!-- Ads Panel -->
+        <section :class="[
+          'hidden xl:flex flex-col border-l',
+          'w-[20%]',
+          theme === 'dark' ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-gray-50'
+        ]">
+          <!-- Ads Content -->
+          <div class="flex-1 overflow-y-auto p-4">
+            <ClientOnly>
+              <!-- Square Ad 1 -->
+              <div class="mb-4">
+                <Adsense 
+                  key="editor-ad-1"
+                  client="ca-pub-1356911639243870" 
+                  ad-slot="3430238458"
+                  kind="square"
+                  :style="{ display: 'inline-block', width: '300px', height: '300px' }" 
+                />
+              </div>
+
+              <!-- Square Ad 2 -->
+              <div class="mb-4">
+                <Adsense 
+                  key="editor-ad-2"
+                  client="ca-pub-1356911639243870" 
+                  ad-slot="4242301831"
+                  kind="square"
+                  :style="{ display: 'inline-block', width: '300px', height: '300px' }" 
+                />
+              </div>
+            </ClientOnly>
           </div>
         </section>
 
@@ -580,14 +613,19 @@
         </button>
       </template>
     </Dialog>
+
+    <!-- Toast Notifications -->
+    <Toast :toasts="toasts" @remove="removeToast" />
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { Icon } from '@iconify/vue'
 import Dialog from '~/components/ui/Dialog.vue'
 import MonacoEditor from '~/components/MonacoEditor.vue'
+import Adsense from '~/components/Adsense.vue'
+import Toast from '~/components/ui/Toast.vue'
 
 defineOptions({
   name: 'MatplotlibEditor'
@@ -618,13 +656,19 @@ const emit = defineEmits([
   'loadExample',
   'newFile',
   'selectFile',
-  'deleteFile'
+  'deleteFile',
+  'renameFile',
+  'saveToStorage'
 ])
 
 // UI State
 const showFileDropdown = ref(false)
 const showSidebar = ref(true)
 const sidebarCollapsed = ref(false)
+
+// Toast notifications
+const toasts = ref([])
+let toastId = 0
 
 // Delete confirmation dialog
 const deleteDialog = ref({
@@ -640,12 +684,38 @@ const shareDialog = ref({
   copied: false
 })
 
+// Rename state
+const editingFileId = ref(null)
+const editingFileName = ref('')
+
+// Toast functions
+function showToast(message, type = 'info') {
+  const id = toastId++
+  toasts.value.push({ id, message, type })
+  
+  setTimeout(() => {
+    removeToast(id)
+  }, 3000)
+}
+
+function removeToast(id) {
+  const index = toasts.value.findIndex(t => t.id === id)
+  if (index > -1) {
+    toasts.value.splice(index, 1)
+  }
+}
+
 function selectFile(fileId) {
   emit('selectFile', fileId)
   showFileDropdown.value = false
 }
 
-function confirmDelete(fileId, fileName) {
+function handleDeleteFile(fileId, fileName) {
+  if (props.files.length <= 1) {
+    showToast('Cannot delete the last file', 'warning')
+    return
+  }
+  
   deleteDialog.value = {
     show: true,
     fileId,
@@ -656,13 +726,28 @@ function confirmDelete(fileId, fileName) {
 function confirmDeleteFile() {
   if (deleteDialog.value.fileId) {
     emit('deleteFile', deleteDialog.value.fileId)
+    showToast('File deleted successfully', 'success')
   }
   deleteDialog.value.show = false
+}
+
+function handleNewFile() {
+  if (props.files.length >= 5) {
+    showToast('Maximum 5 files allowed', 'warning')
+    return
+  }
+  emit('newFile')
 }
 
 function handleFileUpload(event) {
   const file = event.target.files?.[0]
   if (!file) return
+
+  if (props.files.length >= 5) {
+    showToast('Maximum 5 files allowed', 'warning')
+    event.target.value = ''
+    return
+  }
 
   const reader = new FileReader()
   reader.onload = (e) => {
@@ -671,6 +756,7 @@ function handleFileUpload(event) {
       name: file.name,
       content: content
     })
+    showToast('File uploaded successfully', 'success')
   }
   reader.readAsText(file)
   
@@ -678,17 +764,38 @@ function handleFileUpload(event) {
   event.target.value = ''
 }
 
-function saveFile() {
-  const activeFile = props.files.find(f => f.id === props.activeFileId)
-  if (!activeFile) return
+function startRenameFile(fileId, fileName) {
+  editingFileId.value = fileId
+  editingFileName.value = fileName
+}
 
-  const blob = new Blob([props.code], { type: 'text/plain' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = activeFile.name
-  a.click()
-  URL.revokeObjectURL(url)
+function handleDoubleClick(fileId, fileName) {
+  startRenameFile(fileId, fileName)
+}
+
+function confirmRename(fileId) {
+  if (!editingFileName.value.trim()) {
+    showToast('File name cannot be empty', 'error')
+    return
+  }
+  
+  if (editingFileName.value.trim() !== props.files.find(f => f.id === fileId)?.name) {
+    emit('renameFile', { fileId, newName: editingFileName.value.trim() })
+    showToast('File renamed successfully', 'success')
+  }
+  
+  editingFileId.value = null
+  editingFileName.value = ''
+}
+
+function cancelRename() {
+  editingFileId.value = null
+  editingFileName.value = ''
+}
+
+function saveFile() {
+  emit('saveToStorage')
+  showToast('Progress saved successfully', 'success')
 }
 
 function shareCode() {
@@ -704,6 +811,7 @@ function copyShareUrl() {
   if (shareDialog.value.url) {
     navigator.clipboard.writeText(shareDialog.value.url)
     shareDialog.value.copied = true
+    showToast('Link copied to clipboard', 'success')
     setTimeout(() => {
       shareDialog.value.copied = false
     }, 2000)

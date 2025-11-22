@@ -265,7 +265,7 @@
       </div>
     </div>
 
-    <!-- Timer Footer -->
+    <!-- Footer Navigation -->
     <div :class="[
       'px-4 py-2 border-t flex items-center justify-between',
       theme === 'dark'
@@ -273,18 +273,16 @@
         : 'bg-gray-50 border-gray-200'
     ]">
       <div class="flex items-center space-x-2">
-        <Icon icon="ph:clock" :class="[
-          'w-4 h-4',
-          theme === 'dark' ? 'text-yellow-300' : 'text-blue-600'
-        ]" />
-        <span :class="[
-          'text-sm font-mono',
-          theme === 'dark' ? 'text-yellow-300' : 'text-blue-600'
+        <div :class="[
+          'flex items-center space-x-1 px-2 py-1 rounded text-xs',
+          pyodideReady 
+            ? theme === 'dark' ? 'bg-green-900 text-green-300' : 'bg-green-100 text-green-700'
+            : theme === 'dark' ? 'bg-yellow-900 text-yellow-300' : 'bg-yellow-100 text-yellow-700'
         ]">
-          {{ elapsedTime.hours > 0 ? `${elapsedTime.hours}h ` : '' }}{{
-            elapsedTime.minutes.toString().padStart(2, '0') }}:{{ elapsedTime.seconds.toString().padStart(2, '0')
-          }}
-        </span>
+          <Icon :icon="pyodideReady ? 'ph:check-circle' : 'ph:spinner'" 
+                :class="pyodideReady ? '' : 'animate-spin'" class="w-3 h-3" />
+          <span>{{ pyodideReady ? 'Ready' : 'Loading...' }}</span>
+        </div>
       </div>
 
       <div class="flex items-center space-x-2">

@@ -63,21 +63,6 @@
             <Icon :icon="theme === 'dark' ? 'ph:sun' : 'ph:moon'" class="w-5 h-5" />
           </button>
 
-          <!-- Timer -->
-          <div :class="[
-            'flex items-center space-x-2 px-3 py-2 rounded-lg shadow-sm border',
-            theme === 'dark'
-              ? 'bg-gray-700 border-gray-600 text-yellow-300'
-              : 'bg-white border-gray-300 text-gray-600'
-          ]">
-            <Icon icon="ph:clock" class="w-4 h-4" />
-            <span class="text-sm font-mono">
-              {{ elapsedTime.hours > 0 ? `${elapsedTime.hours}h ` : '' }}{{
-                elapsedTime.minutes.toString().padStart(2, '0') }}:{{ elapsedTime.seconds.toString().padStart(2, '0')
-              }}
-            </span>
-          </div>
-
           <!-- Run Button -->
           <button @click="$emit('runCode')" :disabled="isLoading || !pyodideReady" :class="[
             'px-4 py-2 rounded-lg font-medium transition-colors shadow-sm flex items-center space-x-2',

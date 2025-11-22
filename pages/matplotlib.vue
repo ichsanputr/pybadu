@@ -10,7 +10,6 @@
         :output="output" 
         :isLoading="isLoading" 
         :pyodideReady="pyodideReady"
-        :elapsedTime="elapsedTime"
         :monacoTheme="monacoTheme"
         :examples="examples"
         @update:code="code = $event"
@@ -31,7 +30,6 @@
         :output="output" 
         :isLoading="isLoading" 
         :pyodideReady="pyodideReady"
-        :elapsedTime="elapsedTime"
         :monacoTheme="monacoTheme"
         :examples="examples"
         @update:code="code = $event"
@@ -55,7 +53,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useHead } from '#app'
 import { useBreakpoints } from '@vueuse/core'
 import MatplotlibDesktop from '~/components/matplotlib/MatplotlibDesktop.vue'
@@ -107,24 +105,9 @@ const isLoading = ref(false)
 const pyodideReady = ref(false)
 const pyodide = ref(null)
 const loaderVisible = ref(false)
-const startTime = ref(Date.now())
-const currentTime = ref(Date.now())
-let timerIntervalId = null
 
 // Theme state - defaults to dark like BudiBadu
 const theme = ref('dark')
-
-// Computed property for elapsed time
-const elapsedTime = computed(() => {
-  if (!startTime.value) return { hours: 0, minutes: 0, seconds: 0 }
-
-  const elapsedMs = currentTime.value - startTime.value
-  const hours = Math.floor(elapsedMs / 3600000)
-  const minutes = Math.floor((elapsedMs % 3600000) / 60000)
-  const seconds = Math.floor((elapsedMs % 60000) / 1000)
-
-  return { hours, minutes, seconds }
-})
 
 // VueUse breakpoint for responsive layout
 const breakpoints = import.meta.client ? useBreakpoints({
@@ -488,12 +471,6 @@ plt.rcParams['figure.dpi'] = 100
       
       pyodideReady.value = true
       
-      // Start timer
-      startTime.value = Date.now()
-      timerIntervalId = setInterval(() => {
-        currentTime.value = Date.now()
-      }, 1000)
-      
       // Run initial example
       await runCode()
       
@@ -505,13 +482,6 @@ plt.rcParams['figure.dpi'] = 100
         timestamp: new Date().toLocaleTimeString()
       })
     }
-  }
-})
-
-onUnmounted(() => {
-  if (timerIntervalId) {
-    clearInterval(timerIntervalId)
-    timerIntervalId = null
   }
 })
 </script>

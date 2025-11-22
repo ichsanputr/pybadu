@@ -1,6 +1,6 @@
 <template>
   <div class="font-sans">
-    <AppHeader :sticky="false" />
+    <AppHeader :sticky="false" :transparent="true" />
     <main>
       <slot />
     </main>

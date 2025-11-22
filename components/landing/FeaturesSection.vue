@@ -5,7 +5,7 @@
       <div class="text-center mb-16">
         <h2 class="text-2xl sm:text-4xl font-bold mb-6">
           <span class="text-gray-800">Why Choose</span>
-          <span class="bg-gradient-to-r from-yellow-600 via-orange-500 to-yellow-400 bg-clip-text text-transparent"> Pybadu</span>
+          <span class="bg-gradient-to-r from-python-blue-600 via-python-blue-500 to-python-yellow-500 bg-clip-text text-transparent"> Pybadu</span>
           <span class="text-gray-800">?</span>
         </h2>
         <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">
@@ -17,8 +17,8 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
         <!-- Dedicated Compilers -->
         <div class="text-center group">
-          <div class="w-16 h-16 bg-gradient-to-br from-yellow-100 to-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
-            <Icon icon="ph:cpu" class="w-8 h-8 text-yellow-600" />
+          <div class="w-16 h-16 bg-gradient-to-br from-python-yellow-100 to-python-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+            <Icon icon="ph:cpu" class="w-8 h-8 text-python-blue-600" />
           </div>
           <h3 class="text-xl font-semibold text-gray-900 mb-4">Dedicated Compilers</h3>
           <p class="text-gray-600 leading-relaxed">
@@ -89,7 +89,7 @@
       </div>
 
       <!-- Comparison Section -->
-      <div class="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-8 md:p-12">
+      <div class="bg-gradient-to-br from-python-blue-50 to-python-yellow-50 rounded-2xl p-8 md:p-12">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
             <h3 class="text-2xl font-bold text-gray-900 mb-6">
@@ -115,7 +115,7 @@
               </div>
             </div>
             <div class="mt-8">
-              <a href="https://budibadu.com" target="_blank" class="inline-flex items-center text-yellow-600 hover:text-yellow-700 font-medium">
+              <a href="https://budibadu.com" target="_blank" class="inline-flex items-center text-python-blue-600 hover:text-python-blue-700 font-medium">
                 <span>Visit BudiBadu</span>
                 <Icon icon="ph:arrow-square-out" class="w-4 h-4 ml-2" />
               </a>
@@ -125,7 +125,7 @@
           <div class="relative">
             <div class="bg-white rounded-lg shadow-lg p-6">
               <div class="flex items-center space-x-4 mb-4">
-                <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center">
+                <div class="w-12 h-12 bg-gradient-to-br from-python-yellow-400 to-orange-500 rounded-lg flex items-center justify-center">
                   <span class="text-white font-bold">B</span>
                 </div>
                 <div>
@@ -134,7 +134,7 @@
                 </div>
               </div>
               <div class="flex items-center space-x-4 mb-4">
-                <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg flex items-center justify-center">
+                <div class="w-12 h-12 bg-gradient-to-br from-python-blue-400 to-python-blue-600 rounded-lg flex items-center justify-center">
                   <span class="text-white font-bold">🐍</span>
                 </div>
                 <div>

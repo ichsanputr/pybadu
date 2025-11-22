@@ -1,5 +1,5 @@
 <template>
-  <section class="py-20 bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50">
+  <section class="py-20 bg-gradient-to-br from-python-blue-50 via-white to-python-yellow-50">
     <Container>
       <div class="text-center">
         <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
@@ -19,27 +19,27 @@
             </div>
             <h3 class="font-semibold text-gray-900 mb-2">Start with Matplotlib</h3>
             <p class="text-sm text-gray-600 mb-4">Create beautiful visualizations</p>
-            <div class="text-yellow-600 font-medium text-sm">Try Now →</div>
+            <div class="text-python-blue-600 font-medium text-sm">Try Now →</div>
           </NuxtLink>
 
-          <!-- Stemmer -->
-          <NuxtLink to="/snowball" class="group bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-lg transition-all duration-200 hover:scale-105">
+          <!-- NumPy -->
+          <NuxtLink to="/numpy" class="group bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-lg transition-all duration-200 hover:scale-105">
+            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:bg-purple-200 transition-colors">
+              <Icon icon="simple-icons:numpy" class="w-6 h-6 text-purple-600" />
+            </div>
+            <h3 class="font-semibold text-gray-900 mb-2">NumPy Computing</h3>
+            <p class="text-sm text-gray-600 mb-4">Scientific computing arrays</p>
+            <div class="text-python-blue-600 font-medium text-sm">Try Now →</div>
+          </NuxtLink>
+
+          <!-- Pandas -->
+          <NuxtLink to="/pandas" class="group bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-lg transition-all duration-200 hover:scale-105">
             <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:bg-green-200 transition-colors">
-              <Icon icon="material-symbols:psychology" class="w-6 h-6 text-green-600" />
+              <Icon icon="simple-icons:pandas" class="w-6 h-6 text-green-600" />
             </div>
-            <h3 class="font-semibold text-gray-900 mb-2">Text Processing</h3>
-            <p class="text-sm text-gray-600 mb-4">Advanced stemming algorithms</p>
-            <div class="text-yellow-600 font-medium text-sm">Try Now →</div>
-          </NuxtLink>
-
-          <!-- General Fiddle -->
-          <NuxtLink to="/fiddle" class="group bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-lg transition-all duration-200 hover:scale-105">
-            <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:bg-yellow-200 transition-colors">
-              <Icon icon="ph:code" class="w-6 h-6 text-yellow-600" />
-            </div>
-            <h3 class="font-semibold text-gray-900 mb-2">Python Fiddle</h3>
-            <p class="text-sm text-gray-600 mb-4">General Python environment</p>
-            <div class="text-yellow-600 font-medium text-sm">Try Now →</div>
+            <h3 class="font-semibold text-gray-900 mb-2">Pandas Analysis</h3>
+            <p class="text-sm text-gray-600 mb-4">Data manipulation & analysis</p>
+            <div class="text-python-blue-600 font-medium text-sm">Try Now →</div>
           </NuxtLink>
         </div>
 
@@ -50,20 +50,20 @@
               <Icon icon="simple-icons:matplotlib" class="w-5 h-5" />
               <span>Start with Matplotlib</span>
             </NuxtLink>
-            <NuxtLink to="/fiddle" class="btn-secondary px-8 py-4 text-lg flex items-center space-x-3">
-              <Icon icon="ph:code" class="w-5 h-5" />
-              <span>Try Python Fiddle</span>
+            <NuxtLink to="/numpy" class="btn-secondary px-8 py-4 text-lg flex items-center space-x-3">
+              <Icon icon="simple-icons:numpy" class="w-5 h-5" />
+              <span>Try NumPy</span>
             </NuxtLink>
           </div>
 
           <!-- Sub CTA -->
           <p class="text-sm text-gray-500">
             Part of the 
-            <a href="https://budibadu.com" target="_blank" class="text-yellow-600 hover:text-yellow-700 font-medium">
+            <a href="https://budibadu.com" target="_blank" class="text-python-blue-600 hover:text-python-blue-700 font-medium">
               BudiBadu ecosystem
             </a>
             • Powered by 
-            <a href="https://pyodide.org" target="_blank" class="text-yellow-600 hover:text-yellow-700 font-medium">
+            <a href="https://pyodide.org" target="_blank" class="text-python-blue-600 hover:text-python-blue-700 font-medium">
               Pyodide WebAssembly
             </a>
           </p>
@@ -84,7 +84,7 @@ defineOptions({
 
 <style scoped>
 .btn-primary {
-  @apply bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-semibold rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105;
+  @apply bg-gradient-to-r from-python-blue-600 to-python-yellow-500 hover:from-python-blue-700 hover:to-python-yellow-600 text-white font-semibold rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105;
 }
 
 .btn-secondary {

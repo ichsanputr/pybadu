@@ -5,11 +5,9 @@
         <!-- Brand -->
         <div class="col-span-1 md:col-span-2">
           <div class="flex items-center space-x-3 mb-4">
-            <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center">
-              <span class="text-white font-bold text-xl">🐍</span>
-            </div>
+            <img src="/logo-light.png" alt="Pybadu Logo" class="w-12 h-12 rounded-lg" />
             <div>
-              <div class="text-xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
+              <div class="text-xl font-bold text-white">
                 Pybadu
               </div>
               <div class="text-sm text-gray-400">Python Library Playground</div>
@@ -25,14 +23,17 @@
         <div>
           <h3 class="text-white font-semibold mb-4">Libraries</h3>
           <div class="space-y-2">
-            <NuxtLink to="/matplotlib" class="block text-gray-400 hover:text-yellow-400 text-sm transition-colors">
+            <NuxtLink to="/matplotlib" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               Matplotlib
             </NuxtLink>
-            <NuxtLink to="/snowball" class="block text-gray-400 hover:text-yellow-400 text-sm transition-colors">
-              Snowball Stemmer
+            <NuxtLink to="/numpy" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              NumPy
             </NuxtLink>
-            <NuxtLink to="/fiddle" class="block text-gray-400 hover:text-yellow-400 text-sm transition-colors">
-              Python Fiddle
+            <NuxtLink to="/pandas" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              Pandas
+            </NuxtLink>
+            <NuxtLink to="/scikit-learn" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              Scikit-learn
             </NuxtLink>
           </div>
         </div>
@@ -41,11 +42,14 @@
         <div>
           <h3 class="text-white font-semibold mb-4">Ecosystem</h3>
           <div class="space-y-2">
-            <a href="https://budibadu.com" target="_blank" class="block text-gray-400 hover:text-yellow-400 text-sm transition-colors">
+            <a href="https://budibadu.com" target="_blank" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               BudiBadu ↗
             </a>
-            <a href="https://pyodide.org" target="_blank" class="block text-gray-400 hover:text-yellow-400 text-sm transition-colors">
+            <a href="https://pyodide.org" target="_blank" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               Pyodide ↗
+            </a>
+            <a href="https://github.com/unovue/inspira-ui" target="_blank" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              Inspira UI ↗
             </a>
           </div>
         </div>

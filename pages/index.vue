@@ -2,16 +2,12 @@
   <div>
     <HeroSection />
     <LibraryShowcase />
-    <FeaturesSection />
-    <GetStartedSection />
   </div>
 </template>
 
 <script setup>
 import HeroSection from '~/components/landing/HeroSection.vue'
 import LibraryShowcase from '~/components/landing/LibraryShowcase.vue'
-import FeaturesSection from '~/components/landing/FeaturesSection.vue'
-import GetStartedSection from '~/components/landing/GetStartedSection.vue'
 
 // Use landing layout
 definePageMeta({

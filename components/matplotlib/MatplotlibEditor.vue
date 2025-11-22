@@ -16,14 +16,14 @@
           <img 
             :src="theme === 'dark' ? '/logo-light.png' : '/logo.png'" 
             alt="Pybadu Logo" 
-            class="w-8 h-8 rounded-md" 
+            class="w-8 h-8 rounded-lg" 
           />
         </NuxtLink>
         <div class="hidden sm:flex items-center space-x-2">
           <span :class="[
             'font-semibold',
             theme === 'dark' ? 'text-white' : 'text-gray-900'
-          ]">Matplotlib Playground</span>
+          ]">{{ libraryName }} Playground</span>
         </div>
 
         <!-- File Tabs (moved beside logo) -->
@@ -36,8 +36,8 @@
               'flex items-center space-x-2 px-3 py-1.5 rounded-md text-sm font-medium whitespace-nowrap transition-colors group',
               activeFileId === file.id
                 ? theme === 'dark'
-                  ? 'bg-gray-700 text-yellow-400'
-                  : 'bg-gray-100 text-blue-600'
+                  ? 'bg-gray-700 text-python-yellow-400'
+                  : 'bg-gray-100 text-python-blue-600'
                 : theme === 'dark'
                   ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
@@ -103,8 +103,8 @@
                   'w-full flex items-center justify-between px-2 py-1.5 rounded text-sm text-left',
                   activeFileId === file.id
                     ? theme === 'dark'
-                      ? 'bg-yellow-900/30 text-yellow-400'
-                      : 'bg-blue-100 text-blue-600'
+                      ? 'bg-python-yellow-900/30 text-python-yellow-400'
+                      : 'bg-python-blue-100 text-python-blue-600'
                     : theme === 'dark'
                       ? 'text-gray-300 hover:bg-gray-700'
                       : 'text-gray-700 hover:bg-gray-100'
@@ -146,7 +146,9 @@
             'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
             isLoading || !pyodideReady
               ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-              : 'bg-green-600 hover:bg-green-700 text-white'
+              : theme === 'dark'
+                ? 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+                : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
           ]"
         >
           <Icon 
@@ -174,8 +176,8 @@
           :class="[
             'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
             theme === 'dark'
-              ? 'bg-gray-700 hover:bg-gray-600 text-gray-300'
-              : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+              ? 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+              : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
           ]"
         >
           <Icon icon="ph:download" class="w-4 h-4" />
@@ -188,8 +190,8 @@
           :class="[
             'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
             theme === 'dark'
-              ? 'bg-blue-600 hover:bg-blue-700 text-white'
-              : 'bg-blue-600 hover:bg-blue-700 text-white'
+              ? 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+              : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
           ]"
         >
           <Icon icon="ph:share" class="w-4 h-4" />
@@ -349,7 +351,7 @@
         </div>
       </aside>
 
-      <!-- Editor & Output -->
+      <!-- Editor & Output & Ads -->
       <main class="flex-1 flex flex-col lg:flex-row overflow-hidden">
         <!-- Code Editor -->
         <section :class="[
@@ -439,7 +441,7 @@
         <!-- Output Panel -->
         <section :class="[
           'flex flex-col border-t lg:border-t-0 lg:border-l',
-          'w-full lg:w-2/5 xl:w-1/2',
+          'w-full lg:w-2/5',
           theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
         ]">
           <!-- Output Header -->
@@ -473,9 +475,8 @@
             </button>
           </div>
 
-          <div class="flex-1 flex">
-            <!-- Output Content -->
-            <div class="flex-1 overflow-y-auto p-4 space-y-3">
+          <!-- Output Content -->
+          <div class="flex-1 overflow-y-auto p-4 space-y-3">
               <div
                 v-for="(item, index) in output"
                 :key="index"
@@ -494,57 +495,16 @@
                 </div>
               </div>
 
-              <div v-if="output.length === 0" :class="[
-                'text-center py-8 text-sm',
-                theme === 'dark' ? 'text-gray-500' : 'text-gray-400'
-              ]">
-                <Icon icon="ph:terminal" class="w-8 h-8 mx-auto mb-2 opacity-50" />
-                <p>Run your Python code to see output here</p>
-              </div>
-            </div>
-
-            <!-- Adsense Slot - Separated Column -->
-            <div :class="[
-              'w-48 lg:w-56 xl:w-64 border-l flex-shrink-0 hidden lg:block',
-              theme === 'dark' ? 'bg-gray-800/30 border-gray-700' : 'bg-gray-50 border-gray-200'
+            <div v-if="output.length === 0" :class="[
+              'text-center py-8 text-sm',
+              theme === 'dark' ? 'text-gray-500' : 'text-gray-400'
             ]">
-              <div class="p-4 h-full flex flex-col">
-                <div :class="[
-                  'text-xs font-semibold mb-4 pb-2 border-b',
-                  theme === 'dark' ? 'text-gray-300 border-gray-600' : 'text-gray-700 border-gray-300'
-                ]">
-                  <Icon icon="ph:star" class="w-3 h-3 inline mr-1" />
-                  Sponsors & Ads
-                </div>
-                
-                <!-- Adsense Placeholder -->
-                <div :class="[
-                  'flex-1 border-2 border-dashed rounded-lg flex items-center justify-center min-h-[400px] max-h-[600px]',
-                  theme === 'dark' ? 'border-gray-600 bg-gray-800/50' : 'border-gray-300 bg-gray-100'
-                ]">
-                  <div class="text-center p-4">
-                    <Icon icon="ph:rectangle-dashed" :class="[
-                      'w-10 h-10 mx-auto mb-2',
-                      theme === 'dark' ? 'text-gray-600' : 'text-gray-400'
-                    ]" />
-                    <div :class="[
-                      'text-xs font-medium mb-1',
-                      theme === 'dark' ? 'text-gray-500' : 'text-gray-500'
-                    ]">
-                      Advertisement Space
-                    </div>
-                    <div :class="[
-                      'text-xs',
-                      theme === 'dark' ? 'text-gray-600' : 'text-gray-400'
-                    ]">
-                      Support BudiBadu
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <Icon icon="ph:terminal" class="w-8 h-8 mx-auto mb-2 opacity-50" />
+              <p>Run your Python code to see output here</p>
             </div>
           </div>
         </section>
+
       </main>
     </div>
 
@@ -642,7 +602,11 @@ const props = defineProps({
   isLoading: Boolean,
   pyodideReady: Boolean,
   monacoTheme: String,
-  examples: Array
+  examples: Array,
+  libraryName: {
+    type: String,
+    default: 'Python'
+  }
 })
 
 const emit = defineEmits([

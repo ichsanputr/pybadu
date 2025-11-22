@@ -1,16 +1,11 @@
 <template>
-  <section class="py-20 bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50 relative overflow-hidden">
-    <!-- Background Elements -->
-    <div class="absolute inset-0 -z-10">
-      <div class="absolute top-10 left-1/4 h-64 w-64 rounded-full bg-yellow-200/30 blur-3xl"></div>
-      <div class="absolute bottom-10 right-1/4 h-64 w-64 rounded-full bg-orange-200/30 blur-3xl"></div>
-    </div>
+  <section class="py-20 bg-white relative overflow-hidden border-t border-gray-100">
     
     <Container>
       <!-- Section Header -->
       <div class="text-center mb-16">
         <h2 class="text-2xl sm:text-4xl font-bold mb-6">
-          <span class="bg-gradient-to-r from-yellow-600 via-orange-500 to-yellow-400 bg-clip-text text-transparent">
+          <span class="bg-gradient-to-r from-python-blue-600 via-python-blue-500 to-python-yellow-500 bg-clip-text text-transparent">
             Specialized Libraries
           </span><br>
           <span class="text-gray-800">dedicated compiler for each Python library</span>
@@ -38,7 +33,7 @@
             Create stunning static, animated, and interactive visualizations in Python. 
             Pre-loaded with NumPy for seamless data plotting.
           </p>
-          <NuxtLink to="/matplotlib" class="text-yellow-600 hover:text-yellow-700 font-medium flex items-center">
+          <NuxtLink to="/matplotlib" class="text-python-blue-600 hover:text-python-blue-700 font-medium flex items-center">
             <span>Try Matplotlib</span>
             <Icon icon="ph:arrow-right" class="w-4 h-4 ml-1" />
           </NuxtLink>
@@ -59,103 +54,100 @@
             Advanced text stemming algorithm supporting multiple languages. 
             Perfect for natural language processing and text analysis tasks.
           </p>
-          <NuxtLink to="/snowball" class="text-yellow-600 hover:text-yellow-700 font-medium flex items-center">
+          <NuxtLink to="/snowball" class="text-python-blue-600 hover:text-python-blue-700 font-medium flex items-center">
             <span>Try Stemmer</span>
             <Icon icon="ph:arrow-right" class="w-4 h-4 ml-1" />
           </NuxtLink>
         </div>
 
-        <!-- NumPy (Coming Soon) -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow group opacity-75">
+        <!-- NumPy -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow group">
           <div class="flex items-center mb-4">
-            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
+            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4 group-hover:bg-purple-200 transition-colors">
               <Icon icon="simple-icons:numpy" class="w-6 h-6 text-purple-600" />
             </div>
             <div>
               <h3 class="text-lg font-semibold text-gray-900">NumPy</h3>
               <p class="text-sm text-gray-600">Scientific Computing</p>
-              <span class="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full mt-1">Coming Soon</span>
             </div>
           </div>
           <p class="text-gray-600 mb-4">
             Fundamental package for scientific computing with Python. 
             Powerful N-dimensional array object and linear algebra functions.
           </p>
-          <div class="text-gray-400 font-medium flex items-center">
-            <span>In Development</span>
-            <Icon icon="ph:clock" class="w-4 h-4 ml-1" />
-          </div>
+          <NuxtLink to="/numpy" class="text-python-blue-600 hover:text-python-blue-700 font-medium flex items-center">
+            <span>Try NumPy</span>
+            <Icon icon="ph:arrow-right" class="w-4 h-4 ml-1" />
+          </NuxtLink>
         </div>
 
-        <!-- Pandas (Coming Soon) -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow group opacity-75">
+        <!-- Pandas -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow group">
           <div class="flex items-center mb-4">
-            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4 group-hover:bg-green-200 transition-colors">
               <Icon icon="simple-icons:pandas" class="w-6 h-6 text-green-600" />
             </div>
             <div>
               <h3 class="text-lg font-semibold text-gray-900">Pandas</h3>
               <p class="text-sm text-gray-600">Data Analysis</p>
-              <span class="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full mt-1">Coming Soon</span>
             </div>
           </div>
           <p class="text-gray-600 mb-4">
             Powerful data structures and data analysis tools for Python. 
             Perfect for data manipulation and analysis tasks.
           </p>
-          <div class="text-gray-400 font-medium flex items-center">
-            <span>In Development</span>
-            <Icon icon="ph:clock" class="w-4 h-4 ml-1" />
-          </div>
+          <NuxtLink to="/pandas" class="text-python-blue-600 hover:text-python-blue-700 font-medium flex items-center">
+            <span>Try Pandas</span>
+            <Icon icon="ph:arrow-right" class="w-4 h-4 ml-1" />
+          </NuxtLink>
         </div>
 
-        <!-- Scikit-learn (Coming Soon) -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow group opacity-75">
+        <!-- Scikit-learn -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow group">
           <div class="flex items-center mb-4">
-            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-4">
+            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-4 group-hover:bg-orange-200 transition-colors">
               <Icon icon="simple-icons:scikitlearn" class="w-6 h-6 text-orange-600" />
             </div>
             <div>
               <h3 class="text-lg font-semibold text-gray-900">Scikit-learn</h3>
               <p class="text-sm text-gray-600">Machine Learning</p>
-              <span class="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full mt-1">Coming Soon</span>
             </div>
           </div>
           <p class="text-gray-600 mb-4">
             Simple and efficient tools for predictive data analysis. 
             Built on NumPy, SciPy, and matplotlib.
           </p>
-          <div class="text-gray-400 font-medium flex items-center">
-            <span>In Development</span>
-            <Icon icon="ph:clock" class="w-4 h-4 ml-1" />
-          </div>
+          <NuxtLink to="/scikit-learn" class="text-python-blue-600 hover:text-python-blue-700 font-medium flex items-center">
+            <span>Try Scikit-learn</span>
+            <Icon icon="ph:arrow-right" class="w-4 h-4 ml-1" />
+          </NuxtLink>
         </div>
 
-        <!-- General Python Fiddle -->
-        <div class="bg-gradient-to-br from-yellow-100 to-orange-100 rounded-lg shadow-sm border border-yellow-200 p-6 hover:shadow-md transition-shadow group">
+        <!-- More Libraries Coming -->
+        <div class="bg-gradient-to-br from-python-blue-100 to-python-yellow-100 rounded-lg shadow-sm border border-python-blue-200 p-6 hover:shadow-md transition-shadow group">
           <div class="flex items-center mb-4">
-            <div class="w-12 h-12 bg-yellow-200 rounded-lg flex items-center justify-center mr-4 group-hover:bg-yellow-300 transition-colors">
-              <Icon icon="ph:code" class="w-6 h-6 text-yellow-800" />
+            <div class="w-12 h-12 bg-python-yellow-200 rounded-lg flex items-center justify-center mr-4 group-hover:bg-python-yellow-300 transition-colors">
+              <Icon icon="ph:plus-circle" class="w-6 h-6 text-python-blue-700" />
             </div>
             <div>
-              <h3 class="text-lg font-semibold text-gray-900">Python Fiddle</h3>
-              <p class="text-sm text-gray-600">General Purpose</p>
+              <h3 class="text-lg font-semibold text-gray-900">More Libraries</h3>
+              <p class="text-sm text-gray-600">Coming Soon</p>
             </div>
           </div>
           <p class="text-gray-600 mb-4">
-            General Python environment with popular packages pre-installed. 
-            Great for learning, testing, and experimenting with Python code.
+            More specialized Python library environments on the way. 
+            SciPy, NetworkX, SymPy, and many more packages available in Pyodide.
           </p>
-          <NuxtLink to="/fiddle" class="text-yellow-700 hover:text-yellow-800 font-medium flex items-center">
-            <span>Try Python Fiddle</span>
-            <Icon icon="ph:arrow-right" class="w-4 h-4 ml-1" />
-          </NuxtLink>
+          <a href="https://pyodide.org/en/stable/usage/packages-in-pyodide.html" target="_blank" class="text-python-blue-700 hover:text-python-blue-800 font-medium flex items-center">
+            <span>View All Packages</span>
+            <Icon icon="ph:arrow-square-out" class="w-4 h-4 ml-1" />
+          </a>
         </div>
       </div>
 
       <!-- Call to Action -->
       <div class="text-center">
-        <a href="https://pyodide.org/en/stable/usage/packages-in-pyodide.html" target="_blank" class="inline-flex items-center text-gray-600 hover:text-yellow-600 transition-colors">
+        <a href="https://pyodide.org/en/stable/usage/packages-in-pyodide.html" target="_blank" class="inline-flex items-center text-gray-600 hover:text-python-blue-600 transition-colors">
           <span>View all available packages in Pyodide</span>
           <Icon icon="ph:arrow-square-out" class="w-4 h-4 ml-2" />
         </a>

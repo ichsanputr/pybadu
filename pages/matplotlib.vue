@@ -1,8 +1,9 @@
 <template>
   <div>
-    <!-- Editor Area (100vh) -->
-    <div class="h-screen">
+    <!-- Editor Area -->
+    <div class="min-h-screen">
       <MatplotlibEditor 
+        libraryName="Matplotlib"
         :theme="theme" 
         :files="files"
         :activeFileId="activeFileId"
@@ -27,263 +28,110 @@
         <transition name="fade">
           <div v-if="loaderVisible"
             class="fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-[#18181b] transition-colors duration-300">
-            <Icon icon="ph:spinner" class="w-10 h-10 text-yellow-500 animate-spin" />
+            <Icon icon="ph:spinner" class="w-10 h-10 text-python-yellow-500 animate-spin" />
           </div>
         </transition>
       </ClientOnly>
     </div>
 
-    <!-- Explanation Section (scrollable below) -->
-    <section class="bg-white dark:bg-gray-900 transition-colors duration-300">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="max-w-4xl mx-auto">
-          <!-- Header -->
-          <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-              About Matplotlib Playground
-            </h2>
-            <p class="text-lg text-gray-600 dark:text-gray-300">
-              An interactive environment for creating beautiful visualizations with Python's most popular plotting library
-            </p>
-          </div>
+    <!-- Information Section -->
+    <LibraryInfoSection>
+      <!-- Header -->
+      <div class="text-center mb-12">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 mb-4">
+          <Icon icon="simple-icons:matplotlib" class="w-8 h-8 text-white" />
+        </div>
+        <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          About Matplotlib Playground
+        </h2>
+        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          Create stunning data visualizations with Python's most popular plotting library. Run matplotlib code directly in your browser with zero setup.
+        </p>
+      </div>
 
-          <!-- Features Grid -->
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            <div class="text-center">
-              <div class="w-16 h-16 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Icon icon="ph:chart-line" class="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
-              </div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Interactive Plotting</h3>
-              <p class="text-gray-600 dark:text-gray-300 text-sm">Create charts, graphs, and visualizations with instant preview</p>
+      <!-- Features -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <AnimatedCard>
+          <div class="text-center">
+            <div class="w-14 h-14 bg-gradient-to-br from-python-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+              <Icon icon="ph:chart-line" class="w-7 h-7 text-white" />
             </div>
-            
-            <div class="text-center">
-              <div class="w-16 h-16 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Icon icon="ph:files" class="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
-              </div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Multi-File Support</h3>
-              <p class="text-gray-600 dark:text-gray-300 text-sm">Work with multiple Python files like a real IDE</p>
-            </div>
-            
-            <div class="text-center">
-              <div class="w-16 h-16 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Icon icon="ph:browser" class="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
-              </div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Browser-Based</h3>
-              <p class="text-gray-600 dark:text-gray-300 text-sm">No installation required, runs entirely in your browser</p>
-            </div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Interactive Plotting</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Create 2D and 3D visualizations with instant preview and real-time updates</p>
           </div>
-
-          <!-- What you can do -->
-          <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-8">
-            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">What you can create:</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <ul class="space-y-3 text-gray-600 dark:text-gray-300">
-                  <li class="flex items-start">
-                    <Icon icon="ph:check" class="w-5 h-5 text-green-600 dark:text-green-400 mr-2 mt-0.5 flex-shrink-0" />
-                    <span>Line plots and scatter plots</span>
-                  </li>
-                  <li class="flex items-start">
-                    <Icon icon="ph:check" class="w-5 h-5 text-green-600 dark:text-green-400 mr-2 mt-0.5 flex-shrink-0" />
-                    <span>Bar charts and histograms</span>
-                  </li>
-                  <li class="flex items-start">
-                    <Icon icon="ph:check" class="w-5 h-5 text-green-600 dark:text-green-400 mr-2 mt-0.5 flex-shrink-0" />
-                    <span>3D surface and wireframe plots</span>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <ul class="space-y-3 text-gray-600 dark:text-gray-300">
-                  <li class="flex items-start">
-                    <Icon icon="ph:check" class="w-5 h-5 text-green-600 dark:text-green-400 mr-2 mt-0.5 flex-shrink-0" />
-                    <span>Subplots and complex layouts</span>
-                  </li>
-                  <li class="flex items-start">
-                    <Icon icon="ph:check" class="w-5 h-5 text-green-600 dark:text-green-400 mr-2 mt-0.5 flex-shrink-0" />
-                    <span>Statistical visualizations</span>
-                  </li>
-                  <li class="flex items-start">
-                    <Icon icon="ph:check" class="w-5 h-5 text-green-600 dark:text-green-400 mr-2 mt-0.5 flex-shrink-0" />
-                    <span>Custom styling and themes</span>
-                  </li>
-                </ul>
-              </div>
+        </AnimatedCard>
+        
+        <AnimatedCard>
+          <div class="text-center">
+            <div class="w-14 h-14 bg-gradient-to-br from-python-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+              <Icon icon="ph:files" class="w-7 h-7 text-white" />
             </div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Multi-File Support</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Organize your code across multiple files like a professional IDE</p>
           </div>
+        </AnimatedCard>
+        
+        <AnimatedCard>
+          <div class="text-center">
+            <div class="w-14 h-14 bg-gradient-to-br from-python-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+              <Icon icon="ph:rocket-launch" class="w-7 h-7 text-white" />
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Instant Execution</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">No installation needed - powered by Pyodide WebAssembly</p>
+          </div>
+        </AnimatedCard>
+      </div>
 
-          <!-- Code Example -->
-          <div class="mt-12">
-            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Getting Started</h3>
-            <div class="bg-gray-900 rounded-lg p-6 overflow-x-auto">
-              <pre class="text-sm text-gray-300"><code>import matplotlib.pyplot as plt
+      <!-- Example Code -->
+      <div class="mb-12 overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-800">
+        <div class="bg-gradient-to-r from-python-blue-600 to-blue-600 px-6 py-3">
+          <p class="text-white font-semibold">Quick Example</p>
+        </div>
+        <div class="bg-gray-900 p-6">
+          <pre class="text-sm text-gray-300 overflow-x-auto"><code>import matplotlib.pyplot as plt
 import numpy as np
 
-# Create sample data
 x = np.linspace(0, 10, 100)
 y = np.sin(x)
 
-# Create a simple plot
 plt.figure(figsize=(10, 6))
-plt.plot(x, y, label='sin(x)')
-plt.xlabel('X values')
-plt.ylabel('Y values')
-plt.title('Simple Sine Wave')
-plt.legend()
+plt.plot(x, y, 'b-', linewidth=2)
+plt.title('Sine Wave')
 plt.grid(True, alpha=0.3)
-plt.show()
-
-print("Your first plot is ready!")</code></pre>
-            </div>
-          </div>
-
-          <!-- Part of ecosystem -->
-          <div class="mt-12 text-center">
-            <div class="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-xl p-8">
-              <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Part of BudiBadu Ecosystem</h3>
-              <p class="text-gray-600 dark:text-gray-300 mb-4">
-                Pybadu is a specialized subset of the BudiBadu platform, dedicated to providing the best Python library experience.
-              </p>
-              <a href="https://budibadu.com" target="_blank" class="inline-flex items-center space-x-2 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200">
-                <span>Explore BudiBadu</span>
-                <Icon icon="ph:arrow-square-out" class="w-4 h-4" />
-              </a>
-            </div>
-          </div>
+plt.show()</code></pre>
         </div>
       </div>
-    </section>
+    </LibraryInfoSection>
+
+    <!-- Footer -->
+    <AppFooter />
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { onMounted } from 'vue'
 import { useHead } from '#app'
 import MatplotlibEditor from '~/components/matplotlib/MatplotlibEditor.vue'
+import LibraryInfoSection from '~/components/LibraryInfoSection.vue'
+import AnimatedCard from '~/components/ui/AnimatedCard.vue'
+import AppFooter from '~/components/AppFooter.vue'
 import { Icon } from '@iconify/vue'
+import { useLibraryPlayground } from '~/composables/useLibraryPlayground'
 
-// Define component name
 defineOptions({
   name: 'MatplotlibPlayground'
 })
 
-// Use problem layout for full-screen experience
 definePageMeta({
-  layout: 'problem'
+  layout: 'library'
 })
 
-// SEO Meta
 useHead({
   title: 'Matplotlib Playground - Pybadu',
   meta: [
     { name: 'description', content: 'Interactive matplotlib plotting playground powered by Pyodide WebAssembly' }
   ]
 })
-
-// Reactive state
-const files = ref([
-  {
-    id: 1,
-    name: 'main.py',
-    content: `import matplotlib.pyplot as plt
-import numpy as np
-
-# Create sample data
-x = np.linspace(0, 10, 100)
-y = np.sin(x)
-
-# Create the plot
-plt.figure(figsize=(10, 6))
-plt.plot(x, y, 'b-', linewidth=2, label='sin(x)')
-plt.xlabel('x')
-plt.ylabel('y') 
-plt.title('Sine Wave Plot')
-plt.legend()
-plt.grid(True, alpha=0.3)
-
-# Display the plot
-plt.show()
-
-print("Plot generated successfully!")`
-  }
-])
-
-const activeFileId = ref(1)
-const output = ref([])
-const isLoading = ref(false)
-const pyodideReady = ref(false)
-const pyodide = ref(null)
-const loaderVisible = ref(false)
-
-// Theme state - defaults to dark like BudiBadu
-const theme = ref('dark')
-
-// File management
-const currentFileContent = computed({
-  get: () => {
-    const activeFile = files.value.find(f => f.id === activeFileId.value)
-    return activeFile ? activeFile.content : ''
-  },
-  set: (value) => {
-    const activeFile = files.value.find(f => f.id === activeFileId.value)
-    if (activeFile) {
-      activeFile.content = value
-    }
-  }
-})
-
-function updateCurrentFile(content) {
-  currentFileContent.value = content
-}
-
-function createNewFile() {
-  const newId = Math.max(...files.value.map(f => f.id)) + 1
-  const newFile = {
-    id: newId,
-    name: `file${newId}.py`,
-    content: '# New Python file\nimport matplotlib.pyplot as plt\nimport numpy as np\n\n# Your code here...\n'
-  }
-  files.value.push(newFile)
-  activeFileId.value = newId
-}
-
-function selectFile(fileId) {
-  activeFileId.value = fileId
-}
-
-function deleteFile(fileId) {
-  if (files.value.length <= 1) return // Don't delete the last file
-  
-  files.value = files.value.filter(f => f.id !== fileId)
-  
-  // If we deleted the active file, switch to the first available
-  if (activeFileId.value === fileId) {
-    activeFileId.value = files.value[0].id
-  }
-}
-
-// Monaco theme based on current theme
-const monacoTheme = computed(() => (theme.value === 'dark' ? 'vs-dark' : 'vs-light'))
-
-// Theme management functions
-function setThemeClass(val) {
-  if (typeof window !== 'undefined') {
-    if (val === 'dark') {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }
-}
-
-watch(theme, (val) => {
-  setThemeClass(val)
-}, { immediate: true })
-
-function toggleTheme() {
-  theme.value = theme.value === 'light' ? 'dark' : 'light'
-}
 
 // Example code snippets
 const examples = [
@@ -472,127 +320,54 @@ print("3D surface plot created!")`
   }
 ]
 
-// Wait for Pyodide to be available globally
-function waitForPyodide() {
-  return new Promise((resolve) => {
-    if (window.loadPyodide) {
-      resolve()
-    } else {
-      const checkPyodide = () => {
-        if (window.loadPyodide) {
-          resolve()
-        } else {
-          setTimeout(checkPyodide, 100)
-        }
-      }
-      checkPyodide()
-    }
-  })
-}
+const defaultCode = `import matplotlib.pyplot as plt
+import numpy as np
 
-// Run Python code
-async function runCode() {
-  if (!pyodideReady.value || !currentFileContent.value.trim()) return
-  
-  isLoading.value = true
-  const startTime = Date.now()
-  
-  try {
-    // Clear previous output
-    output.value = []
-    
-    // Capture Python print statements
-    pyodide.value.runPython(`
-import sys
-from io import StringIO
-import matplotlib.pyplot as plt
+# Create sample data
+x = np.linspace(0, 10, 100)
+y = np.sin(x)
 
-# Clear any previous plots
-plt.close('all')
+# Create the plot
+plt.figure(figsize=(10, 6))
+plt.plot(x, y, 'b-', linewidth=2, label='sin(x)')
+plt.xlabel('x')
+plt.ylabel('y') 
+plt.title('Sine Wave Plot')
+plt.legend()
+plt.grid(True, alpha=0.3)
 
-# Capture stdout
-sys.stdout = StringIO()
-    `)
-    
-    // Execute user code
-    pyodide.value.runPython(currentFileContent.value)
-    
-    // Get the captured output
-    const stdout = pyodide.value.runPython(`
-captured_output = sys.stdout.getvalue()
-sys.stdout = sys.__stdout__  # Reset stdout
-captured_output
-    `)
-    
-    const executionTime = Date.now() - startTime
-    
-    // Add output messages
-    if (stdout && stdout.trim()) {
-      output.value.push({
-        type: 'print',
-        content: stdout.trim(),
-        timestamp: new Date().toLocaleTimeString()
-      })
-    }
-    
-    output.value.push({
-      type: 'success', 
-      content: `✓ Code executed successfully in ${executionTime}ms`,
-      timestamp: new Date().toLocaleTimeString()
-    })
-    
-  } catch (error) {
-    console.error('Error running Python code:', error)
-    output.value.push({
-      type: 'error',
-      content: `Error: ${error.message}`,
-      timestamp: new Date().toLocaleTimeString()
-    })
-  } finally {
-    isLoading.value = false
-  }
-}
+# Display the plot
+plt.show()
 
-// Clear functions
-function clearCode() {
-  currentFileContent.value = ''
-}
+print("Plot generated successfully!")`
 
-function clearOutput() {
-  output.value = []
-}
-
-// Load example code
-function loadExample(example) {
-  currentFileContent.value = example.code
-  // Auto-run the example
-  setTimeout(() => {
-    runCode()
-  }, 100)
-}
-
-// Initialize Pyodide and packages
-onMounted(async () => {
-  if (process.client) {
-    try {
-      // Ensure dark theme is applied
-      setThemeClass('dark')
-      
-      // Wait for Pyodide to be available
-      await waitForPyodide()
-      
-      // Load Pyodide
-      pyodide.value = await loadPyodide()
-      
-      // Load micropip
-      await pyodide.value.loadPackage("micropip")
-      const micropip = pyodide.value.pyimport("micropip")
-      
-      // Install matplotlib
-      await micropip.install("matplotlib")
-      
-      // Pre-load essential packages
-      pyodide.value.runPython(`
+// Use the shared composable
+const {
+  files,
+  activeFileId,
+  output,
+  isLoading,
+  pyodideReady,
+  theme,
+  loaderVisible,
+  currentFileContent,
+  monacoTheme,
+  updateCurrentFile,
+  createNewFile,
+  selectFile,
+  deleteFile,
+  toggleTheme,
+  runCode,
+  clearCode,
+  clearOutput,
+  loadExample,
+  initializePyodide
+} = useLibraryPlayground({
+  packageName: 'matplotlib',
+  defaultCode,
+  examples,
+  additionalPackages: [],
+  setupCode: `
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
@@ -604,27 +379,15 @@ matplotlib.use('Agg')
 plt.rcParams['figure.facecolor'] = 'white'
 plt.rcParams['axes.facecolor'] = 'white'
 plt.rcParams['figure.dpi'] = 100
-      `)
-      
-      pyodideReady.value = true
-      
-      // Run initial example
-      await runCode()
-      
-    } catch (error) {
-      console.error('Failed to initialize Pyodide or matplotlib:', error)
-      output.value.push({
-        type: 'error',
-        content: `Failed to initialize: ${error.message}`,
-        timestamp: new Date().toLocaleTimeString()
-      })
-    }
-  }
+  `
+})
+
+onMounted(async () => {
+  await initializePyodide()
 })
 </script>
 
 <style scoped>
-/* Fade transition for loader */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s ease;

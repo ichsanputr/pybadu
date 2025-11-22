@@ -1,11 +1,73 @@
 <template>
-  <div class="matplotlib-page-container">
-    <!-- Fixed Header -->
-    <header class="matplotlib-header" :class="{
-      'bg-gray-800 border-b border-gray-700': theme === 'dark',
-      'bg-gradient-to-r from-gray-50 to-white border-b border-gray-200': theme === 'light'
-    }">
-      <div class="h-full flex items-center justify-between px-4 sm:px-6 gap-4">
+  <div class="matplotlib-page-container h-full flex">
+    <!-- File Sidebar -->
+    <div :class="[
+      'w-64 border-r flex flex-col',
+      theme === 'dark' 
+        ? 'bg-gray-800 border-gray-700' 
+        : 'bg-white border-gray-200'
+    ]">
+      <!-- Sidebar Header -->
+      <div :class="[
+        'px-4 py-3 border-b flex items-center justify-between',
+        theme === 'dark' 
+          ? 'border-gray-700' 
+          : 'border-gray-200'
+      ]">
+        <h3 :class="[
+          'font-semibold text-sm',
+          theme === 'dark' ? 'text-white' : 'text-gray-900'
+        ]">Files</h3>
+        <button @click="$emit('newFile')" :class="[
+          'p-1.5 rounded-md transition-colors',
+          theme === 'dark'
+            ? 'hover:bg-gray-700 text-gray-400 hover:text-gray-200'
+            : 'hover:bg-gray-100 text-gray-600 hover:text-gray-900'
+        ]">
+          <Icon icon="ph:plus" class="w-4 h-4" />
+        </button>
+      </div>
+
+      <!-- File List -->
+      <div class="flex-1 p-2 overflow-y-auto">
+        <div v-for="file in files" :key="file.id" 
+             @click="$emit('selectFile', file.id)"
+             :class="[
+               'flex items-center justify-between p-2 rounded-md cursor-pointer mb-1 group transition-colors',
+               activeFileId === file.id
+                 ? theme === 'dark'
+                   ? 'bg-yellow-900/30 text-yellow-400 border border-yellow-700/50'
+                   : 'bg-yellow-100 text-yellow-800 border border-yellow-300'
+                 : theme === 'dark'
+                   ? 'hover:bg-gray-700 text-gray-300'
+                   : 'hover:bg-gray-100 text-gray-700'
+             ]">
+          <div class="flex items-center min-w-0">
+            <Icon icon="ph:file-py" class="w-4 h-4 mr-2 flex-shrink-0" />
+            <span class="text-sm font-medium truncate">{{ file.name }}</span>
+          </div>
+          <button v-if="files.length > 1" 
+                  @click.stop="$emit('deleteFile', file.id)"
+                  :class="[
+                    'opacity-0 group-hover:opacity-100 p-0.5 rounded transition-all',
+                    theme === 'dark'
+                      ? 'hover:bg-red-900/50 text-red-400'
+                      : 'hover:bg-red-100 text-red-600'
+                  ]">
+            <Icon icon="ph:trash" class="w-3 h-3" />
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col">
+      <!-- Fixed Header -->
+      <header class="matplotlib-header" :class="{
+        'bg-gray-800 border-b border-gray-700': theme === 'dark',
+        'bg-gray-50 border-b border-gray-200': theme === 'light'
+      }">
+        <div class="h-full flex items-center justify-between px-4 sm:px-6 gap-4">
         <!-- Left Section: Logo + Navigation -->
         <div class="flex items-center space-x-4 min-w-0 flex-1">
           <!-- App Logo -->
@@ -274,6 +336,7 @@
         </button>
       </div>
     </div>
+    </div>
   </div>
 </template>
 
@@ -283,11 +346,12 @@ import MonacoEditor from '~/components/MonacoEditor.vue'
 
 const props = defineProps({
   theme: String,
+  files: Array,
+  activeFileId: Number,
   code: String,
   output: Array,
   isLoading: Boolean,
   pyodideReady: Boolean,
-  elapsedTime: Object,
   monacoTheme: String,
   examples: Array
 })
@@ -298,7 +362,10 @@ const emit = defineEmits([
   'runCode',
   'clearCode',
   'clearOutput',
-  'loadExample'
+  'loadExample',
+  'newFile',
+  'selectFile',
+  'deleteFile'
 ])
 </script>
 

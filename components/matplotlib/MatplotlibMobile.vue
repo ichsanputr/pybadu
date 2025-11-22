@@ -77,6 +77,63 @@
 
     <!-- Tab Content -->
     <div class="flex-1 overflow-hidden">
+      <!-- Files Tab -->
+      <div v-show="activeTab === 'files'" class="h-full flex flex-col">
+        <!-- Files Header -->
+        <div :class="[
+          'px-4 py-3 border-b flex items-center justify-between',
+          theme === 'dark' 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-gray-50 border-gray-200'
+        ]">
+          <h3 :class="[
+            'font-medium text-sm',
+            theme === 'dark' ? 'text-white' : 'text-gray-900'
+          ]">Python Files</h3>
+          <button @click="$emit('newFile')" :class="[
+            'px-3 py-1.5 rounded-lg text-sm font-medium flex items-center space-x-1.5',
+            'bg-yellow-600 hover:bg-yellow-700 text-white transition-colors'
+          ]">
+            <Icon icon="ph:plus" class="w-4 h-4" />
+            <span>New</span>
+          </button>
+        </div>
+
+        <!-- File List -->
+        <div class="flex-1 p-3 overflow-y-auto">
+          <div v-for="file in files" :key="file.id" 
+               @click="$emit('selectFile', file.id)"
+               :class="[
+                 'flex items-center justify-between p-3 rounded-lg cursor-pointer mb-2 transition-colors',
+                 activeFileId === file.id
+                   ? 'bg-yellow-100 border-yellow-300 border'
+                   : theme === 'dark'
+                     ? 'bg-gray-800 hover:bg-gray-700'
+                     : 'bg-white hover:bg-gray-50 border border-gray-200'
+               ]">
+            <div class="flex items-center min-w-0">
+              <Icon icon="ph:file-py" :class="[
+                'w-5 h-5 mr-3 flex-shrink-0',
+                activeFileId === file.id 
+                  ? 'text-yellow-600' 
+                  : theme === 'dark' ? 'text-yellow-400' : 'text-blue-600'
+              ]" />
+              <span :class="[
+                'font-medium truncate',
+                activeFileId === file.id 
+                  ? 'text-yellow-800' 
+                  : theme === 'dark' ? 'text-white' : 'text-gray-900'
+              ]">{{ file.name }}</span>
+            </div>
+            <button v-if="files.length > 1" 
+                    @click.stop="$emit('deleteFile', file.id)"
+                    class="p-1.5 rounded-md text-red-500 hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors">
+              <Icon icon="ph:trash" class="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Code Editor Tab -->
       <div v-show="activeTab === 'code'" class="h-full flex flex-col">
         <!-- Editor Status -->
@@ -314,11 +371,12 @@ import MonacoEditor from '~/components/MonacoEditor.vue'
 
 const props = defineProps({
   theme: String,
+  files: Array,
+  activeFileId: Number,
   code: String,
   output: Array,
   isLoading: Boolean,
   pyodideReady: Boolean,
-  elapsedTime: Object,
   monacoTheme: String,
   examples: Array
 })
@@ -329,7 +387,10 @@ const emit = defineEmits([
   'runCode',
   'clearCode',
   'clearOutput',
-  'loadExample'
+  'loadExample',
+  'newFile',
+  'selectFile',
+  'deleteFile'
 ])
 
 // Tab management
@@ -337,6 +398,7 @@ const activeTab = ref('code')
 const showRunDialog = ref(false)
 
 const tabs = [
+  { id: 'files', label: 'Files', icon: 'ph:files' },
   { id: 'code', label: 'Code', icon: 'ph:code' },
   { id: 'output', label: 'Output', icon: 'ph:terminal' },
   { id: 'examples', label: 'Examples', icon: 'ph:books' }

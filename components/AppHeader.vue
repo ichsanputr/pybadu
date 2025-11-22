@@ -1,13 +1,14 @@
 <template>
-  <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+  <header :class="[
+    'bg-white border-b border-gray-200',
+    sticky ? 'sticky top-0 z-50' : ''
+  ]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <!-- Logo -->
         <div class="flex items-center">
           <NuxtLink to="/" class="flex items-center space-x-3">
-            <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center">
-              <span class="text-white font-bold text-xl">🐍</span>
-            </div>
+            <img src="/logo.png" alt="Pybadu Logo" class="w-10 h-10 rounded-lg">
             <div>
               <div class="text-xl font-bold bg-gradient-to-r from-yellow-600 via-orange-500 to-yellow-400 bg-clip-text text-transparent">
                 Pybadu
@@ -78,6 +79,13 @@ import { Icon } from '@iconify/vue'
 
 defineOptions({
   name: 'AppHeader'
+})
+
+defineProps({
+  sticky: {
+    type: Boolean,
+    default: true
+  }
 })
 
 const showMobileMenu = ref(false)

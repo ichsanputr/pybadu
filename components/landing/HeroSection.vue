@@ -2,6 +2,13 @@
   <section class="relative overflow-hidden">
     <!-- Background -->
     <div class="absolute inset-0 -z-10">
+      <!-- Falling Stars Background -->
+      <FallingStarsBg 
+        color="#FFC832" 
+        :count="100"
+        class="opacity-20"
+      />
+      
       <div class="absolute inset-0 bg-gradient-to-br from-yellow-50 via-white to-orange-50"></div>
       <div class="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-yellow-200/40 blur-3xl"></div>
       <div class="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-orange-200/40 blur-3xl"></div>
@@ -111,6 +118,7 @@
 
 <script setup>
 import { Icon } from '@iconify/vue'
+import FallingStarsBg from '~/components/ui/FallingStarsBg.vue'
 
 defineOptions({
   name: 'HeroSection'

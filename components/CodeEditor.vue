@@ -143,7 +143,7 @@
         <button
           @click="showInfoDialog = true"
           :class="[
-            'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+            'hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
             theme === 'dark'
               ? 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
               : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
@@ -153,7 +153,7 @@
           <Icon icon="ph:info" class="w-4 h-4" />
         </button>
 
-
+        <!-- Run Button (Always Visible) -->
         <button
           @click="$emit('runCode')"
           :disabled="isLoading || !pyodideReady"
@@ -173,53 +173,142 @@
           <span class="hidden sm:inline">{{ !pyodideReady ? 'Loading...' : isLoading ? 'Running...' : 'Run' }}</span>
         </button>
 
-        <!-- Save Button -->
-        <button
-          @click="saveFile"
-          :disabled="isSaving"
-          :class="[
-            'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
-            isSaving
-              ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-              : theme === 'dark'
+        <!-- Desktop Buttons (Hidden on Mobile) -->
+        <div class="hidden sm:flex items-center space-x-2">
+          <!-- Save Button -->
+          <button
+            @click="saveFile"
+            :disabled="isSaving"
+            :class="[
+              'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+              isSaving
+                ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                : theme === 'dark'
+                  ? 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+                  : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+            ]"
+          >
+            <Icon 
+              :icon="isSaving ? 'ph:spinner' : 'uil:save'" 
+              :class="['w-4 h-4', isSaving ? 'animate-spin' : '']"
+            />
+            <span>{{ isSaving ? 'Saving...' : 'Save' }}</span>
+          </button>
+
+          <!-- Share Button -->
+          <button
+            @click="openShareDialog"
+            :class="[
+              'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+              theme === 'dark'
                 ? 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
                 : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
-          ]"
-        >
-          <Icon 
-            :icon="isSaving ? 'ph:spinner' : 'uil:save'" 
-            :class="['w-4 h-4', isSaving ? 'animate-spin' : '']"
-          />
-          <span class="hidden sm:inline">{{ isSaving ? 'Saving...' : 'Save' }}</span>
-        </button>
+            ]"
+          >
+            <Icon icon="ph:share" class="w-4 h-4" />
+            <span>Share</span>
+          </button>
 
-        <!-- Share Button -->
-        <button
-          @click="openShareDialog"
-          :class="[
-            'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
-            theme === 'dark'
-              ? 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
-              : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
-          ]"
-        >
-          <Icon icon="ph:share" class="w-4 h-4" />
-          <span class="hidden sm:inline">Share</span>
-        </button>
+          <!-- Theme Toggle -->
+          <button
+            @click="$emit('toggleTheme')"
+            :class="[
+              'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+              theme === 'dark'
+                ? 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+                : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+            ]"
+          >
+            <Icon :icon="theme === 'dark' ? 'ph:sun' : 'ph:moon'" class="w-4 h-4" />
+            <span>{{ theme === 'dark' ? 'Light' : 'Dark' }}</span>
+          </button>
+        </div>
 
-        <!-- Theme Toggle - Moved to End -->
-        <button
-          @click="$emit('toggleTheme')"
-          :class="[
-            'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
-            theme === 'dark'
-              ? 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
-              : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
-          ]"
-        >
-          <Icon :icon="theme === 'dark' ? 'ph:sun' : 'ph:moon'" class="w-4 h-4" />
-          <span class="hidden sm:inline">{{ theme === 'dark' ? 'Light' : 'Dark' }}</span>
-        </button>
+        <!-- Mobile Menu Button -->
+        <div class="sm:hidden relative">
+          <button
+            @click="showMobileMenu = !showMobileMenu"
+            :class="[
+              'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+              theme === 'dark'
+                ? 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+                : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+            ]"
+          >
+            <Icon icon="ph:list" class="w-4 h-4" />
+          </button>
+
+          <!-- Mobile Dropdown Menu -->
+          <div
+            v-if="showMobileMenu"
+            @click="showMobileMenu = false"
+            :class="[
+              'absolute right-0 top-full mt-2 w-48 rounded-lg shadow-lg border z-50',
+              theme === 'dark'
+                ? 'bg-gray-800 border-gray-700'
+                : 'bg-white border-gray-200'
+            ]"
+          >
+            <button
+              @click="showInfoDialog = true"
+              :class="[
+                'w-full flex items-center space-x-2 px-4 py-3 text-sm transition-colors',
+                theme === 'dark'
+                  ? 'text-gray-300 hover:bg-gray-700'
+                  : 'text-gray-700 hover:bg-gray-50'
+              ]"
+            >
+              <Icon icon="ph:info" class="w-4 h-4" />
+              <span>Information</span>
+            </button>
+
+            <button
+              @click="saveFile"
+              :disabled="isSaving"
+              :class="[
+                'w-full flex items-center space-x-2 px-4 py-3 text-sm transition-colors',
+                isSaving
+                  ? 'opacity-50 cursor-not-allowed'
+                  : '',
+                theme === 'dark'
+                  ? 'text-gray-300 hover:bg-gray-700'
+                  : 'text-gray-700 hover:bg-gray-50'
+              ]"
+            >
+              <Icon 
+                :icon="isSaving ? 'ph:spinner' : 'uil:save'" 
+                :class="['w-4 h-4', isSaving ? 'animate-spin' : '']"
+              />
+              <span>{{ isSaving ? 'Saving...' : 'Save' }}</span>
+            </button>
+
+            <button
+              @click="openShareDialog"
+              :class="[
+                'w-full flex items-center space-x-2 px-4 py-3 text-sm transition-colors',
+                theme === 'dark'
+                  ? 'text-gray-300 hover:bg-gray-700'
+                  : 'text-gray-700 hover:bg-gray-50'
+              ]"
+            >
+              <Icon icon="ph:share" class="w-4 h-4" />
+              <span>Share</span>
+            </button>
+
+            <button
+              @click="$emit('toggleTheme')"
+              :class="[
+                'w-full flex items-center space-x-2 px-4 py-3 text-sm transition-colors rounded-b-lg',
+                theme === 'dark'
+                  ? 'text-gray-300 hover:bg-gray-700'
+                  : 'text-gray-700 hover:bg-gray-50'
+              ]"
+            >
+              <Icon :icon="theme === 'dark' ? 'ph:sun' : 'ph:moon'" class="w-4 h-4" />
+              <span>{{ theme === 'dark' ? 'Light Mode' : 'Dark Mode' }}</span>
+            </button>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -421,7 +510,7 @@
       <!-- Editor & Output & Ads -->
       <main class="flex-1 flex flex-col lg:flex-row overflow-hidden">
         <!-- Code Editor -->
-        <section class="w-full lg:w-[35%] xl:w-[40%]" :class="[
+        <section class="w-full lg:w-[35%] xl:w-[40%] h-[50vh] lg:h-auto" :class="[
           'flex flex-col border-r',
           theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
         ]">
@@ -469,7 +558,7 @@
         <!-- Output Panel -->
         <section :class="[
           'flex flex-col border-t lg:border-t-0 lg:border-l',
-          'w-full lg:w-[35%] xl:w-[35%]',
+          'w-full lg:w-[35%] xl:w-[35%] h-[50vh] lg:h-auto',
           theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
         ]">
           <!-- Output Header -->
@@ -986,10 +1075,6 @@
             <li>For matplotlib plots, use plt.show() to display</li>
           </ul>
         </div>
-
-        <div class="text-center pt-2">
-          Learn more at <a href="https://pyodide.org" target="_blank" class="text-python-blue-500 hover:underline">pyodide.org</a>
-        </div>
       </div>
     </Dialog>
 
@@ -1059,6 +1144,7 @@ onMounted(() => {
 
 // UI State
 const showFileDropdown = ref(false)
+const showMobileMenu = ref(false)
 const showSidebar = ref(true)
 const sidebarCollapsed = ref(false)
 
@@ -1332,7 +1418,7 @@ async function createShareLink() {
     
     // Set share URL with query params
     const baseUrl = window.location.origin
-    shareDialog.value.shareUrl = `${baseUrl}/share?id=${result.id}`
+    shareDialog.value.shareUrl = `${baseUrl}/pybadu/share?id=${result.id}`
     shareDialog.value.shareId = result.id
 
     showToast('Share link created successfully!', 'success')

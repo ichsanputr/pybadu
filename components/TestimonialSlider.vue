@@ -29,14 +29,14 @@
               :key="testimonial.name"
               class="absolute inset-0 flex flex-col justify-center"
             >
-              <p class="text-xl md:text-2xl font-medium text-gray-900 dark:text-white mb-6 leading-relaxed">
+              <p class="text-base md:text-xl lg:text-2xl font-medium text-gray-900 dark:text-white mb-6 leading-relaxed">
                 "{{ testimonial.quote }}"
               </p>
               <div>
-                <p class="font-bold text-lg text-gray-900 dark:text-white">
+                <p class="font-bold text-base md:text-lg text-gray-900 dark:text-white">
                   {{ testimonial.name }}
                 </p>
-                <p class="text-gray-600 dark:text-gray-400">
+                <p class="text-sm md:text-base text-gray-600 dark:text-gray-400">
                   {{ testimonial.role }}
                 </p>
               </div>

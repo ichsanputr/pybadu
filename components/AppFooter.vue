@@ -80,7 +80,7 @@
 
       <!-- Bottom -->
       <div class="border-t border-gray-800 mt-8 py-6 flex flex-col sm:flex-row justify-center items-center">
-        <p class="text-gray-400 text-sm">
+        <p class="text-gray-400 text-xs sm:text-sm">
           © {{ new Date().getFullYear() }} Pybadu. Part of BudiBadu ecosystem.
         </p>
       </div>

@@ -25,29 +25,64 @@
     </div>
 
     <!-- Main Content -->
-    <div v-else class="flex flex-col h-screen">
+    <div v-else class="flex flex-col min-h-screen">
       <!-- Header -->
-      <header class="flex items-center justify-between px-4 py-3 bg-gray-800 border-b border-gray-700">
-        <div class="flex items-center space-x-3">
-          <NuxtLink to="/" class="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-            <img src="/logo-light.png" alt="Budibadu Logo" class="w-7 h-7 rounded-lg" />
-            <span class="font-semibold">Budibadu</span>
-          </NuxtLink>
-          <div class="h-5 w-px bg-gray-600"></div>
-          <div class="flex items-center space-x-2">
-            <Icon icon="ph:share-network" class="w-5 h-5 text-python-blue-500" />
-            <span class="text-sm text-gray-400">Shared {{ compilerType }} Code</span>
+      <header class="px-4 py-3 bg-gray-800 border-b border-gray-700">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <!-- Left Section: Logo and Info -->
+          <div class="flex items-center space-x-3 flex-wrap">
+            <NuxtLink to="/" class="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+              <img src="/logo-light.png" alt="Budibadu Logo" class="w-7 h-7 rounded-lg" />
+              <span class="font-semibold text-sm sm:text-base">Budibadu</span>
+            </NuxtLink>
+            <div class="h-5 w-px bg-gray-600 hidden sm:block"></div>
+            <div class="flex items-center space-x-2">
+              <Icon icon="ph:share-network" class="w-4 h-4 sm:w-5 sm:h-5 text-python-blue-500" />
+              <span class="text-xs sm:text-sm text-gray-300 font-medium">
+                Shared <span class="text-python-blue-400">{{ compilerType }}</span> Code
+              </span>
+            </div>
+            <!-- File Name (if single file or show current file) -->
+            <div v-if="currentFile" class="flex items-center space-x-1.5 text-xs sm:text-sm text-gray-400">
+              <span class="hidden sm:inline">·</span>
+              <Icon icon="ph:file-py" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-python-yellow-400" />
+              <span class="font-mono">{{ currentFile.name }}</span>
+            </div>
           </div>
-        </div>
-        <div class="flex items-center space-x-2">
-          <span class="text-xs text-gray-500">{{ shareData?.views || 0 }} views</span>
+
+          <!-- Right Section: Views and Run Button -->
+          <div class="flex items-center space-x-3">
+            <!-- Views Counter -->
+            <div class="flex items-center space-x-1.5 px-3 py-1.5 bg-gray-700/50 rounded-lg">
+              <Icon icon="ph:eye" class="w-4 h-4 text-gray-400" />
+              <span class="text-xs sm:text-sm text-gray-300 font-medium">{{ shareData?.views || 0 }}</span>
+            </div>
+
+            <!-- Run Button -->
+            <button
+              @click="runCode"
+              :disabled="!pyodideReady || isLoading"
+              :class="[
+                'px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all inline-flex items-center space-x-1.5 sm:space-x-2',
+                !pyodideReady || isLoading
+                  ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                  : 'bg-python-blue-600 hover:bg-python-blue-700 text-white shadow-lg hover:shadow-xl'
+              ]"
+            >
+              <Icon 
+                :icon="!pyodideReady || isLoading ? 'ph:spinner' : 'ph:play'" 
+                :class="['w-4 h-4', !pyodideReady || isLoading ? 'animate-spin' : '']" 
+              />
+              <span class="hidden sm:inline">{{ !pyodideReady ? 'Loading...' : isLoading ? 'Running...' : 'Run Code' }}</span>
+            </button>
+          </div>
         </div>
       </header>
 
       <!-- Editor and Output -->
       <div class="flex-1 flex flex-col lg:flex-row overflow-hidden">
         <!-- Code Editor -->
-        <div class="flex-1 flex flex-col border-r border-gray-700">
+        <div class="flex-1 flex flex-col lg:border-r border-gray-700 h-[50vh] lg:h-auto">
           <!-- File Tabs (if multiple files) -->
           <div v-if="files.length > 1" class="flex items-center space-x-1 px-4 py-2 bg-gray-800 border-b border-gray-700 overflow-x-auto">
             <button
@@ -55,13 +90,13 @@
               :key="file.id"
               @click="activeFileId = file.id"
               :class="[
-                'flex items-center space-x-2 px-3 py-1.5 rounded-md text-sm font-medium whitespace-nowrap transition-colors',
+                'flex items-center space-x-2 px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium whitespace-nowrap transition-colors',
                 activeFileId === file.id
                   ? 'bg-gray-700 text-python-yellow-400'
                   : 'text-gray-400 hover:text-gray-200 hover:bg-gray-700'
               ]"
             >
-              <Icon icon="ph:file-py" class="w-4 h-4" />
+              <Icon icon="ph:file-py" class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               <span>{{ file.name }}</span>
             </button>
           </div>
@@ -77,44 +112,25 @@
               :fontSize="14"
             />
           </div>
-
-          <!-- Run Button -->
-          <div class="px-4 py-3 bg-gray-800 border-t border-gray-700">
-            <button
-              @click="runCode"
-              :disabled="!pyodideReady || isLoading"
-              :class="[
-                'w-full sm:w-auto px-6 py-2.5 rounded-lg text-sm font-medium transition-all inline-flex items-center justify-center space-x-2',
-                !pyodideReady || isLoading
-                  ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                  : 'bg-python-blue-600 hover:bg-python-blue-700 text-white shadow-lg hover:shadow-xl'
-              ]"
-            >
-              <Icon 
-                :icon="!pyodideReady || isLoading ? 'ph:spinner' : 'ph:play'" 
-                :class="['w-5 h-5', !pyodideReady || isLoading ? 'animate-spin' : '']" 
-              />
-              <span>{{ !pyodideReady ? 'Loading...' : isLoading ? 'Running...' : 'Run Code' }}</span>
-            </button>
-          </div>
         </div>
 
         <!-- Output Panel -->
-        <div class="flex-1 flex flex-col bg-gray-900">
+        <div class="flex-1 flex flex-col bg-gray-900 border-t lg:border-t-0 lg:border-l border-gray-700 h-[50vh] lg:h-auto">
           <div class="px-4 py-3 bg-gray-800 border-b border-gray-700">
             <div class="flex items-center justify-between">
-              <h3 class="text-sm font-semibold text-gray-300">Output</h3>
+              <h3 class="text-xs sm:text-sm font-semibold text-gray-300">Output</h3>
               <button
                 v-if="output.length > 0"
                 @click="output = []"
-                class="text-xs text-gray-500 hover:text-gray-300 transition-colors"
+                class="text-xs text-gray-500 hover:text-gray-300 transition-colors flex items-center space-x-1"
               >
-                Clear
+                <Icon icon="ph:trash" class="w-3.5 h-3.5" />
+                <span>Clear</span>
               </button>
             </div>
           </div>
           <div class="flex-1 overflow-y-auto p-4">
-            <div v-if="output.length === 0" class="text-gray-500 text-sm">
+            <div v-if="output.length === 0" class="text-gray-500 text-xs sm:text-sm">
               Run your code to see the output here
             </div>
             <div v-else class="space-y-2">
@@ -122,7 +138,7 @@
                 v-for="(item, index) in output"
                 :key="index"
                 :class="[
-                  'p-3 rounded-lg text-sm font-mono whitespace-pre-wrap break-all',
+                  'p-2 sm:p-3 rounded-lg text-xs sm:text-sm font-mono whitespace-pre-wrap break-all',
                   item.type === 'error'
                     ? 'bg-red-900/20 text-red-400 border border-red-800'
                     : item.type === 'image'

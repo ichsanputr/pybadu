@@ -97,17 +97,17 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Online NumPy Compiler - Scientific Computing | Pybadu',
+  title: 'Online NumPy Compiler',
   meta: [
     { name: 'description', content: 'Run NumPy code online in your browser. Scientific computing with arrays, matrices, and numerical operations powered by Pyodide WebAssembly. No installation required.' },
     { name: 'keywords', content: 'numpy, scientific computing, python arrays, numerical python, online compiler, pyodide, numpy online, data science' },
     { name: 'author', content: 'Pybadu' },
-    { property: 'og:title', content: 'Online NumPy Compiler - Scientific Computing' },
+    { property: 'og:title', content: 'Online NumPy Compiler' },
     { property: 'og:description', content: 'Run NumPy code online in your browser. Scientific computing with arrays and matrices.' },
     { property: 'og:type', content: 'website' },
     { property: 'og:image', content: '/pybadu.png' },
     { name: 'twitter:card', content: 'summary_large_image' },
-    { name: 'twitter:title', content: 'Online NumPy Compiler - Scientific Computing' },
+    { name: 'twitter:title', content: 'Online NumPy Compiler' },
     { name: 'twitter:description', content: 'Run NumPy code online with arrays and matrices' },
     { name: 'twitter:image', content: '/pybadu.png' }
   ]

@@ -99,17 +99,17 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Online Scikit-learn Compiler - Machine Learning | Pybadu',
+  title: 'Online Scikit-learn Compiler',
   meta: [
     { name: 'description', content: 'Build machine learning models with Scikit-learn in your browser. Classification, regression, clustering powered by Pyodide WebAssembly. No installation required.' },
     { name: 'keywords', content: 'scikit-learn, machine learning, sklearn, python ml, online compiler, pyodide, ml online, data science' },
     { name: 'author', content: 'Pybadu' },
-    { property: 'og:title', content: 'Online Scikit-learn Compiler - Machine Learning' },
+    { property: 'og:title', content: 'Online Scikit-learn Compiler' },
     { property: 'og:description', content: 'Build ML models with Scikit-learn in your browser' },
     { property: 'og:type', content: 'website' },
     { property: 'og:image', content: '/pybadu.png' },
     { name: 'twitter:card', content: 'summary_large_image' },
-    { name: 'twitter:title', content: 'Online Scikit-learn Compiler - Machine Learning' },
+    { name: 'twitter:title', content: 'Online Scikit-learn Compiler' },
     { name: 'twitter:description', content: 'Build machine learning models with Scikit-learn online' },
     { name: 'twitter:image', content: '/pybadu.png' }
   ]

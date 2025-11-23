@@ -57,7 +57,10 @@ export function useLibraryPlayground(config = {}) {
     }
   ])
 
-  const activeFileId = ref(storedData?.activeFileId || 1)
+  // Ensure activeFileId points to a valid file, default to first file if not found
+  const initialActiveFileId = storedData?.activeFileId || files.value[0]?.id || 1
+  const fileExists = files.value.some(f => f.id === initialActiveFileId)
+  const activeFileId = ref(fileExists ? initialActiveFileId : files.value[0]?.id || 1)
   // Output is never saved or loaded - always starts empty
   const output = ref([])
   const isLoading = ref(false)

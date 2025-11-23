@@ -99,17 +99,17 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Online Pandas Compiler - Data Analysis | Pybadu',
+  title: 'Online Pandas Compiler',
   meta: [
     { name: 'description', content: 'Analyze data with Pandas in your browser. Create DataFrames, manipulate data, and perform statistical analysis powered by Pyodide WebAssembly. No installation required.' },
     { name: 'keywords', content: 'pandas, data analysis, dataframe, python data, online compiler, pyodide, pandas online, data manipulation' },
     { name: 'author', content: 'Pybadu' },
-    { property: 'og:title', content: 'Online Pandas Compiler - Data Analysis' },
+    { property: 'og:title', content: 'Online Pandas Compiler' },
     { property: 'og:description', content: 'Analyze data with Pandas DataFrames in your browser' },
     { property: 'og:type', content: 'website' },
     { property: 'og:image', content: '/pybadu.png' },
     { name: 'twitter:card', content: 'summary_large_image' },
-    { name: 'twitter:title', content: 'Online Pandas Compiler - Data Analysis' },
+    { name: 'twitter:title', content: 'Online Pandas Compiler' },
     { name: 'twitter:description', content: 'Analyze data with Pandas in your browser' },
     { name: 'twitter:image', content: '/pybadu.png' }
   ]

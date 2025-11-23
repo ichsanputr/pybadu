@@ -98,17 +98,17 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Online Matplotlib Compiler - Python Visualization | Pybadu',
+  title: 'Online Matplotlib Compiler',
   meta: [
     { name: 'description', content: 'Create stunning Python data visualizations with our online Matplotlib compiler. Run Matplotlib code in your browser with Pyodide WebAssembly. No installation required.' },
     { name: 'keywords', content: 'matplotlib, python visualization, data plotting, online python compiler, pyodide, matplotlib online, python charts, data science' },
     { name: 'author', content: 'Pybadu' },
-    { property: 'og:title', content: 'Online Matplotlib Compiler - Python Visualization' },
+    { property: 'og:title', content: 'Online Matplotlib Compiler' },
     { property: 'og:description', content: 'Create stunning Python data visualizations with our online Matplotlib compiler. Run Matplotlib code in your browser.' },
     { property: 'og:type', content: 'website' },
     { property: 'og:image', content: '/pybadu.png' },
     { name: 'twitter:card', content: 'summary_large_image' },
-    { name: 'twitter:title', content: 'Online Matplotlib Compiler - Python Visualization' },
+    { name: 'twitter:title', content: 'Online Matplotlib Compiler' },
     { name: 'twitter:description', content: 'Create stunning Python data visualizations with Matplotlib in your browser' },
     { name: 'twitter:image', content: '/pybadu.png' }
   ]

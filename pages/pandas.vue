@@ -30,9 +30,9 @@
     <!-- Information Section -->
     <LibraryInfoSection>
       <div class="text-center mb-12">
-        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-          Pandas Online Compiler
-        </h2>
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+          Online Pandas Compiler
+        </h1>
         
         <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
           <p class="text-base md:text-lg leading-relaxed">
@@ -64,7 +64,7 @@
           </p>
 
           <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Who Should Use This</h3>
-          <ul class="list-disc list-inside space-y-2 text-lg ml-4">
+          <ul class="list-disc list-inside space-y-2 text-sm md:text-base ml-4">
             <li>Data analysts working with structured datasets and creating insights</li>
             <li>Data scientists preprocessing data for machine learning models</li>
             <li>Business intelligence professionals building reports and dashboards</li>
@@ -99,9 +99,19 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Online Pandas Compiler',
+  title: 'Online Pandas Compiler - Data Analysis | Pybadu',
   meta: [
-    { name: 'description', content: 'Interactive Pandas data analysis playground powered by Pyodide WebAssembly' }
+    { name: 'description', content: 'Analyze data with Pandas in your browser. Create DataFrames, manipulate data, and perform statistical analysis powered by Pyodide WebAssembly. No installation required.' },
+    { name: 'keywords', content: 'pandas, data analysis, dataframe, python data, online compiler, pyodide, pandas online, data manipulation' },
+    { name: 'author', content: 'Pybadu' },
+    { property: 'og:title', content: 'Online Pandas Compiler - Data Analysis' },
+    { property: 'og:description', content: 'Analyze data with Pandas DataFrames in your browser' },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:image', content: '/pybadu.png' },
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: 'Online Pandas Compiler - Data Analysis' },
+    { name: 'twitter:description', content: 'Analyze data with Pandas in your browser' },
+    { name: 'twitter:image', content: '/pybadu.png' }
   ]
 })
 

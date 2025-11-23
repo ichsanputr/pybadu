@@ -30,9 +30,9 @@
     <!-- Information Section -->
     <LibraryInfoSection>
       <div class="text-center mb-12">
-        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-          Scikit-learn Online Compiler
-        </h2>
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+          Online Scikit-learn Compiler
+        </h1>
         
         <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
           <p class="text-base md:text-lg leading-relaxed">
@@ -64,7 +64,7 @@
           </p>
 
           <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Target Audience</h3>
-          <ul class="list-disc list-inside space-y-2 text-lg ml-4">
+          <ul class="list-disc list-inside space-y-2 text-sm md:text-base ml-4">
             <li>Machine learning beginners and students learning fundamentals</li>
             <li>Data scientists prototyping models before production deployment</li>
             <li>Researchers experimenting with different algorithms and techniques</li>
@@ -99,9 +99,19 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Online Scikit-learn Compiler',
+  title: 'Online Scikit-learn Compiler - Machine Learning | Pybadu',
   meta: [
-    { name: 'description', content: 'Interactive Scikit-learn machine learning playground powered by Pyodide WebAssembly' }
+    { name: 'description', content: 'Build machine learning models with Scikit-learn in your browser. Classification, regression, clustering powered by Pyodide WebAssembly. No installation required.' },
+    { name: 'keywords', content: 'scikit-learn, machine learning, sklearn, python ml, online compiler, pyodide, ml online, data science' },
+    { name: 'author', content: 'Pybadu' },
+    { property: 'og:title', content: 'Online Scikit-learn Compiler - Machine Learning' },
+    { property: 'og:description', content: 'Build ML models with Scikit-learn in your browser' },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:image', content: '/pybadu.png' },
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: 'Online Scikit-learn Compiler - Machine Learning' },
+    { name: 'twitter:description', content: 'Build machine learning models with Scikit-learn online' },
+    { name: 'twitter:image', content: '/pybadu.png' }
   ]
 })
 

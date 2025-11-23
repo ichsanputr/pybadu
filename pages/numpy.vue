@@ -30,9 +30,9 @@
     <!-- Information Section -->
     <LibraryInfoSection>
       <div class="text-center mb-12">
-        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-          NumPy Online Compiler
-        </h2>
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+          Online NumPy Compiler
+        </h1>
         
         <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
           <p class="text-base md:text-lg leading-relaxed">
@@ -62,7 +62,7 @@
           </p>
 
           <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Ideal Use Cases</h3>
-          <ul class="list-disc list-inside space-y-2 text-lg ml-4">
+          <ul class="list-disc list-inside space-y-2 text-sm md:text-base ml-4">
             <li>Scientific computing and numerical analysis for research and education</li>
             <li>Data preprocessing for machine learning pipelines and model training</li>
             <li>Statistical analysis and modeling with advanced mathematical operations</li>
@@ -97,9 +97,19 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Online NumPy Compiler',
+  title: 'Online NumPy Compiler - Scientific Computing | Pybadu',
   meta: [
-    { name: 'description', content: 'Interactive NumPy computing playground powered by Pyodide WebAssembly' }
+    { name: 'description', content: 'Run NumPy code online in your browser. Scientific computing with arrays, matrices, and numerical operations powered by Pyodide WebAssembly. No installation required.' },
+    { name: 'keywords', content: 'numpy, scientific computing, python arrays, numerical python, online compiler, pyodide, numpy online, data science' },
+    { name: 'author', content: 'Pybadu' },
+    { property: 'og:title', content: 'Online NumPy Compiler - Scientific Computing' },
+    { property: 'og:description', content: 'Run NumPy code online in your browser. Scientific computing with arrays and matrices.' },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:image', content: '/pybadu.png' },
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: 'Online NumPy Compiler - Scientific Computing' },
+    { name: 'twitter:description', content: 'Run NumPy code online with arrays and matrices' },
+    { name: 'twitter:image', content: '/pybadu.png' }
   ]
 })
 

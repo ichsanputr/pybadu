@@ -30,7 +30,7 @@
           :initial="{ opacity: 0, y: 20 }"
           :while-in-view="{ opacity: 1, y: 0 }"
           :transition="{ delay: 0.4, duration: 0.6 }"
-          class="text-2xl md:text-3xl lg:text-4xl font-bold text-center text-gray-800 dark:text-gray-200"
+          class="text-xl md:text-2xl lg:text-3xl font-bold text-center text-gray-800 dark:text-gray-200"
         >
           Dedicated Python Library Playground
         </Motion>
@@ -55,10 +55,10 @@
         >
           <NuxtLink
             to="/matplotlib"
-            class="group relative px-8 py-4 bg-python-blue-600 hover:bg-python-blue-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 overflow-hidden"
+            class="group relative px-4 py-2.5 sm:px-8 sm:py-4 bg-python-blue-600 hover:bg-python-blue-700 text-white text-sm sm:text-base font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 overflow-hidden"
           >
             <span class="relative z-10 flex items-center gap-2">
-              <Icon icon="ph:play-circle" class="w-5 h-5" />
+              <Icon icon="ph:play-circle" class="w-4 h-4 sm:w-5 sm:h-5" />
               Start Coding Now
             </span>
             <div class="absolute inset-0 bg-gradient-to-r from-python-blue-500 to-python-yellow-500 opacity-0 group-hover:opacity-20 transition-opacity" />
@@ -67,10 +67,10 @@
           <a
             href="https://budibadu.com"
             target="_blank"
-            class="px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 border border-gray-200 dark:border-gray-700 flex items-center gap-2"
+            class="px-4 py-2.5 sm:px-8 sm:py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm sm:text-base font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 border border-gray-200 dark:border-gray-700 flex items-center gap-2"
           >
             Explore BudiBadu
-            <Icon icon="ph:arrow-square-out" class="w-5 h-5" />
+            <Icon icon="ph:arrow-square-out" class="w-4 h-4 sm:w-5 sm:h-5" />
           </a>
         </Motion>
 

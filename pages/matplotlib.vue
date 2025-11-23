@@ -31,9 +31,9 @@
     <LibraryInfoSection>
       <!-- Header -->
       <div class="text-center mb-12">
-        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-          Matplotlib Online Compiler
-        </h2>
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+          Online Matplotlib Compiler
+        </h1>
         
         <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
           <p class="text-base md:text-lg leading-relaxed">
@@ -62,7 +62,7 @@
           </p>
 
           <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Perfect For</h3>
-          <ul class="list-disc list-inside space-y-2 text-lg ml-4">
+          <ul class="list-disc list-inside space-y-2 text-sm md:text-base ml-4">
             <li>Data scientists prototyping visualizations and creating publication-ready figures</li>
             <li>Students learning Python data visualization and exploring different plot types</li>
             <li>Educators teaching data science courses with interactive examples</li>
@@ -98,9 +98,19 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Online Matplotlib Compiler',
+  title: 'Online Matplotlib Compiler - Python Visualization | Pybadu',
   meta: [
-    { name: 'description', content: 'Interactive matplotlib plotting playground powered by Pyodide WebAssembly' }
+    { name: 'description', content: 'Create stunning Python data visualizations with our online Matplotlib compiler. Run Matplotlib code in your browser with Pyodide WebAssembly. No installation required.' },
+    { name: 'keywords', content: 'matplotlib, python visualization, data plotting, online python compiler, pyodide, matplotlib online, python charts, data science' },
+    { name: 'author', content: 'Pybadu' },
+    { property: 'og:title', content: 'Online Matplotlib Compiler - Python Visualization' },
+    { property: 'og:description', content: 'Create stunning Python data visualizations with our online Matplotlib compiler. Run Matplotlib code in your browser.' },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:image', content: '/pybadu.png' },
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: 'Online Matplotlib Compiler - Python Visualization' },
+    { name: 'twitter:description', content: 'Create stunning Python data visualizations with Matplotlib in your browser' },
+    { name: 'twitter:image', content: '/pybadu.png' }
   ]
 })
 

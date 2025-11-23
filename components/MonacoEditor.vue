@@ -12,8 +12,12 @@
       />
     </div>
     <template #fallback>
-      <div class="w-full flex items-center justify-center bg-gray-100" :style="{ height: height }">
-        <div class="text-gray-500">Loading editor...</div>
+      <div 
+        class="w-full flex items-center justify-center" 
+        :class="theme === 'vs-dark' ? 'bg-gray-900' : 'bg-gray-100'"
+        :style="{ height: height }"
+      >
+        <div :class="theme === 'vs-dark' ? 'text-gray-400' : 'text-gray-500'">Loading editor...</div>
       </div>
     </template>
   </ClientOnly>

@@ -30,16 +30,17 @@ export function useLibraryPlayground(config = {}) {
     return null
   }
 
-  // Save files to localStorage (excluding output)
+  // Save files to localStorage (excluding output and activeFileId)
   function saveFilesToStorage() {
     if (typeof window === 'undefined') return
     
     try {
       const data = {
         files: files.value,
-        activeFileId: activeFileId.value,
         timestamp: Date.now()
-        // Note: output is intentionally excluded to prevent storing heavy image data
+        // Note: output and activeFileId are intentionally excluded
+        // - output: prevents storing heavy image data
+        // - activeFileId: always defaults to first file on page reload
       }
       localStorage.setItem(storageKey, JSON.stringify(data))
     } catch (error) {
@@ -57,10 +58,8 @@ export function useLibraryPlayground(config = {}) {
     }
   ])
 
-  // Ensure activeFileId points to a valid file, default to first file if not found
-  const initialActiveFileId = storedData?.activeFileId || files.value[0]?.id || 1
-  const fileExists = files.value.some(f => f.id === initialActiveFileId)
-  const activeFileId = ref(fileExists ? initialActiveFileId : files.value[0]?.id || 1)
+  // activeFileId always defaults to first file on page reload (not saved to localStorage)
+  const activeFileId = ref(Number(files.value[0]?.id) || 1)
   // Output is never saved or loaded - always starts empty
   const output = ref([])
   const isLoading = ref(false)
@@ -76,9 +75,7 @@ export function useLibraryPlayground(config = {}) {
     saveFilesToStorage()
   }, { deep: true })
 
-  watch(activeFileId, () => {
-    saveFilesToStorage()
-  })
+  // Note: activeFileId is not watched - it always defaults to first file on reload
   
   // Note: output is intentionally not watched or saved to avoid localStorage bloat
 

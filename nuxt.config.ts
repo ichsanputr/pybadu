@@ -24,6 +24,7 @@ export default defineNuxtConfig({
     }
   },
   app: {
+    baseURL: '/pybadu/',
     head: {
       htmlAttrs: {
         lang: 'en'

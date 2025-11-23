@@ -64,7 +64,7 @@
           </p>
 
           <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Target Audience</h3>
-          <ul class="list-disc list-inside space-y-2 text-sm md:text-base ml-4">
+          <ul class="list-disc list-inside space-y-2 text-base md:text-lg ml-4">
             <li>Machine learning beginners and students learning fundamentals</li>
             <li>Data scientists prototyping models before production deployment</li>
             <li>Researchers experimenting with different algorithms and techniques</li>

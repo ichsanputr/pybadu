@@ -20,8 +20,8 @@
       </div>
 
       <!-- Content Section -->
-      <div class="flex-1 text-center md:text-left">
-        <div class="relative min-h-[200px] flex flex-col justify-center">
+      <div class="flex-1 text-center md:text-left w-full">
+        <div class="relative min-h-[200px] flex flex-col justify-center w-full">
           <TransitionGroup name="slide-fade">
             <div
               v-for="(testimonial, index) in testimonials"

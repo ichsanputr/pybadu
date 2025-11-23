@@ -62,7 +62,7 @@
           </p>
 
           <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Perfect For</h3>
-          <ul class="list-disc list-inside space-y-2 text-sm md:text-base ml-4">
+          <ul class="list-disc list-inside space-y-2 text-base md:text-lg ml-4">
             <li>Data scientists prototyping visualizations and creating publication-ready figures</li>
             <li>Students learning Python data visualization and exploring different plot types</li>
             <li>Educators teaching data science courses with interactive examples</li>

@@ -26,7 +26,7 @@
                   Part of the BudiBadu Ecosystem
                 </h3>
                 
-                <p class="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
+                <p class="text-base md:text-lg text-white/90 mb-8 max-w-2xl mx-auto">
                   Specialized Python library playground powered by Pyodide WebAssembly.
                   Run Python directly in your browser with zero setup.
                 </p>
@@ -35,7 +35,7 @@
                   <a 
                     href="https://budibadu.com" 
                     target="_blank" 
-                    class="group inline-flex items-center gap-2 px-6 py-3 bg-white text-python-blue-600 font-semibold rounded-xl hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
+                    class="text-sm md:text-base group inline-flex items-center gap-2 px-6 py-3 bg-white text-python-blue-600 font-semibold rounded-xl hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
                   >
                     <Icon icon="ph:rocket-launch" class="w-5 h-5" />
                     <span>Explore BudiBadu</span>
@@ -45,7 +45,7 @@
                   <a 
                     href="https://pyodide.org" 
                     target="_blank" 
-                    class="group inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-white/20 transition-all duration-200 border-2 border-white/50"
+                    class="text-sm md:text-base group inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-white/20 transition-all duration-200 border-2 border-white/50"
                   >
                     <Icon icon="simple-icons:python" class="w-5 h-5" />
                     <span>Learn about Pyodide</span>

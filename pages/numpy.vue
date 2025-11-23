@@ -62,7 +62,7 @@
           </p>
 
           <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Ideal Use Cases</h3>
-          <ul class="list-disc list-inside space-y-2 text-sm md:text-base ml-4">
+          <ul class="list-disc list-inside space-y-2 text-base md:text-lg ml-4">
             <li>Scientific computing and numerical analysis for research and education</li>
             <li>Data preprocessing for machine learning pipelines and model training</li>
             <li>Statistical analysis and modeling with advanced mathematical operations</li>

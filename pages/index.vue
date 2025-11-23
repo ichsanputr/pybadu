@@ -299,14 +299,14 @@
           <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">
             Ready to Start Coding?
           </h2>
-          <p class="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+          <p class="text-base md:text-lg text-white/90 mb-8 max-w-2xl mx-auto">
             Join thousands of programmers using Pybadu for Python library development.
             No setup required, start coding in seconds.
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <NuxtLink
               to="/matplotlib"
-              class="px-8 py-4 bg-white text-python-blue-600 font-semibold rounded-xl hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 inline-flex items-center gap-2 justify-center"
+              class="px-4 py-2.5 sm:px-8 sm:py-4 bg-white text-python-blue-600 text-sm sm:text-base font-semibold rounded-xl hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 inline-flex items-center gap-2 justify-center"
             >
               <Icon icon="ph:play-circle-fill" class="w-6 h-6" />
               Start Playground
@@ -314,7 +314,7 @@
             <a
               href="https://github.com/ichsanputr/pybadu"
               target="_blank"
-              class="px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-white/20 transition-all duration-200 border-2 border-white/50 inline-flex items-center gap-2 justify-center"
+              class="px-4 py-2.5 sm:px-8 sm:py-4 bg-white/10 backdrop-blur-sm text-white text-sm sm:text-base font-semibold rounded-xl hover:bg-white/20 transition-all duration-200 border-2 border-white/50 inline-flex items-center gap-2 justify-center"
             >
               <Icon icon="ph:github-logo" class="w-6 h-6" />
               View on GitHub

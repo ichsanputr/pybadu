@@ -64,7 +64,7 @@
           </p>
 
           <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Who Should Use This</h3>
-          <ul class="list-disc list-inside space-y-2 text-sm md:text-base ml-4">
+          <ul class="list-disc list-inside space-y-2 text-base md:text-lg ml-4">
             <li>Data analysts working with structured datasets and creating insights</li>
             <li>Data scientists preprocessing data for machine learning models</li>
             <li>Business intelligence professionals building reports and dashboards</li>

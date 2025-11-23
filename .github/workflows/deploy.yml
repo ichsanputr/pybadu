@@ -1,0 +1,51 @@
+name: Deploy Nuxt 3 SSR
+
+on:
+  push:
+    branches: ["**"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Use production env
+        run: |
+          if [ -f .env.production ]; then cp .env.production .env; fi
+
+      - name: Build
+        run: pnpm build
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Sync dist to VPS
+        run: |
+          rsync -avz --delete -e "ssh -p 30221 -o StrictHostKeyChecking=no" \
+          ./.output/ root@151.243.222.93:/root/pybadu/.output/
+
+      - name: Reload PM2 on VPS
+        run: |
+          ssh -p 30221 -o StrictHostKeyChecking=no root@151.243.222.93 << 'EOF'
+            cd /root/pybadu
+            pm2 start ecosystem.config.js
+          EOF

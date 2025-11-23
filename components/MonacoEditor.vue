@@ -42,22 +42,34 @@ const props = defineProps({
   fontSize: {
     type: [Number, String],
     default: 16
+  },
+  options: {
+    type: Object,
+    default: () => ({})
   }
 })
 
 const emit = defineEmits(['update:modelValue', 'change'])
 
-const editorOptions = computed(() => ({
-  automaticLayout: true,
-  minimap: { enabled: false },
-  fontSize: Number(props.fontSize) || 16,
-  lineNumbers: 'on',
-  scrollBeyondLastLine: false,
-  readOnly: false,
-  wordWrap: 'on',
-  tabSize: 4,
-  insertSpaces: true
-}))
+// Use options prop if provided, otherwise use defaults
+const editorOptions = computed(() => {
+  if (props.options && Object.keys(props.options).length > 0) {
+    return props.options
+  }
+  
+  // Fallback to default options
+  return {
+    automaticLayout: true,
+    minimap: { enabled: false },
+    fontSize: Number(props.fontSize) || 16,
+    lineNumbers: 'on',
+    scrollBeyondLastLine: false,
+    readOnly: false,
+    wordWrap: 'on',
+    tabSize: 4,
+    insertSpaces: true
+  }
+})
 
 const handleChange = (value) => {
   emit('update:modelValue', value)

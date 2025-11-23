@@ -36,53 +36,39 @@
         
         <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
           <p class="text-lg leading-relaxed">
-            NumPy (Numerical Python) is the fundamental package for scientific computing in Python. Our dedicated NumPy 
-            playground provides a complete browser environment for working with large, multi-dimensional arrays and matrices, 
-            along with a comprehensive collection of mathematical functions to operate on these arrays.
+            NumPy (Numerical Python) is the fundamental package for scientific computing in Python and serves as the 
+            foundation for the entire Python data science ecosystem. Our dedicated online NumPy compiler provides a 
+            complete browser environment for working with large, multi-dimensional arrays and matrices, along with a 
+            comprehensive collection of mathematical functions to operate on these arrays. NumPy's powerful ndarray 
+            object is the cornerstone of modern data analysis, machine learning, and scientific computing in Python.
           </p>
           
           <p class="text-lg leading-relaxed">
             This compiler includes <strong>NumPy 1.14+</strong> with full support for ndarray operations, linear algebra, 
-            Fourier transforms, and random number generation. Whether you're performing matrix operations, statistical 
-            analysis, or scientific computations, our NumPy playground offers instant execution without any setup.
+            Fourier transforms, and random number generation, all powered by Pyodide WebAssembly technology. The compiler 
+            supports all core NumPy features including array creation, manipulation with powerful indexing and slicing, 
+            broadcasting for efficient element-wise operations, and a comprehensive library of mathematical functions 
+            covering trigonometric, exponential, and logarithmic operations. Whether you're performing matrix operations, 
+            statistical analysis, or scientific computations, our NumPy playground offers instant execution without any setup.
           </p>
-
-          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Core Capabilities</h3>
-          
-          <ul class="list-disc list-inside space-y-2 text-lg ml-4">
-            <li><strong>Array Operations:</strong> Create and manipulate N-dimensional arrays with powerful indexing and slicing</li>
-            <li><strong>Mathematical Functions:</strong> Comprehensive library of mathematical functions (trigonometric, exponential, logarithmic)</li>
-            <li><strong>Linear Algebra:</strong> Matrix operations, eigenvalues, singular value decomposition, and matrix decompositions</li>
-            <li><strong>Statistical Functions:</strong> Mean, median, standard deviation, percentiles, and correlation coefficients</li>
-            <li><strong>Random Number Generation:</strong> Various probability distributions for simulation and modeling</li>
-            <li><strong>Broadcasting:</strong> Efficient element-wise operations on arrays of different shapes</li>
-            <li><strong>Fourier Transforms:</strong> Fast Fourier Transform (FFT) operations for signal processing</li>
-          </ul>
-
-          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Topics Covered</h3>
 
           <p class="text-lg leading-relaxed">
-            Our NumPy compiler comes with examples covering essential topics:
+            Our platform comes with carefully crafted examples covering essential NumPy topics such as array basics, 
+            array creation using zeros, ones, identity matrices, random arrays, arange, and linspace functions. You'll 
+            learn matrix operations including multiplication, transpose, determinant, and inverse operations, as well as 
+            statistical analysis techniques for computing mean, median, standard deviation, percentiles, and correlation 
+            coefficients. The examples also demonstrate NumPy's broadcasting rules for efficient computations and linear 
+            algebra operations like solving linear equations, eigenvalue problems, and SVD decomposition.
           </p>
 
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Ideal Use Cases</h3>
           <ul class="list-disc list-inside space-y-2 text-lg ml-4">
-            <li><strong>Array Basics:</strong> Creating arrays, understanding array shapes, and basic operations</li>
-            <li><strong>Array Creation:</strong> zeros, ones, identity matrices, random arrays, arange, and linspace</li>
-            <li><strong>Matrix Operations:</strong> Matrix multiplication, transpose, determinant, and inverse operations</li>
-            <li><strong>Statistical Analysis:</strong> Computing statistics, percentiles, and correlation analysis</li>
-            <li><strong>Broadcasting Rules:</strong> Understanding and applying NumPy's broadcasting for efficient computations</li>
-            <li><strong>Linear Algebra:</strong> Solving linear equations, eigenvalue problems, and SVD decomposition</li>
-          </ul>
-
-          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Ideal For</h3>
-
-          <ul class="list-disc list-inside space-y-2 text-lg ml-4">
-            <li>Scientific computing and numerical analysis</li>
-            <li>Data preprocessing for machine learning</li>
-            <li>Statistical analysis and modeling</li>
-            <li>Signal and image processing</li>
-            <li>Physics and engineering simulations</li>
-            <li>Financial calculations and quantitative analysis</li>
+            <li>Scientific computing and numerical analysis for research and education</li>
+            <li>Data preprocessing for machine learning pipelines and model training</li>
+            <li>Statistical analysis and modeling with advanced mathematical operations</li>
+            <li>Signal and image processing applications in various domains</li>
+            <li>Physics and engineering simulations requiring efficient array computations</li>
+            <li>Financial calculations and quantitative analysis for trading algorithms</li>
           </ul>
         </div>
       </div>
@@ -111,7 +97,7 @@ definePageMeta({
 })
 
 useHead({
-  title: 'NumPy Online Compiler',
+  title: 'Online NumPy Compiler',
   meta: [
     { name: 'description', content: 'Interactive NumPy computing playground powered by Pyodide WebAssembly' }
   ]

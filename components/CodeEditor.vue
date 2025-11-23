@@ -195,7 +195,7 @@
 
         <!-- Share Button -->
         <button
-          @click="shareCode"
+          @click="openShareDialog"
           :class="[
             'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
             theme === 'dark'
@@ -374,6 +374,24 @@
                 </button>
               </div>
             </div>
+
+            <!-- Settings Section -->
+            <div class="mt-auto pt-4 border-t" :class="theme === 'dark' ? 'border-gray-700' : 'border-gray-200'">
+              <button
+                @click="showSettingsDialog = true"
+                :class="[
+                  'w-full text-left p-2 rounded-md text-sm transition-colors',
+                  theme === 'dark'
+                    ? 'text-gray-300 hover:bg-gray-700'
+                    : 'text-gray-700 hover:bg-gray-100'
+                ]"
+              >
+                <div class="flex items-center space-x-2">
+                  <Icon icon="ph:gear" class="w-4 h-4 flex-shrink-0" />
+                  <span>Settings</span>
+                </div>
+              </button>
+            </div>
           </div>
 
           <!-- Collapsed Sidebar Icons -->
@@ -441,17 +459,7 @@
               @update:model-value="$emit('update:code', $event)"
               :language="'python'"
               :theme="monacoTheme"
-              :options="{
-                fontSize: 14,
-                minimap: { enabled: false },
-                scrollBeyondLastLine: false,
-                wordWrap: 'on',
-                lineNumbers: 'on',
-                folding: true,
-                automaticLayout: true,
-                tabSize: 4,
-                insertSpaces: true
-              }"
+              :options="monacoOptions"
               height="100%"
               class="h-full w-full"
             />
@@ -625,90 +633,310 @@
       v-model="shareDialog.show"
       size="md"
       title="Share Your Code"
-      subtitle="Share your Python code with the community"
+      subtitle="Select a file to share and create a link"
       icon="ph:share-network"
       icon-variant="info"
       :theme="theme"
     >
       <div class="space-y-4">
-        <!-- Social Media Buttons -->
-        <div class="grid grid-cols-2 gap-3">
-          <button
-            @click="shareToTwitter"
-            class="flex items-center justify-center space-x-2 px-4 py-3 rounded-lg bg-[#1DA1F2] hover:bg-[#1a8cd8] text-white font-medium transition-colors"
-          >
-            <Icon icon="simple-icons:x" class="w-4 h-4" />
-            <span>Twitter</span>
-          </button>
-          
-          <button
-            @click="shareToFacebook"
-            class="flex items-center justify-center space-x-2 px-4 py-3 rounded-lg bg-[#1877F2] hover:bg-[#0c63d4] text-white font-medium transition-colors"
-          >
-            <Icon icon="simple-icons:facebook" class="w-4 h-4" />
-            <span>Facebook</span>
-          </button>
-          
-          <button
-            @click="shareToLinkedIn"
-            class="flex items-center justify-center space-x-2 px-4 py-3 rounded-lg bg-[#0A66C2] hover:bg-[#004182] text-white font-medium transition-colors"
-          >
-            <Icon icon="simple-icons:linkedin" class="w-4 h-4" />
-            <span>LinkedIn</span>
-          </button>
-          
-          <button
-            @click="shareToWhatsApp"
-            class="flex items-center justify-center space-x-2 px-4 py-3 rounded-lg bg-[#25D366] hover:bg-[#1faa52] text-white font-medium transition-colors"
-          >
-            <Icon icon="simple-icons:whatsapp" class="w-4 h-4" />
-            <span>WhatsApp</span>
-          </button>
+        <!-- Expiration Info -->
+        <div v-if="!shareDialog.shareUrl" :class="[
+          'p-3 rounded-lg text-sm flex items-start space-x-2',
+          theme === 'dark' ? 'bg-yellow-900/20 text-yellow-300' : 'bg-yellow-50 text-yellow-800'
+        ]">
+          <Icon icon="ph:clock" class="w-4 h-4 mt-0.5 flex-shrink-0" />
+          <span>Share links expire after 1 hour for security.</span>
         </div>
 
-        <!-- Divider -->
-        <div class="relative">
-          <div class="absolute inset-0 flex items-center">
-            <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
-          </div>
-          <div class="relative flex justify-center text-sm">
-            <span class="px-2 bg-white dark:bg-gray-800 text-gray-500">or copy link</span>
-          </div>
-        </div>
-
-        <!-- Copy Link -->
-        <div>
-          <label class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
-            Share URL
+        <!-- File Selection (Radio buttons for single selection) -->
+        <div v-if="!shareDialog.shareUrl">
+          <label :class="['block text-sm font-medium mb-3', theme === 'dark' ? 'text-gray-300' : 'text-gray-700']">
+            Select a File to Share
           </label>
-          <div class="flex space-x-2">
-            <input
-              ref="shareUrlInput"
-              v-model="shareDialog.url"
-              readonly
-              class="flex-1 px-3 py-2 rounded-lg text-sm border bg-gray-50 border-gray-300 text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 font-mono"
-            />
-            <button
-              @click="copyShareUrl"
+          <div class="space-y-2 max-h-60 overflow-y-auto">
+            <label
+              v-for="file in files"
+              :key="file.id"
               :class="[
-                'px-4 py-2 rounded-lg text-sm font-medium transition-all',
-                shareDialog.copied
-                  ? 'bg-green-600 hover:bg-green-700 text-white'
-                  : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+                'flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors',
+                shareDialog.selectedFile === file.id
+                  ? theme === 'dark'
+                    ? 'bg-python-blue-900/30 border-2 border-python-blue-600'
+                    : 'bg-python-blue-50 border-2 border-python-blue-500'
+                  : theme === 'dark'
+                    ? 'bg-gray-800 border-2 border-gray-700 hover:border-gray-600'
+                    : 'bg-gray-50 border-2 border-gray-200 hover:border-gray-300'
               ]"
             >
-              <Icon :icon="shareDialog.copied ? 'ph:check-circle' : 'ph:copy'" class="w-4 h-4" />
-            </button>
+              <input
+                type="radio"
+                :checked="shareDialog.selectedFile === file.id"
+                @change="shareDialog.selectedFile = file.id"
+                class="w-4 h-4 text-python-blue-600"
+                name="share-file"
+              />
+              <span :class="['flex-1 text-sm font-medium', theme === 'dark' ? 'text-gray-200' : 'text-gray-800']">
+                {{ file.name }}
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Share URL Display -->
+        <div v-if="shareDialog.shareUrl" class="space-y-3">
+          <div :class="[
+            'p-4 rounded-lg border',
+            theme === 'dark' ? 'bg-green-900/20 border-green-800' : 'bg-green-50 border-green-200'
+          ]">
+            <div class="flex items-center space-x-2 mb-2">
+              <Icon icon="ph:check-circle-fill" :class="[
+                'w-5 h-5',
+                theme === 'dark' ? 'text-green-400' : 'text-green-600'
+              ]" />
+              <span :class="[
+                'font-semibold',
+                theme === 'dark' ? 'text-green-300' : 'text-green-800'
+              ]">
+                Share link created!
+              </span>
+            </div>
+            <p :class="['text-sm', theme === 'dark' ? 'text-green-200' : 'text-green-700']">
+              Anyone with this link can view and run your code. Link expires in 1 hour.
+            </p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-2" :class="theme === 'dark' ? 'text-gray-300' : 'text-gray-700'">
+              Share URL
+            </label>
+            <div class="flex space-x-2">
+              <input
+                :value="shareDialog.shareUrl"
+                readonly
+                :class="[
+                  'flex-1 px-3 py-2 rounded-lg text-sm border font-mono',
+                  theme === 'dark'
+                    ? 'bg-gray-700 border-gray-600 text-gray-300'
+                    : 'bg-gray-50 border-gray-300 text-gray-700'
+                ]"
+              />
+              <button
+                @click="copyShareUrl"
+                class="px-4 py-2 rounded-lg text-sm font-medium transition-all bg-python-blue-600 hover:bg-python-blue-700 text-white"
+              >
+                <Icon icon="ph:copy" class="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
       
       <template #footer>
         <button
+          v-if="!shareDialog.shareUrl"
           @click="shareDialog.show = false"
           class="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors"
         >
-          Close
+          Cancel
+        </button>
+        <button
+          v-if="!shareDialog.shareUrl"
+          @click="createShareLink"
+          :disabled="!shareDialog.selectedFile || shareDialog.isCreating"
+          :class="[
+            'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+            !shareDialog.selectedFile || shareDialog.isCreating
+              ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+              : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+          ]"
+        >
+          <Icon v-if="shareDialog.isCreating" icon="ph:spinner" class="w-4 h-4 inline animate-spin mr-2" />
+          {{ shareDialog.isCreating ? 'Creating...' : 'Create Link' }}
+        </button>
+        <button
+          v-if="shareDialog.shareUrl"
+          @click="shareDialog.show = false"
+          class="px-4 py-2 bg-python-blue-600 hover:bg-python-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+        >
+          Done
+        </button>
+      </template>
+    </Dialog>
+
+    <!-- Settings Dialog -->
+    <Dialog 
+      v-model="showSettingsDialog"
+      size="lg"
+      title="Editor Settings"
+      subtitle="Configure Monaco editor options"
+      icon="ph:gear"
+      icon-variant="info"
+      :theme="theme"
+    >
+      <div class="space-y-4">
+        <!-- Font Size -->
+        <div>
+          <label :class="['block text-sm font-medium mb-2', theme === 'dark' ? 'text-gray-300' : 'text-gray-700']">
+            Font Size: {{ editorSettings.fontSize }}px
+          </label>
+          <input 
+            v-model.number="editorSettings.fontSize"
+            type="range" 
+            min="10" 
+            max="24" 
+            step="1"
+            class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer"
+          />
+        </div>
+
+        <!-- Line Numbers -->
+        <div>
+          <label :class="['block text-sm font-medium mb-2', theme === 'dark' ? 'text-gray-300' : 'text-gray-700']">
+            Line Numbers
+          </label>
+          <select 
+            v-model="editorSettings.lineNumbers"
+            :class="[
+              'w-full px-3 py-2 rounded-lg border',
+              theme === 'dark' 
+                ? 'bg-gray-800 border-gray-700 text-gray-300' 
+                : 'bg-white border-gray-300 text-gray-700'
+            ]"
+          >
+            <option value="on">On</option>
+            <option value="off">Off</option>
+            <option value="relative">Relative</option>
+          </select>
+        </div>
+
+        <!-- Word Wrap -->
+        <div>
+          <label :class="['block text-sm font-medium mb-2', theme === 'dark' ? 'text-gray-300' : 'text-gray-700']">
+            Word Wrap
+          </label>
+          <select 
+            v-model="editorSettings.wordWrap"
+            :class="[
+              'w-full px-3 py-2 rounded-lg border',
+              theme === 'dark' 
+                ? 'bg-gray-800 border-gray-700 text-gray-300' 
+                : 'bg-white border-gray-300 text-gray-700'
+            ]"
+          >
+            <option value="on">On</option>
+            <option value="off">Off</option>
+          </select>
+        </div>
+
+        <!-- Minimap -->
+        <div class="flex items-center justify-between">
+          <label :class="['text-sm font-medium', theme === 'dark' ? 'text-gray-300' : 'text-gray-700']">
+            Show Minimap
+          </label>
+          <button
+            @click="editorSettings.minimap = !editorSettings.minimap"
+            :class="[
+              'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
+              editorSettings.minimap ? 'bg-python-blue-600' : 'bg-gray-300 dark:bg-gray-700'
+            ]"
+          >
+            <span
+              :class="[
+                'inline-block h-4 w-4 transform rounded-full bg-white transition-transform',
+                editorSettings.minimap ? 'translate-x-6' : 'translate-x-1'
+              ]"
+            />
+          </button>
+        </div>
+
+        <!-- Tab Size -->
+        <div>
+          <label :class="['block text-sm font-medium mb-2', theme === 'dark' ? 'text-gray-300' : 'text-gray-700']">
+            Tab Size: {{ editorSettings.tabSize }}
+          </label>
+          <input 
+            v-model.number="editorSettings.tabSize"
+            type="range" 
+            min="2" 
+            max="8" 
+            step="1"
+            class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer"
+          />
+        </div>
+
+        <!-- Insert Spaces -->
+        <div class="flex items-center justify-between">
+          <label :class="['text-sm font-medium', theme === 'dark' ? 'text-gray-300' : 'text-gray-700']">
+            Insert Spaces (instead of tabs)
+          </label>
+          <button
+            @click="editorSettings.insertSpaces = !editorSettings.insertSpaces"
+            :class="[
+              'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
+              editorSettings.insertSpaces ? 'bg-python-blue-600' : 'bg-gray-300 dark:bg-gray-700'
+            ]"
+          >
+            <span
+              :class="[
+                'inline-block h-4 w-4 transform rounded-full bg-white transition-transform',
+                editorSettings.insertSpaces ? 'translate-x-6' : 'translate-x-1'
+              ]"
+            />
+          </button>
+        </div>
+
+        <!-- Render Whitespace -->
+        <div>
+          <label :class="['block text-sm font-medium mb-2', theme === 'dark' ? 'text-gray-300' : 'text-gray-700']">
+            Show Whitespace
+          </label>
+          <select 
+            v-model="editorSettings.renderWhitespace"
+            :class="[
+              'w-full px-3 py-2 rounded-lg border',
+              theme === 'dark' 
+                ? 'bg-gray-800 border-gray-700 text-gray-300' 
+                : 'bg-white border-gray-300 text-gray-700'
+            ]"
+          >
+            <option value="none">None</option>
+            <option value="all">All</option>
+            <option value="boundary">Boundary</option>
+            <option value="selection">Selection</option>
+          </select>
+        </div>
+
+        <!-- Cursor Style -->
+        <div>
+          <label :class="['block text-sm font-medium mb-2', theme === 'dark' ? 'text-gray-300' : 'text-gray-700']">
+            Cursor Style
+          </label>
+          <select 
+            v-model="editorSettings.cursorStyle"
+            :class="[
+              'w-full px-3 py-2 rounded-lg border',
+              theme === 'dark' 
+                ? 'bg-gray-800 border-gray-700 text-gray-300' 
+                : 'bg-white border-gray-300 text-gray-700'
+            ]"
+          >
+            <option value="line">Line</option>
+            <option value="block">Block</option>
+            <option value="underline">Underline</option>
+            <option value="line-thin">Line Thin</option>
+            <option value="block-outline">Block Outline</option>
+            <option value="underline-thin">Underline Thin</option>
+          </select>
+        </div>
+      </div>
+
+      <template #footer>
+        <button
+          @click="applyEditorSettings"
+          class="w-full px-4 py-3 bg-python-blue-600 hover:bg-python-blue-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center justify-center space-x-2"
+        >
+          <Icon icon="ph:check" class="w-4 h-4" />
+          <span>Apply Settings</span>
         </button>
       </template>
     </Dialog>
@@ -765,7 +993,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount, computed } from 'vue'
 import { Icon } from '@iconify/vue'
 import Dialog from '~/components/ui/Dialog.vue'
 import MonacoEditor from '~/components/MonacoEditor.vue'
@@ -842,11 +1070,13 @@ const deleteDialog = ref({
   fileName: ''
 })
 
-// Share dialog
+// Share dialog - new version with file selection
 const shareDialog = ref({
   show: false,
-  url: '',
-  copied: false
+  selectedFile: null, // Changed to single file selection
+  isCreating: false,
+  shareUrl: '',
+  shareId: ''
 })
 
 // Rename state
@@ -855,6 +1085,36 @@ const editingFileName = ref('')
 
 // Info dialog
 const showInfoDialog = ref(false)
+
+// Settings dialog and Monaco editor options
+const showSettingsDialog = ref(false)
+const editorSettings = ref({
+  fontSize: 14,
+  lineNumbers: 'on',
+  minimap: false,
+  wordWrap: 'on',
+  tabSize: 4,
+  insertSpaces: true,
+  renderWhitespace: 'none',
+  fontFamily: 'Consolas, "Courier New", monospace',
+  cursorStyle: 'line'
+})
+
+// Computed Monaco options for reactivity
+const monacoOptions = computed(() => ({
+  fontSize: editorSettings.value.fontSize,
+  minimap: { enabled: editorSettings.value.minimap },
+  scrollBeyondLastLine: false,
+  wordWrap: editorSettings.value.wordWrap,
+  lineNumbers: editorSettings.value.lineNumbers,
+  folding: true,
+  automaticLayout: true,
+  tabSize: editorSettings.value.tabSize,
+  insertSpaces: editorSettings.value.insertSpaces,
+  renderWhitespace: editorSettings.value.renderWhitespace,
+  fontFamily: editorSettings.value.fontFamily,
+  cursorStyle: editorSettings.value.cursorStyle
+}))
 
 // Toast functions
 function showToast(message, type = 'info') {
@@ -998,46 +1258,96 @@ async function saveFile() {
   isSaving.value = false
 }
 
-function shareCode() {
-  const url = window.location.href
+function openShareDialog() {
+  // Reset dialog state
   shareDialog.value = {
     show: true,
-    url: url,
-    copied: false
+    selectedFile: props.files[0]?.id || null, // Select first file by default
+    isCreating: false,
+    shareUrl: '',
+    shareId: ''
+  }
+}
+
+// No longer needed - radio buttons handle selection directly
+// function toggleFileSelection is removed
+
+async function createShareLink() {
+  if (!shareDialog.value.selectedFile) {
+    showToast('Please select a file to share', 'warning')
+    return
+  }
+
+  shareDialog.value.isCreating = true
+
+  try {
+    // Get selected file
+    const fileToShare = props.files.find(f => f.id === shareDialog.value.selectedFile)
+    
+    if (!fileToShare) {
+      throw new Error('Selected file not found')
+    }
+
+    // Get library name from props or current route
+    const libraryName = props.libraryName || 'python'
+
+    // Create share payload matching the Go API
+    // Convert ID to string to match Go struct expectations
+    const shareData = {
+      compiler_type: libraryName.toLowerCase(),
+      files: [{
+        id: String(fileToShare.id), // Convert to string
+        name: fileToShare.name,
+        content: fileToShare.content
+      }]
+    }
+
+    // Get API base URL from runtime config
+    const config = useRuntimeConfig()
+    const apiBaseUrl = config.public.apiBaseUrl || 'http://localhost:8080'
+
+    // Call Golang API to create share
+    const response = await fetch(`${apiBaseUrl}/pybadu/share`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(shareData)
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.error || 'Failed to create share link')
+    }
+
+    const result = await response.json()
+    
+    // Set share URL
+    const baseUrl = window.location.origin
+    shareDialog.value.shareUrl = `${baseUrl}/share/${result.id}`
+    shareDialog.value.shareId = result.id
+
+    showToast('Share link created successfully!', 'success')
+  } catch (error) {
+    console.error('Error creating share link:', error)
+    showToast(error.message || 'Failed to create share link', 'error')
+  } finally {
+    shareDialog.value.isCreating = false
   }
 }
 
 function copyShareUrl() {
-  if (shareDialog.value.url) {
-    navigator.clipboard.writeText(shareDialog.value.url)
-    shareDialog.value.copied = true
+  if (shareDialog.value.shareUrl) {
+    navigator.clipboard.writeText(shareDialog.value.shareUrl)
     showToast('Link copied to clipboard', 'success')
-    setTimeout(() => {
-      shareDialog.value.copied = false
-    }, 2000)
   }
 }
 
-function shareToTwitter() {
-  const url = encodeURIComponent(shareDialog.value.url)
-  const text = encodeURIComponent('Check out my Python code on Pybadu!')
-  window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=550,height=420')
-}
-
-function shareToFacebook() {
-  const url = encodeURIComponent(shareDialog.value.url)
-  window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=550,height=420')
-}
-
-function shareToLinkedIn() {
-  const url = encodeURIComponent(shareDialog.value.url)
-  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank', 'width=550,height=420')
-}
-
-function shareToWhatsApp() {
-  const url = encodeURIComponent(shareDialog.value.url)
-  const text = encodeURIComponent('Check out my Python code on Pybadu!')
-  window.open(`https://wa.me/?text=${text}%20${url}`, '_blank')
+function applyEditorSettings() {
+  // Settings are already reactive via computed property
+  // Just close the dialog and show confirmation
+  showSettingsDialog.value = false
+  showToast('Editor settings applied successfully', 'success')
 }
 
 function downloadImage(base64Data, index) {

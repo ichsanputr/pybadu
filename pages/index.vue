@@ -194,7 +194,6 @@
               icon-bg="from-python-blue-500 to-python-blue-600"
               description="Each library has its own optimized environment. Pre-configured with all dependencies and best practices for seamless development."
               href="/matplotlib"
-              cta="Try Matplotlib →"
             />
             
             <BentoCard
@@ -204,7 +203,6 @@
               icon-bg="from-python-blue-500 to-python-blue-600"
               description="Start coding instantly. No installation, no configuration, just pure Python in your browser."
               href="/numpy"
-              cta="Explore NumPy →"
             />
 
             <BentoCard
@@ -214,7 +212,6 @@
               icon-bg="from-python-blue-500 to-python-blue-600"
               description="See your results immediately with our WebAssembly-powered execution engine."
               href="/pandas"
-              cta="Try Pandas →"
             />
 
             <BentoCard
@@ -224,7 +221,6 @@
               icon-bg="from-python-blue-500 to-python-blue-600"
               description="Create complex projects with up to 5 files. Full IDE-like experience with file management and auto-save to localStorage."
               href="/scikit-learn"
-              cta="Start Building →"
             />
 
             <BentoCard
@@ -304,7 +300,7 @@
             Ready to Start Coding?
           </h2>
           <p class="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Join thousands of developers using Pybadu for Python library development.
+            Join thousands of programmers using Pybadu for Python library development.
             No setup required, start coding in seconds.
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
@@ -313,7 +309,7 @@
               class="px-8 py-4 bg-white text-python-blue-600 font-semibold rounded-xl hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 inline-flex items-center gap-2 justify-center"
             >
               <Icon icon="ph:play-circle-fill" class="w-6 h-6" />
-              Launch Playground
+              Start Playground
             </NuxtLink>
             <a
               href="https://github.com/ichsanputr/pybadu"
@@ -344,19 +340,17 @@ definePageMeta({
   layout: false
 })
 
-// Ensure light theme on landing page
+// Ensure light theme on landing page - completely isolated from compiler pages
 onMounted(() => {
   if (typeof document !== 'undefined') {
+    // Force light theme for homepage
     document.documentElement.classList.remove('dark')
   }
 })
 
-// Clean up when leaving
+// When leaving homepage, don't interfere with compiler page theme
 onUnmounted(() => {
-  // Keep light theme when navigating away from landing page
-  if (typeof document !== 'undefined') {
-    document.documentElement.classList.remove('dark')
-  }
+  // Compiler pages will set their own theme (dark by default)
 })
 
 // Total Pyodide packages count (approximate)

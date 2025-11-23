@@ -65,14 +65,8 @@ export function useLibraryPlayground(config = {}) {
   const pyodide = ref(null)
   const loaderVisible = ref(false)
   
-  // Initialize theme from document class (in case returning from index page)
-  const getInitialTheme = () => {
-    if (typeof document !== 'undefined') {
-      return document.documentElement.classList.contains('dark') ? 'dark' : 'dark'
-    }
-    return 'dark'
-  }
-  const theme = ref(getInitialTheme())
+  // Theme is stateless - always starts with dark, not saved to localStorage
+  const theme = ref('dark')
 
   // Auto-save files when they change (output is never saved)
   watch(files, () => {
@@ -157,21 +151,10 @@ export function useLibraryPlayground(config = {}) {
     }
   }
 
-  // Sync theme with document class on mount
-  if (typeof window !== 'undefined') {
-    const hasDocumentDark = document.documentElement.classList.contains('dark')
-    if (hasDocumentDark) {
-      theme.value = 'dark'
-    } else {
-      // If coming from index page (no dark class), set to dark for compiler pages
-      theme.value = 'dark'
-      setThemeClass('dark')
-    }
-  }
-
+  // Watch theme changes and apply to document (but never save to localStorage)
   watch(theme, (val) => {
     setThemeClass(val)
-  })
+  }, { immediate: true })
 
   function toggleTheme() {
     theme.value = theme.value === 'light' ? 'dark' : 'light'

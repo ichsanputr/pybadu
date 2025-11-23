@@ -13,7 +13,7 @@
               <div class="text-sm text-gray-400">Python Library Playground</div>
             </div>
           </div>
-          <p class="text-gray-400 max-w-md mb-6">
+          <p class="text-gray-400 max-w-md mb-6 text-sm">
             Dedicated Python library compilers powered by Pyodide WebAssembly. 
             Part of the BudiBadu ecosystem for developers and learners.
           </p>
@@ -24,11 +24,11 @@
             <a href="https://budibadu.com" target="_blank" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               BudiBadu ↗
             </a>
-            <a href="https://pyodide.org" target="_blank" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
-              Pyodide ↗
+            <a href="https://budibadu.com/quizibadu" target="_blank" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              Quizibadu ↗
             </a>
-            <a href="https://github.com/unovue/inspira-ui" target="_blank" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
-              Inspira UI ↗
+            <a href="https://budibadu.com/toolbadu" target="_blank" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              Toolbadu ↗
             </a>
           </div>
         </div>

@@ -36,55 +36,41 @@
         
         <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
           <p class="text-lg leading-relaxed">
-            Pandas is Python's premier library for data analysis and manipulation. Our dedicated Pandas playground provides 
-            a complete browser-based environment for working with structured data using powerful DataFrame and Series objects. 
-            Built on top of NumPy, Pandas offers high-performance, easy-to-use data structures perfect for real-world data analysis.
+            Pandas is Python's premier library for data analysis and manipulation, used by millions of data professionals 
+            worldwide. Our dedicated online Pandas compiler provides a complete browser-based environment for working with 
+            structured data using powerful DataFrame and Series objects. Built on top of NumPy, Pandas offers high-performance, 
+            easy-to-use data structures perfect for real-world data analysis, making it the industry standard for data 
+            manipulation in Python. From financial analysis to scientific research, Pandas is the tool of choice for 
+            professionals who need to clean, transform, and analyze data efficiently.
           </p>
           
           <p class="text-lg leading-relaxed">
             This compiler includes <strong>Pandas 2.x</strong> with <strong>NumPy</strong>, enabling you to perform complex 
-            data operations instantly. From data cleaning and transformation to statistical analysis and time series manipulation, 
-            our Pandas playground provides all the tools you need for comprehensive data analysis without any installation.
+            data operations instantly through Pyodide WebAssembly technology. You can work with DataFrames (two-dimensional 
+            labeled data structures with columns of potentially different types) and Series (one-dimensional labeled arrays), 
+            performing operations like data cleaning, transformation, statistical analysis, and time series manipulation. 
+            The platform provides all the tools you need for comprehensive data analysis including powerful indexing and 
+            slicing capabilities, GroupBy operations for split-apply-combine functionality, sophisticated missing data 
+            handling, and SQL-like operations for combining multiple datasets.
           </p>
-
-          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Core Features</h3>
-          
-          <ul class="list-disc list-inside space-y-2 text-lg ml-4">
-            <li><strong>DataFrames:</strong> Two-dimensional labeled data structures with columns of potentially different types</li>
-            <li><strong>Series:</strong> One-dimensional labeled arrays capable of holding any data type</li>
-            <li><strong>Data Selection:</strong> Powerful indexing, slicing, and filtering capabilities for data access</li>
-            <li><strong>GroupBy Operations:</strong> Split-apply-combine functionality for aggregating data</li>
-            <li><strong>Missing Data Handling:</strong> Tools for detecting, removing, and filling missing values</li>
-            <li><strong>Merging & Joining:</strong> SQL-like operations for combining multiple datasets</li>
-            <li><strong>Time Series:</strong> Specialized functionality for date/time data and resampling</li>
-            <li><strong>Data Import/Export:</strong> Reading from and writing to various file formats (CSV, JSON, etc.)</li>
-          </ul>
-
-          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Data Operations Covered</h3>
 
           <p class="text-lg leading-relaxed">
-            Master essential data manipulation techniques with our comprehensive examples:
+            Our comprehensive example collection covers essential data manipulation techniques including DataFrame basics, 
+            data selection and filtering, grouping data by categories with aggregate functions, detecting and filling 
+            missing values, and combining datasets using merge, join, and concatenate operations. You'll also learn time 
+            series analysis with datetime data, resampling techniques, and rolling window calculations. The examples 
+            demonstrate data import/export with various file formats (CSV, JSON) and advanced data transformation pipelines 
+            that are commonly used in production environments.
           </p>
 
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Who Should Use This</h3>
           <ul class="list-disc list-inside space-y-2 text-lg ml-4">
-            <li><strong>DataFrame Basics:</strong> Creating, viewing, and understanding DataFrame structures and operations</li>
-            <li><strong>Data Selection:</strong> Multiple methods for selecting, filtering, and accessing data</li>
-            <li><strong>GroupBy & Aggregation:</strong> Grouping data by categories and applying aggregate functions</li>
-            <li><strong>Missing Data:</strong> Detecting null values, filling missing data, and dropping incomplete rows</li>
-            <li><strong>Data Merging:</strong> Combining datasets using merge, join, and concatenate operations</li>
-            <li><strong>Time Series Analysis:</strong> Working with datetime data, resampling, and rolling window calculations</li>
-          </ul>
-
-          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Perfect For</h3>
-
-          <ul class="list-disc list-inside space-y-2 text-lg ml-4">
-            <li>Data analysts working with structured datasets</li>
-            <li>Data scientists preprocessing data for machine learning</li>
-            <li>Business intelligence and reporting tasks</li>
-            <li>Financial data analysis and portfolio management</li>
-            <li>ETL (Extract, Transform, Load) operations</li>
-            <li>Statistical analysis and data exploration</li>
-            <li>Students learning data analysis with Python</li>
+            <li>Data analysts working with structured datasets and creating insights</li>
+            <li>Data scientists preprocessing data for machine learning models</li>
+            <li>Business intelligence professionals building reports and dashboards</li>
+            <li>Financial analysts performing portfolio management and risk analysis</li>
+            <li>ETL developers building data pipelines and transformation workflows</li>
+            <li>Students learning data analysis and manipulation techniques with Python</li>
           </ul>
         </div>
       </div>
@@ -113,7 +99,7 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Pandas Online Compiler',
+  title: 'Online Pandas Compiler',
   meta: [
     { name: 'description', content: 'Interactive Pandas data analysis playground powered by Pyodide WebAssembly' }
   ]

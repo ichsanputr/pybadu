@@ -139,6 +139,21 @@
           </div>
         </div>
 
+        <!-- Info Button -->
+        <button
+          @click="showInfoDialog = true"
+          :class="[
+            'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+            theme === 'dark'
+              ? 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+              : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+          ]"
+          title="Information"
+        >
+          <Icon icon="ph:info" class="w-4 h-4" />
+        </button>
+
+
         <button
           @click="$emit('runCode')"
           :disabled="isLoading || !pyodideReady"
@@ -155,21 +170,27 @@
             :icon="isLoading ? 'ph:spinner' : 'ph:play'" 
             :class="['w-4 h-4', isLoading ? 'animate-spin' : '']" 
           />
-          <span class="hidden sm:inline">Run</span>
+          <span class="hidden sm:inline">{{ isLoading ? 'Running...' : 'Run' }}</span>
         </button>
 
         <!-- Save Button -->
         <button
           @click="saveFile"
+          :disabled="isSaving"
           :class="[
             'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
-            theme === 'dark'
-              ? 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
-              : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+            isSaving
+              ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+              : theme === 'dark'
+                ? 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+                : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
           ]"
         >
-          <Icon icon="uil:save" class="w-4 h-4" />
-          <span class="hidden sm:inline">Save</span>
+          <Icon 
+            :icon="isSaving ? 'ph:spinner' : 'uil:save'" 
+            :class="['w-4 h-4', isSaving ? 'animate-spin' : '']"
+          />
+          <span class="hidden sm:inline">{{ isSaving ? 'Saving...' : 'Save' }}</span>
         </button>
 
         <!-- Share Button -->
@@ -571,18 +592,19 @@
 
     <!-- Delete Confirmation Dialog -->
     <Dialog 
-      :show="deleteDialog.show"
-      @close="deleteDialog.show = false"
+      v-model="deleteDialog.show"
       size="sm"
-      :title="'Delete File'"
-      :description="'This action cannot be undone'"
-      :icon="{ name: 'ph:trash', color: 'red' }"
+      title="Delete File"
+      subtitle="This action cannot be undone"
+      icon="ph:trash"
+      icon-variant="error"
+      :theme="theme"
     >
       <p class="text-sm text-gray-700 dark:text-gray-300 mb-6">
         Are you sure you want to delete <strong>{{ deleteDialog.fileName }}</strong>?
       </p>
       
-      <template #actions>
+      <template #footer>
         <button
           @click="deleteDialog.show = false"
           class="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors"
@@ -600,12 +622,13 @@
 
     <!-- Share Dialog -->
     <Dialog 
-      :show="shareDialog.show"
-      @close="shareDialog.show = false"
+      v-model="shareDialog.show"
       size="md"
-      :title="'Share Your Code'"
-      :description="'Share your Python code with the community'"
-      :icon="{ name: 'ph:share-network', color: 'blue' }"
+      title="Share Your Code"
+      subtitle="Share your Python code with the community"
+      icon="ph:share-network"
+      icon-variant="info"
+      :theme="theme"
     >
       <div class="space-y-4">
         <!-- Social Media Buttons -->
@@ -680,7 +703,7 @@
         </div>
       </div>
       
-      <template #actions>
+      <template #footer>
         <button
           @click="shareDialog.show = false"
           class="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors"
@@ -690,13 +713,59 @@
       </template>
     </Dialog>
 
+    <!-- Info Dialog -->
+    <Dialog 
+      v-model="showInfoDialog"
+      size="lg"
+      title="Pyodide Information"
+      subtitle="Notes and tips about code execution"
+      icon="ph:info"
+      icon-variant="info"
+      :theme="theme"
+    >
+      <div :class="['space-y-4 text-sm', theme === 'dark' ? 'text-gray-300' : 'text-gray-700']">
+        <div>
+          <p class="leading-relaxed">
+            Code is executed with <strong>Pyodide</strong>, a port of CPython to WebAssembly/Emscripten. 
+            This allows Python to run directly in your browser without any server-side execution.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="font-semibold mb-2">Known Limitations</h4>
+          <ul class="space-y-1 list-disc list-inside pl-2">
+            <li><strong>Threading & Multiprocessing:</strong> Not available in WebAssembly</li>
+            <li><strong>Network Requests:</strong> Limited to browser APIs, use pyodide.http or fetch</li>
+            <li><strong>File System:</strong> Virtual file system, files don't persist</li>
+            <li><strong>GUI Libraries:</strong> turtle, tkinter are not supported</li>
+            <li><strong>Native Dependencies:</strong> Some C extensions may not work</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-semibold mb-2">Tips for Best Results</h4>
+          <ul class="space-y-1 list-disc list-inside pl-2">
+            <li>Use <strong>Shift + Enter</strong> to quickly run your code</li>
+            <li>Keep computations lightweight for faster execution</li>
+            <li>Use print() statements to debug your code</li>
+            <li>Your files are auto-saved to browser storage</li>
+            <li>For matplotlib plots, use plt.show() to display</li>
+          </ul>
+        </div>
+
+        <div class="text-center pt-2">
+          Learn more at <a href="https://pyodide.org" target="_blank" class="text-python-blue-500 hover:underline">pyodide.org</a>
+        </div>
+      </div>
+    </Dialog>
+
     <!-- Toast Notifications -->
     <Toast :toasts="toasts" @remove="removeToast" />
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { Icon } from '@iconify/vue'
 import Dialog from '~/components/ui/Dialog.vue'
 import MonacoEditor from '~/components/MonacoEditor.vue'
@@ -737,6 +806,23 @@ const emit = defineEmits([
   'saveToStorage'
 ])
 
+// Keyboard shortcuts
+onMounted(() => {
+  const handleKeyDown = (e) => {
+    // Shift + Enter to run code
+    if (e.shiftKey && e.key === 'Enter' && !props.isLoading && props.pyodideReady) {
+      e.preventDefault()
+      emit('runCode')
+    }
+  }
+  
+  window.addEventListener('keydown', handleKeyDown)
+  
+  onBeforeUnmount(() => {
+    window.removeEventListener('keydown', handleKeyDown)
+  })
+})
+
 // UI State
 const showFileDropdown = ref(false)
 const showSidebar = ref(true)
@@ -745,6 +831,9 @@ const sidebarCollapsed = ref(false)
 // Toast notifications
 const toasts = ref([])
 let toastId = 0
+
+// Save loading state
+const isSaving = ref(false)
 
 // Delete confirmation dialog
 const deleteDialog = ref({
@@ -763,6 +852,9 @@ const shareDialog = ref({
 // Rename state
 const editingFileId = ref(null)
 const editingFileName = ref('')
+
+// Info dialog
+const showInfoDialog = ref(false)
 
 // Toast functions
 function showToast(message, type = 'info') {
@@ -894,9 +986,16 @@ function cancelRename() {
   editingFileName.value = ''
 }
 
-function saveFile() {
+async function saveFile() {
+  isSaving.value = true
+  
+  // Add a small delay for better UX
+  await new Promise(resolve => setTimeout(resolve, 300))
+  
   emit('saveToStorage')
   showToast('Progress saved successfully', 'success')
+  
+  isSaving.value = false
 }
 
 function shareCode() {

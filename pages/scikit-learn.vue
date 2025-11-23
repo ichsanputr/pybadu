@@ -25,22 +25,13 @@
         @renameFile="renameFile"
         @saveToStorage="saveToStorage" />
 
-      <!-- Loading Transition (client-only) -->
-      <ClientOnly>
-        <transition name="fade">
-          <div v-if="loaderVisible"
-            class="fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-[#18181b] transition-colors duration-300">
-            <Icon icon="ph:spinner" class="w-10 h-10 text-python-yellow-500 animate-spin" />
-          </div>
-        </transition>
-      </ClientOnly>
     </div>
 
     <!-- Information Section -->
     <LibraryInfoSection>
       <div class="text-center mb-12">
         <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-6">
-          About Scikit-learn Playground
+          Scikit-learn Online Compiler
         </h2>
         
         <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
@@ -133,7 +124,7 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Scikit-learn Playground - Pybadu',
+  title: 'Scikit-learn Online Compiler',
   meta: [
     { name: 'description', content: 'Interactive Scikit-learn machine learning playground powered by Pyodide WebAssembly' }
   ]

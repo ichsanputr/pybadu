@@ -1,17 +1,17 @@
-<template>
+  <template>
     <main>
       <div
         v-bind="props"
         :class="
           cn(
-            'transition-bg relative flex h-[100vh] flex-col items-center justify-center bg-zinc-50 text-slate-950 dark:bg-zinc-900',
+            'transition-bg relative flex h-[100vh] w-full flex-col items-center justify-center bg-zinc-50 text-slate-950 dark:bg-zinc-900 overflow-hidden',
             props.class,
           )
         "
       >
         <div
           :style="styles"
-          class="absolute inset-0 overflow-hidden"
+          class="absolute inset-0 overflow-hidden w-full"
         >
           <div
             :class="

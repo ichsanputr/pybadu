@@ -117,7 +117,7 @@
 </template>
 
 <script setup>
-import { computed, watch } from 'vue'
+import { computed, watch, ref, onMounted } from 'vue'
 import { Icon } from '@iconify/vue'
 
 const props = defineProps({
@@ -184,6 +184,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'confirm', 'cancel'])
 
+// Use theme from prop passed by parent (which gets it from composable theme toggle)
 const isDark = computed(() => props.theme === 'dark')
 
 const sizeClasses = computed(() => {

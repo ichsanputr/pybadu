@@ -30,7 +30,7 @@ export function useLibraryPlayground(config = {}) {
     return null
   }
 
-  // Save files to localStorage
+  // Save files to localStorage (excluding output)
   function saveFilesToStorage() {
     if (typeof window === 'undefined') return
     
@@ -39,6 +39,7 @@ export function useLibraryPlayground(config = {}) {
         files: files.value,
         activeFileId: activeFileId.value,
         timestamp: Date.now()
+        // Note: output is intentionally excluded to prevent storing heavy image data
       }
       localStorage.setItem(storageKey, JSON.stringify(data))
     } catch (error) {
@@ -57,14 +58,23 @@ export function useLibraryPlayground(config = {}) {
   ])
 
   const activeFileId = ref(storedData?.activeFileId || 1)
+  // Output is never saved or loaded - always starts empty
   const output = ref([])
   const isLoading = ref(false)
   const pyodideReady = ref(false)
   const pyodide = ref(null)
   const loaderVisible = ref(false)
-  const theme = ref('dark')
+  
+  // Initialize theme from document class (in case returning from index page)
+  const getInitialTheme = () => {
+    if (typeof document !== 'undefined') {
+      return document.documentElement.classList.contains('dark') ? 'dark' : 'dark'
+    }
+    return 'dark'
+  }
+  const theme = ref(getInitialTheme())
 
-  // Auto-save files when they change
+  // Auto-save files when they change (output is never saved)
   watch(files, () => {
     saveFilesToStorage()
   }, { deep: true })
@@ -72,6 +82,8 @@ export function useLibraryPlayground(config = {}) {
   watch(activeFileId, () => {
     saveFilesToStorage()
   })
+  
+  // Note: output is intentionally not watched or saved to avoid localStorage bloat
 
   // File management
   const currentFileContent = computed({
@@ -145,9 +157,21 @@ export function useLibraryPlayground(config = {}) {
     }
   }
 
+  // Sync theme with document class on mount
+  if (typeof window !== 'undefined') {
+    const hasDocumentDark = document.documentElement.classList.contains('dark')
+    if (hasDocumentDark) {
+      theme.value = 'dark'
+    } else {
+      // If coming from index page (no dark class), set to dark for compiler pages
+      theme.value = 'dark'
+      setThemeClass('dark')
+    }
+  }
+
   watch(theme, (val) => {
     setThemeClass(val)
-  }, { immediate: true })
+  })
 
   function toggleTheme() {
     theme.value = theme.value === 'light' ? 'dark' : 'light'
@@ -173,11 +197,17 @@ export function useLibraryPlayground(config = {}) {
   async function runCode() {
     if (!pyodideReady.value || !currentFileContent.value.trim()) return
     
-    isLoading.value = true
+    // Start execution immediately
+    const startTime = Date.now()
+    
+    // Add small delay before showing loading state (300ms)
+    setTimeout(() => {
+      if (isLoading.value) return // Already set
+      isLoading.value = true
+    }, 300)
     
     // Add minimum 1 second delay for better UX
     const minDelay = 1000
-    const startTime = Date.now()
     
     try {
       output.value = []
@@ -300,7 +330,8 @@ for fig in figs:
   async function initializePyodide() {
     if (process.client) {
       try {
-        setThemeClass('dark')
+        loaderVisible.value = true
+        setThemeClass(theme.value)
         
         await waitForPyodide()
         
@@ -325,6 +356,7 @@ for fig in figs:
         }
         
         pyodideReady.value = true
+        loaderVisible.value = false
         
         // Run initial example if available
         if (currentFileContent.value.trim()) {
@@ -333,6 +365,7 @@ for fig in figs:
         
       } catch (error) {
         console.error('Failed to initialize Pyodide:', error)
+        loaderVisible.value = false
         output.value.push({
           type: 'error',
           content: `Failed to initialize: ${error.message}`,

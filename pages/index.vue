@@ -334,6 +334,7 @@
 </template>
 
 <script setup>
+import { onMounted, onUnmounted } from 'vue'
 import { Motion } from 'motion-v'
 import { Icon } from '@iconify/vue'
 import FlipCard from '~/components/FlipCard.vue'
@@ -341,6 +342,21 @@ import FlipCard from '~/components/FlipCard.vue'
 // Use landing layout
 definePageMeta({
   layout: false
+})
+
+// Ensure light theme on landing page
+onMounted(() => {
+  if (typeof document !== 'undefined') {
+    document.documentElement.classList.remove('dark')
+  }
+})
+
+// Clean up when leaving
+onUnmounted(() => {
+  // Keep light theme when navigating away from landing page
+  if (typeof document !== 'undefined') {
+    document.documentElement.classList.remove('dark')
+  }
 })
 
 // Total Pyodide packages count (approximate)
@@ -351,8 +367,8 @@ const libraries = [
   {
     name: 'Matplotlib',
     description: 'Create stunning data visualizations',
-    icon: 'simple-icons:matplotlib',
-    bgClass: 'bg-gradient-to-br from-blue-500 to-purple-600',
+    icon: 'ph:chart-line',
+    bgClass: 'bg-gradient-to-br from-orange-500 to-red-500',
     href: '/matplotlib'
   },
   {
@@ -409,25 +425,25 @@ const libraries = [
 // Testimonials - Using real GitHub user profile images
 const testimonials = [
   {
-    img: 'https://avatars.githubusercontent.com/u/37160008?v=4',
-    quote: 'Pybadu has transformed how I teach Python data science. Students can experiment with NumPy and Pandas instantly without installation hassles. It\'s a game-changer for online education.',
-    name: 'Muhammad Ichsanul Fadhil',
-    role: 'Software Engineer & Rust Developer'
-  },
-  {
-    img: 'https://avatars.githubusercontent.com/u/62506582?v=4',
+    img: 'https://avatars.githubusercontent.com/u/152264274?v=4',
     quote: 'As a data analyst, I use Pybadu for quick prototyping and sharing visualizations with my team. The Matplotlib compiler is incredibly smooth and the multi-file support is perfect for complex projects.',
     name: 'Hamardikan',
     role: 'Full Stack Developer'
   },
   {
-    img: 'https://avatars.githubusercontent.com/u/75506749?v=4',
+    img: 'https://avatars.githubusercontent.com/u/78834298?v=4',
+    quote: 'Pybadu has transformed how I teach Python data science. Students can experiment with NumPy and Pandas instantly without installation hassles. It\'s a game-changer for online education.',
+    name: 'Muhammad Ichsanul Fadhil',
+    role: 'Software Engineer & Rust Developer'
+  },
+  {
+    img: 'https://avatars.githubusercontent.com/u/69036480?v=4',
     quote: 'The dedicated environment for each library is brilliant. I can test Scikit-learn models without setting up virtual environments. Perfect for research and experimentation.',
     name: 'Deri Kurniawan',
     role: 'Full Stack Developer'
   },
   {
-    img: 'https://avatars.githubusercontent.com/u/4221011?v=4',
+    img: 'https://avatars.githubusercontent.com/u/47033578?v=4',
     quote: 'Pybadu made learning Python libraries so much easier. The examples are helpful and being able to code directly in the browser without any setup is amazing!',
     name: 'Dmitry Vyukov',
     role: 'Software Engineer'

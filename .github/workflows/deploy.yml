@@ -47,5 +47,5 @@ jobs:
         run: |
           ssh -p 30221 -o StrictHostKeyChecking=no root@151.243.222.93 << 'EOF'
             cd /root/pybadu
-            pm2 start ecosystem.config.js
+            pm2 start ecosystem.config.cjs
           EOF

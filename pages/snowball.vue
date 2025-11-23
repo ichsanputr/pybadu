@@ -7,7 +7,7 @@
           <div class="flex items-center space-x-4">
             <NuxtLink to="/fiddle" class="text-gray-500 hover:text-gray-700">← Back to Fiddle</NuxtLink>
             <div>
-              <h1 class="text-2xl font-bold text-gray-900">
+              <h1 class="text-xl md:text-2xl font-bold text-gray-900">
                 🌱 Snowball Stemmer Demo
               </h1>
               <p class="text-gray-600">Text stemming with Pyodide package loading</p>

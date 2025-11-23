@@ -12,7 +12,7 @@
     <div v-else-if="error" class="flex items-center justify-center min-h-screen">
       <div class="text-center max-w-md">
         <Icon icon="ph:warning-circle" class="w-16 h-16 mx-auto mb-4 text-red-500" />
-        <h2 class="text-2xl font-bold mb-2">Share Not Found</h2>
+        <h2 class="text-xl md:text-2xl font-bold mb-2">Share Not Found</h2>
         <p class="text-gray-400 mb-6">{{ error }}</p>
         <NuxtLink 
           to="/"
@@ -30,8 +30,8 @@
       <header class="flex items-center justify-between px-4 py-3 bg-gray-800 border-b border-gray-700">
         <div class="flex items-center space-x-3">
           <NuxtLink to="/" class="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-            <img src="/logo-light.png" alt="Pybadu Logo" class="w-7 h-7 rounded-lg" />
-            <span class="font-semibold">Pybadu</span>
+            <img src="/logo-light.png" alt="Budibadu Logo" class="w-7 h-7 rounded-lg" />
+            <span class="font-semibold">Budibadu</span>
           </NuxtLink>
           <div class="h-5 w-px bg-gray-600"></div>
           <div class="flex items-center space-x-2">
@@ -91,10 +91,10 @@
               ]"
             >
               <Icon 
-                :icon="isLoading ? 'ph:spinner' : 'ph:play'" 
-                :class="['w-5 h-5', isLoading ? 'animate-spin' : '']" 
+                :icon="!pyodideReady || isLoading ? 'ph:spinner' : 'ph:play'" 
+                :class="['w-5 h-5', !pyodideReady || isLoading ? 'animate-spin' : '']" 
               />
-              <span>{{ isLoading ? 'Running...' : pyodideReady ? 'Run Code' : 'Loading Pyodide...' }}</span>
+              <span>{{ !pyodideReady ? 'Loading...' : isLoading ? 'Running...' : 'Run Code' }}</span>
             </button>
           </div>
         </div>
@@ -152,7 +152,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { Icon } from '@iconify/vue'
 
@@ -210,22 +210,42 @@ async function fetchShareData() {
     loading.value = true
     error.value = null
 
-    const shareId = route.params.id
-    const apiBaseUrl = config.public.apiBaseUrl || 'http://localhost:8080'
+    // Get share ID from query params
+    const shareId = route.query.id
+    
+    console.log('Share ID from query:', shareId)
+    
+    if (!shareId) {
+      throw new Error('No share ID provided. Please use a valid share link with ?id=xxxxx')
+    }
 
-    const response = await fetch(`${apiBaseUrl}/pybadu/share/${shareId}`)
+    const apiBaseUrl = config.public.apiBaseUrl || 'http://localhost:8080'
+    const apiUrl = `${apiBaseUrl}/pybadu/share/${shareId}`
+    
+    console.log('Fetching from API:', apiUrl)
+
+    const response = await fetch(apiUrl)
+    
+    console.log('API Response status:', response.status)
 
     if (!response.ok) {
+      const errorText = await response.text()
+      console.error('API Error response:', errorText)
+      
       if (response.status === 404) {
         throw new Error('This share link does not exist or has been removed.')
       } else if (response.status === 410) {
         throw new Error('This share link has expired.')
+      } else if (response.status === 0 || !response.status) {
+        throw new Error('Cannot connect to API server. Please check if the API is running.')
       } else {
-        throw new Error('Failed to load shared code.')
+        throw new Error(`Failed to load shared code (Status: ${response.status})`)
       }
     }
 
     const data = await response.json()
+    console.log('Share data loaded:', data)
+    
     shareData.value = data
     compilerType.value = data.compiler_type
     files.value = data.files.map(f => ({
@@ -237,7 +257,7 @@ async function fetchShareData() {
 
   } catch (err) {
     console.error('Error fetching share data:', err)
-    error.value = err.message
+    error.value = err.message || 'An unexpected error occurred'
   } finally {
     loading.value = false
   }

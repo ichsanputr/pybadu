@@ -30,12 +30,12 @@
     <!-- Information Section -->
     <LibraryInfoSection>
       <div class="text-center mb-12">
-        <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-6">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
           NumPy Online Compiler
         </h2>
         
         <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
-          <p class="text-lg leading-relaxed">
+          <p class="text-base md:text-lg leading-relaxed">
             NumPy (Numerical Python) is the fundamental package for scientific computing in Python and serves as the 
             foundation for the entire Python data science ecosystem. Our dedicated online NumPy compiler provides a 
             complete browser environment for working with large, multi-dimensional arrays and matrices, along with a 
@@ -43,7 +43,7 @@
             object is the cornerstone of modern data analysis, machine learning, and scientific computing in Python.
           </p>
           
-          <p class="text-lg leading-relaxed">
+          <p class="text-base md:text-lg leading-relaxed">
             This compiler includes <strong>NumPy 1.14+</strong> with full support for ndarray operations, linear algebra, 
             Fourier transforms, and random number generation, all powered by Pyodide WebAssembly technology. The compiler 
             supports all core NumPy features including array creation, manipulation with powerful indexing and slicing, 
@@ -52,7 +52,7 @@
             statistical analysis, or scientific computations, our NumPy playground offers instant execution without any setup.
           </p>
 
-          <p class="text-lg leading-relaxed">
+          <p class="text-base md:text-lg leading-relaxed">
             Our platform comes with carefully crafted examples covering essential NumPy topics such as array basics, 
             array creation using zeros, ones, identity matrices, random arrays, arange, and linspace functions. You'll 
             learn matrix operations including multiplication, transpose, determinant, and inverse operations, as well as 
@@ -61,7 +61,7 @@
             algebra operations like solving linear equations, eigenvalue problems, and SVD decomposition.
           </p>
 
-          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Ideal Use Cases</h3>
+          <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Ideal Use Cases</h3>
           <ul class="list-disc list-inside space-y-2 text-lg ml-4">
             <li>Scientific computing and numerical analysis for research and education</li>
             <li>Data preprocessing for machine learning pipelines and model training</li>

@@ -167,10 +167,10 @@
           ]"
         >
           <Icon 
-            :icon="isLoading ? 'ph:spinner' : 'ph:play'" 
-            :class="['w-4 h-4', isLoading ? 'animate-spin' : '']" 
+            :icon="!pyodideReady || isLoading ? 'ph:spinner' : 'ph:play'" 
+            :class="['w-4 h-4', !pyodideReady || isLoading ? 'animate-spin' : '']" 
           />
-          <span class="hidden sm:inline">{{ isLoading ? 'Running...' : 'Run' }}</span>
+          <span class="hidden sm:inline">{{ !pyodideReady ? 'Loading...' : isLoading ? 'Running...' : 'Run' }}</span>
         </button>
 
         <!-- Save Button -->
@@ -722,9 +722,15 @@
               />
               <button
                 @click="copyShareUrl"
-                class="px-4 py-2 rounded-lg text-sm font-medium transition-all bg-python-blue-600 hover:bg-python-blue-700 text-white"
+                :class="[
+                  'px-4 py-2 rounded-lg text-sm font-medium transition-all',
+                  shareDialog.copied 
+                    ? 'bg-green-600 hover:bg-green-700' 
+                    : 'bg-python-blue-600 hover:bg-python-blue-700',
+                  'text-white'
+                ]"
               >
-                <Icon icon="ph:copy" class="w-4 h-4" />
+                <Icon :icon="shareDialog.copied ? 'ph:check' : 'ph:copy'" class="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -1076,7 +1082,8 @@ const shareDialog = ref({
   selectedFile: null, // Changed to single file selection
   isCreating: false,
   shareUrl: '',
-  shareId: ''
+  shareId: '',
+  copied: false // Track if URL was copied
 })
 
 // Rename state
@@ -1265,7 +1272,8 @@ function openShareDialog() {
     selectedFile: props.files[0]?.id || null, // Select first file by default
     isCreating: false,
     shareUrl: '',
-    shareId: ''
+    shareId: '',
+    copied: false
   }
 }
 
@@ -1322,9 +1330,9 @@ async function createShareLink() {
 
     const result = await response.json()
     
-    // Set share URL
+    // Set share URL with query params
     const baseUrl = window.location.origin
-    shareDialog.value.shareUrl = `${baseUrl}/share/${result.id}`
+    shareDialog.value.shareUrl = `${baseUrl}/share?id=${result.id}`
     shareDialog.value.shareId = result.id
 
     showToast('Share link created successfully!', 'success')
@@ -1339,7 +1347,13 @@ async function createShareLink() {
 function copyShareUrl() {
   if (shareDialog.value.shareUrl) {
     navigator.clipboard.writeText(shareDialog.value.shareUrl)
+    shareDialog.value.copied = true
     showToast('Link copied to clipboard', 'success')
+    
+    // Reset copied state after 2 seconds
+    setTimeout(() => {
+      shareDialog.value.copied = false
+    }, 2000)
   }
 }
 

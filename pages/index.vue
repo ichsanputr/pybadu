@@ -40,7 +40,7 @@
           :initial="{ opacity: 0, y: 20 }"
           :while-in-view="{ opacity: 1, y: 0 }"
           :transition="{ delay: 0.6, duration: 0.6 }"
-          class="text-lg md:text-xl text-center max-w-3xl text-gray-600 dark:text-gray-400 px-4"
+          class="text-base md:text-lg lg:text-xl text-center max-w-3xl text-gray-600 dark:text-gray-400 px-4"
         >
           Experience specialized compilers for each Python library. Run NumPy, Pandas, Matplotlib, 
           and Scikit-learn with dedicated environments powered by Pyodide WebAssembly.
@@ -94,7 +94,7 @@
               Specialized Compilers
             </span>
           </h2>
-          <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+          <p class="text-base md:text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
             Unlike general Python environments, Pybadu provides focused compilers optimized for specific libraries.
             Each environment is pre-configured with the perfect setup for your chosen library.
           </p>
@@ -134,7 +134,7 @@
                   :class="library.bgClass"
                 >
                   <Icon :icon="library.icon" class="w-12 h-12 text-white mb-4" />
-                  <p class="text-lg font-bold text-white mb-3">
+                  <p class="text-base md:text-lg font-bold text-white mb-3">
                     Ready to explore?
                   </p>
                   <div class="inline-flex items-center gap-2 px-6 py-3 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-white/30 transition-all">
@@ -175,7 +175,7 @@
           <h2 class="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
             Why Choose Pybadu?
           </h2>
-          <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p class="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
             Specialized environments, zero setup, instant execution. Everything you need for Python library development.
           </p>
         </Motion>
@@ -264,7 +264,7 @@
           <h2 class="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
             What Developers Say
           </h2>
-          <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p class="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
             Trusted by developers and educators worldwide for Python library development and learning.
           </p>
         </Motion>

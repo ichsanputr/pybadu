@@ -30,12 +30,12 @@
     <!-- Information Section -->
     <LibraryInfoSection>
       <div class="text-center mb-12">
-        <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-6">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
           Pandas Online Compiler
         </h2>
         
         <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
-          <p class="text-lg leading-relaxed">
+          <p class="text-base md:text-lg leading-relaxed">
             Pandas is Python's premier library for data analysis and manipulation, used by millions of data professionals 
             worldwide. Our dedicated online Pandas compiler provides a complete browser-based environment for working with 
             structured data using powerful DataFrame and Series objects. Built on top of NumPy, Pandas offers high-performance, 
@@ -44,7 +44,7 @@
             professionals who need to clean, transform, and analyze data efficiently.
           </p>
           
-          <p class="text-lg leading-relaxed">
+          <p class="text-base md:text-lg leading-relaxed">
             This compiler includes <strong>Pandas 2.x</strong> with <strong>NumPy</strong>, enabling you to perform complex 
             data operations instantly through Pyodide WebAssembly technology. You can work with DataFrames (two-dimensional 
             labeled data structures with columns of potentially different types) and Series (one-dimensional labeled arrays), 
@@ -54,7 +54,7 @@
             handling, and SQL-like operations for combining multiple datasets.
           </p>
 
-          <p class="text-lg leading-relaxed">
+          <p class="text-base md:text-lg leading-relaxed">
             Our comprehensive example collection covers essential data manipulation techniques including DataFrame basics, 
             data selection and filtering, grouping data by categories with aggregate functions, detecting and filling 
             missing values, and combining datasets using merge, join, and concatenate operations. You'll also learn time 
@@ -63,7 +63,7 @@
             that are commonly used in production environments.
           </p>
 
-          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Who Should Use This</h3>
+          <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Who Should Use This</h3>
           <ul class="list-disc list-inside space-y-2 text-lg ml-4">
             <li>Data analysts working with structured datasets and creating insights</li>
             <li>Data scientists preprocessing data for machine learning models</li>

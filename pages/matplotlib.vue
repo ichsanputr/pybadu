@@ -31,12 +31,12 @@
     <LibraryInfoSection>
       <!-- Header -->
       <div class="text-center mb-12">
-        <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-6">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
           Matplotlib Online Compiler
         </h2>
         
         <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
-          <p class="text-lg leading-relaxed">
+          <p class="text-base md:text-lg leading-relaxed">
             Matplotlib is Python's most comprehensive library for creating static, animated, and interactive visualizations. 
             As the foundation of Python's data visualization ecosystem, Matplotlib has been the go-to choice for scientists, 
             engineers, and data analysts worldwide for over two decades. Our dedicated online Matplotlib compiler provides a 
@@ -44,7 +44,7 @@
             installation or setup required.
           </p>
           
-          <p class="text-lg leading-relaxed">
+          <p class="text-base md:text-lg leading-relaxed">
             This compiler comes pre-configured with <strong>Matplotlib 3.x</strong> and <strong>NumPy</strong>, powered by 
             Pyodide WebAssembly technology that brings the full power of Python directly to your browser. You can create 
             publication-quality figures, complex multi-subplot layouts, and 3D visualizations instantly. The online compiler 
@@ -53,7 +53,7 @@
             aspect of your plots—from colors and labels to custom styling and annotations.
           </p>
 
-          <p class="text-lg leading-relaxed">
+          <p class="text-base md:text-lg leading-relaxed">
             The multi-file project support allows you to organize complex visualizations across multiple Python files, making 
             it perfect for both simple examples and sophisticated data analysis projects. Whether you're learning data 
             visualization, prototyping charts for presentations, or teaching Python data science, our platform offers a 
@@ -61,7 +61,7 @@
             featuring 6+ pre-built examples, you can quickly learn different plot types and visualization techniques.
           </p>
 
-          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Perfect For</h3>
+          <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Perfect For</h3>
           <ul class="list-disc list-inside space-y-2 text-lg ml-4">
             <li>Data scientists prototyping visualizations and creating publication-ready figures</li>
             <li>Students learning Python data visualization and exploring different plot types</li>

@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-gray-50 py-8">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-8">
-        <h1 class="text-4xl font-bold text-gray-900 mb-4">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
           🐍 Pybadu Python Fiddle
         </h1>
         <p class="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -14,29 +14,29 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <div class="bg-white rounded-lg shadow-lg p-6">
           <div class="text-3xl mb-4">⚡</div>
-          <h3 class="text-lg font-semibold text-gray-900 mb-2">Instant Execution</h3>
+          <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-2">Instant Execution</h3>
           <p class="text-gray-600">Run Python code instantly in your browser without any setup.</p>
         </div>
 
         <div class="bg-white rounded-lg shadow-lg p-6">
           <div class="text-3xl mb-4">📦</div>
-          <h3 class="text-lg font-semibold text-gray-900 mb-2">Standard Library</h3>
+          <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-2">Standard Library</h3>
           <p class="text-gray-600">Full access to Python's standard library and built-in functions.</p>
         </div>
 
         <div class="bg-white rounded-lg shadow-lg p-6">
           <div class="text-3xl mb-4">🔒</div>
-          <h3 class="text-lg font-semibold text-gray-900 mb-2">Safe Environment</h3>
+          <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-2">Safe Environment</h3>
           <p class="text-gray-600">Code runs in a sandboxed WebAssembly environment.</p>
         </div>
       </div>
 
       <!-- Getting Started -->
       <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900 mb-4">🚀 Getting Started</h2>
+        <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-4">🚀 Getting Started</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-3">Quick Start</h3>
+            <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-3">Quick Start</h3>
             <ol class="list-decimal list-inside space-y-2 text-gray-600">
               <li>Click the "Try Fiddle" button below</li>
               <li>Write or paste your Python code</li>
@@ -45,7 +45,7 @@
             </ol>
           </div>
           <div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-3">What You Can Do</h3>
+            <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-3">What You Can Do</h3>
             <ul class="list-disc list-inside space-y-2 text-gray-600">
               <li>Basic Python programming</li>
               <li>Data manipulation and analysis</li>
@@ -68,7 +68,7 @@
 
       <!-- Example Code Preview -->
       <div class="mt-12 bg-white rounded-lg shadow-lg p-6">
-        <h2 class="text-2xl font-bold text-gray-900 mb-4">💻 Example Code</h2>
+        <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-4">💻 Example Code</h2>
         <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto">
           <pre class="text-green-400 text-sm"><code># Example: Data analysis with Python
 data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]

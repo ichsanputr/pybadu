@@ -30,12 +30,12 @@
     <!-- Information Section -->
     <LibraryInfoSection>
       <div class="text-center mb-12">
-        <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-6">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
           Scikit-learn Online Compiler
         </h2>
         
         <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
-          <p class="text-lg leading-relaxed">
+          <p class="text-base md:text-lg leading-relaxed">
             Scikit-learn is Python's most accessible and widely-used machine learning library, offering simple yet powerful 
             tools for predictive data analysis. As the de facto standard for machine learning in Python, Scikit-learn is 
             used by Fortune 500 companies, leading research institutions, and individual developers worldwide. Our dedicated 
@@ -44,7 +44,7 @@
             makes it easy to learn and apply various machine learning algorithms to solve real-world problems.
           </p>
           
-          <p class="text-lg leading-relaxed">
+          <p class="text-base md:text-lg leading-relaxed">
             This compiler includes <strong>Scikit-learn 1.7+</strong> with <strong>NumPy</strong>, powered by Pyodide 
             WebAssembly technology, providing instant access to classification, regression, clustering, and dimensionality 
             reduction algorithms. The platform supports both supervised learning with algorithms for labeled data and 
@@ -54,7 +54,7 @@
             evaluate models using comprehensive performance metrics such as accuracy, precision, recall, and F1-score.
           </p>
 
-          <p class="text-lg leading-relaxed">
+          <p class="text-base md:text-lg leading-relaxed">
             Our interactive examples cover a wide range of machine learning algorithms including Linear Regression, 
             Logistic Regression for classification, K-Means Clustering, Decision Trees, Random Forest ensemble learning, 
             Support Vector Machines, and Principal Component Analysis (PCA). Each example demonstrates key concepts like 
@@ -63,7 +63,7 @@
             are designed to help you understand both the theory and practical implementation of machine learning algorithms.
           </p>
 
-          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Target Audience</h3>
+          <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Target Audience</h3>
           <ul class="list-disc list-inside space-y-2 text-lg ml-4">
             <li>Machine learning beginners and students learning fundamentals</li>
             <li>Data scientists prototyping models before production deployment</li>

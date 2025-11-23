@@ -305,9 +305,8 @@ for fig in figs:
 
   function loadExample(example) {
     currentFileContent.value = example.code
-    setTimeout(() => {
-      runCode()
-    }, 100)
+    // Don't auto-run when loading example
+    // User can manually run when ready
   }
 
   async function initializePyodide() {
@@ -341,10 +340,8 @@ for fig in figs:
         pyodideReady.value = true
         loaderVisible.value = false
         
-        // Run initial example if available
-        if (currentFileContent.value.trim()) {
-          await runCode()
-        }
+        // Don't auto-run code on page load to improve performance
+        // User can manually run code when ready
         
       } catch (error) {
         console.error('Failed to initialize Pyodide:', error)

@@ -15,6 +15,14 @@ export default defineNuxtConfig({
       siteUrl: 'http://localhost:3000',
     }
   },
+  vite: {
+    define: {
+      "process.env.DEBUG": true, // Enable debug logging
+    },
+    server: {
+      allowedHosts: ['localhost', '127.0.0.1']
+    }
+  },
   app: {
     head: {
       htmlAttrs: {

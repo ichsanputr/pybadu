@@ -59,6 +59,12 @@
             <NuxtLink to="/snowball" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               Snowball Stemmer
             </NuxtLink>
+            <NuxtLink to="/beautifulsoup4" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              BeautifulSoup4
+            </NuxtLink>
+            <NuxtLink to="/pyjokes" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              Pyjokes
+            </NuxtLink>
           </div>
         </div>
       </div>

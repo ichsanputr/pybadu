@@ -175,53 +175,53 @@
 
         <!-- Desktop Buttons (Hidden on Mobile) -->
         <div class="hidden sm:flex items-center space-x-2">
-          <!-- Save Button -->
-          <button
-            @click="saveFile"
+        <!-- Save Button -->
+        <button
+          @click="saveFile"
             :disabled="isSaving"
-            :class="[
-              'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+          :class="[
+            'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
               isSaving
                 ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
                 : theme === 'dark'
-                  ? 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
-                  : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
-            ]"
-          >
+              ? 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+              : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+          ]"
+        >
             <Icon 
               :icon="isSaving ? 'ph:spinner' : 'uil:save'" 
               :class="['w-4 h-4', isSaving ? 'animate-spin' : '']"
             />
             <span>{{ isSaving ? 'Saving...' : 'Save' }}</span>
-          </button>
+        </button>
 
-          <!-- Share Button -->
-          <button
+        <!-- Share Button -->
+        <button
             @click="openShareDialog"
-            :class="[
-              'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
-              theme === 'dark'
-                ? 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
-                : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
-            ]"
-          >
-            <Icon icon="ph:share" class="w-4 h-4" />
+          :class="[
+            'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+            theme === 'dark'
+              ? 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+              : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+          ]"
+        >
+          <Icon icon="ph:share" class="w-4 h-4" />
             <span>Share</span>
-          </button>
+        </button>
 
           <!-- Theme Toggle -->
-          <button
-            @click="$emit('toggleTheme')"
-            :class="[
-              'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
-              theme === 'dark'
-                ? 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
-                : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
-            ]"
-          >
-            <Icon :icon="theme === 'dark' ? 'ph:sun' : 'ph:moon'" class="w-4 h-4" />
+        <button
+          @click="$emit('toggleTheme')"
+          :class="[
+            'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+            theme === 'dark'
+              ? 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+              : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+          ]"
+        >
+          <Icon :icon="theme === 'dark' ? 'ph:sun' : 'ph:moon'" class="w-4 h-4" />
             <span>{{ theme === 'dark' ? 'Light' : 'Dark' }}</span>
-          </button>
+        </button>
         </div>
 
         <!-- Mobile Menu Button -->
@@ -313,7 +313,7 @@
     </header>
 
     <!-- Main Layout -->
-    <div class="flex-1 flex overflow-hidden h-[calc(100vh-64px)]">
+    <div class="flex-none flex overflow-hidden h-[calc(100vh-52px)]">
       <!-- Sidebar (Desktop) -->
       <aside 
         v-if="showSidebar"
@@ -509,10 +509,9 @@
       </aside>
 
       <!-- Editor & Output & Ads -->
-       <!-- Oke -->
       <main class="flex-1 flex flex-col lg:flex-row overflow-hidden">
         <!-- Code Editor -->
-        <section class="w-full lg:w-[35%] xl:w-[40%] h-[60vh] lg:h-auto" :class="[
+        <section class="w-full lg:w-[35%] xl:w-[40%] h-[500px] lg:h-full" :class="[
           'flex flex-col border-r',
           theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
         ]">
@@ -560,12 +559,13 @@
         <!-- Output Panel -->
         <section :class="[
           'flex flex-col border-t lg:border-t-0 lg:border-l',
-          'w-full lg:w-[35%] xl:w-[35%] h-[60vh] lg:h-auto',
+          'w-full lg:w-[35%] xl:w-[35%]',
+          'h-[60vh] lg:h-[calc(100vh-64px)]',
           theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
         ]">
           <!-- Output Header -->
           <div :class="[
-            'flex items-center justify-between px-4 py-2 border-b text-sm',
+            'flex items-center justify-between px-4 py-2 border-b text-sm flex-shrink-0',
             theme === 'dark' 
               ? 'bg-gray-800/50 border-gray-700 text-gray-400' 
               : 'bg-gray-50 border-gray-200 text-gray-600'
@@ -595,7 +595,10 @@
           </div>
 
           <!-- Output Content -->
-          <div class="flex-1 overflow-y-auto p-4 space-y-3">
+          <div :class="[
+            'overflow-y-auto p-4 space-y-3',
+            '!h-[500px] lg:h-[calc(100vh-112px)]'
+          ]">
               <div
                 v-for="(item, index) in output"
                 :key="index"
@@ -800,7 +803,7 @@
                     : 'bg-gray-50 border-gray-300 text-gray-700'
                 ]"
               />
-              <button
+          <button
                 @click="copyShareUrl"
                 :class="[
                   'px-4 py-2 rounded-lg text-sm font-medium transition-all',
@@ -809,23 +812,23 @@
                     : 'bg-python-blue-600 hover:bg-python-blue-700',
                   'text-white'
                 ]"
-              >
+          >
                 <Icon :icon="shareDialog.copied ? 'ph:check' : 'ph:copy'" class="w-4 h-4" />
-              </button>
+          </button>
             </div>
           </div>
         </div>
       </div>
-      
+          
       <template #footer>
-        <button
+          <button
           v-if="!shareDialog.shareUrl"
           @click="shareDialog.show = false"
           class="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors"
-        >
+          >
           Cancel
-        </button>
-        <button
+          </button>
+          <button
           v-if="!shareDialog.shareUrl"
           @click="createShareLink"
           :disabled="!shareDialog.selectedFile || shareDialog.isCreating"
@@ -835,17 +838,17 @@
               ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
               : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
           ]"
-        >
+          >
           <Icon v-if="shareDialog.isCreating" icon="ph:spinner" class="w-4 h-4 inline animate-spin mr-2" />
           {{ shareDialog.isCreating ? 'Creating...' : 'Create Link' }}
-        </button>
-        <button
+          </button>
+          <button
           v-if="shareDialog.shareUrl"
           @click="shareDialog.show = false"
           class="px-4 py-2 bg-python-blue-600 hover:bg-python-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
-        >
+          >
           Done
-        </button>
+          </button>
       </template>
     </Dialog>
 
@@ -893,7 +896,7 @@
             <option value="off">Off</option>
             <option value="relative">Relative</option>
           </select>
-        </div>
+          </div>
 
         <!-- Word Wrap -->
         <div>
@@ -912,7 +915,7 @@
             <option value="on">On</option>
             <option value="off">Off</option>
           </select>
-        </div>
+          </div>
 
         <!-- Minimap -->
         <div class="flex items-center justify-between">
@@ -940,7 +943,7 @@
           <label :class="['block text-sm font-medium mb-2', theme === 'dark' ? 'text-gray-300' : 'text-gray-700']">
             Tab Size: {{ editorSettings.tabSize }}
           </label>
-          <input 
+            <input
             v-model.number="editorSettings.tabSize"
             type="range" 
             min="2" 
@@ -955,21 +958,21 @@
           <label :class="['text-sm font-medium', theme === 'dark' ? 'text-gray-300' : 'text-gray-700']">
             Insert Spaces (instead of tabs)
           </label>
-          <button
+            <button
             @click="editorSettings.insertSpaces = !editorSettings.insertSpaces"
-            :class="[
+              :class="[
               'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
               editorSettings.insertSpaces ? 'bg-python-blue-600' : 'bg-gray-300 dark:bg-gray-700'
-            ]"
-          >
+              ]"
+            >
             <span
               :class="[
                 'inline-block h-4 w-4 transform rounded-full bg-white transition-transform',
                 editorSettings.insertSpaces ? 'translate-x-6' : 'translate-x-1'
               ]"
             />
-          </button>
-        </div>
+            </button>
+          </div>
 
         <!-- Render Whitespace -->
         <div>
@@ -1015,7 +1018,7 @@
           </select>
         </div>
       </div>
-
+      
       <template #footer>
         <button
           @click="applyEditorSettings"
@@ -1388,7 +1391,7 @@ async function createShareLink() {
     
     if (!fileToShare) {
       throw new Error('Selected file not found')
-    }
+  }
 
     // Get library name from props or current route
     const libraryName = props.libraryName || 'python'

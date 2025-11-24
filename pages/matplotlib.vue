@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Editor Area -->
-    <div class="min-h-screen">
+    <div class="sm:min-h-screen">
       <CodeEditor 
         libraryName="Matplotlib"
         :theme="theme" 

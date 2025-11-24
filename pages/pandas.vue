@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Editor Area -->
-    <div class="min-h-screen">
+    <div class="sm:min-h-screen">
       <CodeEditor 
         libraryName="Pandas"
         :theme="theme" 
@@ -120,7 +120,6 @@ const examples = [
   {
     title: "DataFrame Basics",
     code: `import pandas as pd
-import numpy as np
 
 # Create a DataFrame
 data = {
@@ -206,13 +205,12 @@ print(df.groupby('Region').agg({
   {
     title: "Missing Data Handling",
     code: `import pandas as pd
-import numpy as np
 
 # Create data with missing values
 data = {
-    'A': [1, 2, np.nan, 4, 5],
-    'B': [5, np.nan, np.nan, 8, 9],
-    'C': [10, 11, 12, np.nan, 14]
+    'A': [1, 2, None, 4, 5],
+    'B': [5, None, None, 8, 9],
+    'C': [10, 11, 12, None, 14]
 }
 
 df = pd.DataFrame(data)
@@ -273,14 +271,14 @@ print(pd.merge(df1, df2, on='ID', how='outer'))`
   {
     title: "Time Series",
     code: `import pandas as pd
-import numpy as np
+import random
 
 # Create time series data
 dates = pd.date_range('2024-01-01', periods=10, freq='D')
 data = {
     'Date': dates,
-    'Temperature': np.random.randint(20, 35, 10),
-    'Humidity': np.random.randint(40, 80, 10)
+    'Temperature': [random.randint(20, 35) for _ in range(10)],
+    'Humidity': [random.randint(40, 80) for _ in range(10)]
 }
 
 df = pd.DataFrame(data)
@@ -303,7 +301,6 @@ print("Date range:", df.index.min(), "to", df.index.max())`
 ]
 
 const defaultCode = `import pandas as pd
-import numpy as np
 
 # Create a sample DataFrame
 data = {
@@ -350,10 +347,9 @@ const {
   packageName: 'pandas',
   defaultCode,
   examples,
-  additionalPackages: ['numpy'],
+  additionalPackages: [],
   setupCode: `
 import pandas as pd
-import numpy as np
   `
 })
 

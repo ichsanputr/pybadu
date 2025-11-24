@@ -64,6 +64,7 @@ export function useLibraryPlayground(config = {}) {
   const output = ref([])
   const isLoading = ref(false)
   const pyodideReady = ref(false)
+  // Note: pyodide now runs in worker, not in main thread
   const pyodide = ref(null)
   const loaderVisible = ref(false)
   
@@ -160,99 +161,103 @@ export function useLibraryPlayground(config = {}) {
     theme.value = theme.value === 'light' ? 'dark' : 'light'
   }
 
-  // Web worker for package loading status
-  let packageWorker = null
+  // Web worker for Pyodide (runs Pyodide in separate thread)
+  let pyodideWorker = null
+  let messageId = 0
+  const pendingMessages = new Map()
 
-  // Load Pyodide CDN script dynamically (only on compiler pages)
-  function loadPyodideScript() {
-    return new Promise((resolve, reject) => {
-      // Check if already loaded
-      if (window.loadPyodide) {
-        resolve()
-        return
-      }
-
-      // Check if script is already being loaded
-      if (document.querySelector('script[src*="pyodide.js"]')) {
-        // Wait for it to load
-        waitForPyodide().then(resolve).catch(reject)
-        return
-      }
-
-      // Create and load script
-      const script = document.createElement('script')
-      script.src = 'https://cdn.jsdelivr.net/pyodide/v0.29.0/full/pyodide.js'
-      script.async = true
-      script.crossOrigin = 'anonymous'
-      
-      script.onload = () => {
-        waitForPyodide().then(resolve).catch(reject)
-      }
-      
-      script.onerror = () => {
-        reject(new Error('Failed to load Pyodide script'))
-      }
-      
-      document.head.appendChild(script)
+  // Request/Response pattern for worker communication (based on Pyodide docs)
+  function getPromiseAndResolve() {
+    let resolve, reject
+    const promise = new Promise((res, rej) => {
+      resolve = res
+      reject = rej
     })
+    return { promise, resolve, reject }
   }
 
-  function waitForPyodide() {
-    return new Promise((resolve, reject) => {
-      if (window.loadPyodide) {
-        resolve()
+  function getId() {
+    return ++messageId
+  }
+
+  function requestResponse(worker, msg) {
+    const { promise, resolve, reject } = getPromiseAndResolve()
+    const id = getId()
+    
+    const listener = (event) => {
+      if (event.data?.id !== id) return
+      
+      worker.removeEventListener('message', listener)
+      pendingMessages.delete(id)
+      
+      const { id: _, ...rest } = event.data
+      
+      if (rest.error) {
+        reject(new Error(rest.error))
       } else {
-        let attempts = 0
-        const maxAttempts = 100 // 10 seconds max wait
-        
-        const checkPyodide = () => {
-          attempts++
-          if (window.loadPyodide) {
-            resolve()
-          } else if (attempts >= maxAttempts) {
-            reject(new Error('Pyodide loader timeout'))
-          } else {
-            setTimeout(checkPyodide, 100)
-          }
-        }
-        checkPyodide()
-      }
-    })
-  }
-
-  // Initialize package worker
-  function initPackageWorker() {
-    if (typeof Worker !== 'undefined' && !packageWorker) {
-      try {
-        packageWorker = new Worker('/workers/pyodide-worker.js')
-        
-        packageWorker.addEventListener('message', (e) => {
-          const { type, status, message, progress, currentPackage } = e.data
-          
-          if (type === 'PACKAGE_STATUS') {
-            // Update loading status (can be used for progress UI if needed)
-            if (status === 'complete') {
-              console.log('Packages installed:', message)
-            } else if (status === 'error') {
-              console.error('Package installation error:', e.data.error)
-            } else if (status === 'loading') {
-              // Progress update (can be used for progress bar)
-              console.log(`Package loading: ${currentPackage || '...'} (${progress}%)`)
-            }
-          }
-        })
-        
-        packageWorker.addEventListener('error', (error) => {
-          console.error('Package worker error:', error)
-        })
-      } catch (error) {
-        console.warn('Web Worker not available, continuing without worker:', error)
+        resolve(rest)
       }
     }
+    
+    worker.addEventListener('message', listener)
+    pendingMessages.set(id, { resolve, reject, listener })
+    
+    worker.postMessage({ id, ...msg })
+    return promise
+  }
+
+  // Initialize Pyodide worker
+  function initPyodideWorker() {
+    if (typeof Worker === 'undefined') {
+      console.warn('Web Workers not supported')
+      return false
+    }
+    
+    if (!pyodideWorker) {
+      try {
+        // Create worker with type: 'module' to use ES6 imports
+        pyodideWorker = new Worker('/workers/pyodide-worker.js', { type: 'module' })
+        
+        pyodideWorker.addEventListener('message', (e) => {
+          const { type, id, message, progress, currentPackage, result, error } = e.data
+          
+          // Handle messages without ID (like WORKER_READY, PYODIDE_READY)
+          if (!id) {
+            if (type === 'WORKER_READY') {
+              console.log('Worker ready:', message)
+            } else if (type === 'PYODIDE_READY') {
+              console.log('Pyodide ready in worker:', message)
+            }
+            return
+          }
+          
+          // Handle messages with ID (request/response)
+          const pending = pendingMessages.get(id)
+          if (pending) {
+            pending.listener(e)
+          }
+        })
+        
+        pyodideWorker.addEventListener('error', (error) => {
+          console.error('Pyodide worker error:', error)
+          output.value.push({
+            type: 'error',
+            content: `Worker error: ${error.message}`,
+            timestamp: new Date().toLocaleTimeString()
+          })
+        })
+        
+        return true
+      } catch (error) {
+        console.error('Failed to create Pyodide worker:', error)
+        return false
+      }
+    }
+    return true
   }
 
   async function runCode() {
-    if (!pyodideReady.value || !currentFileContent.value.trim()) return
+    if (!pyodideReady.value || !currentFileContent.value.trim() || !pyodideWorker) return
     
     // Show loader immediately when button is clicked
     isLoading.value = true
@@ -266,73 +271,36 @@ export function useLibraryPlayground(config = {}) {
     try {
       output.value = []
       
-      pyodide.value.runPython(`
-import sys
-from io import StringIO
-${packageName.includes('matplotlib') ? `
-import matplotlib.pyplot as plt
-plt.close('all')
-` : ''}
-sys.stdout = StringIO()
-      `)
-      
-      pyodide.value.runPython(currentFileContent.value)
-      
-      const stdout = pyodide.value.runPython(`
-captured_output = sys.stdout.getvalue()
-sys.stdout = sys.__stdout__
-captured_output
-      `)
+      // Run Python code in worker
+      const response = await requestResponse(pyodideWorker, {
+        type: 'RUN_PYTHON',
+        data: {
+          code: currentFileContent.value,
+          packageName: packageName
+        }
+      })
       
       // Collect all output items first (don't display yet)
       const outputItems = []
       
-      // Handle matplotlib plots
-      if (packageName.includes('matplotlib')) {
-        try {
-          const canvas = pyodide.value.runPython(`
-import matplotlib.pyplot as plt
-import io
-import base64
-
-# Get all figures
-figs = [plt.figure(n) for n in plt.get_fignums()]
-images = []
-
-for fig in figs:
-    buf = io.BytesIO()
-    fig.savefig(buf, format='png', bbox_inches='tight', dpi=100)
-    buf.seek(0)
-    img_str = base64.b64encode(buf.read()).decode()
-    images.append(img_str)
-    buf.close()
-
-','.join(images) if images else ''
-          `)
-          
-          if (canvas && canvas.trim()) {
-            const images = canvas.split(',')
-            for (const imgData of images) {
-              if (imgData) {
-                outputItems.push({
-                  type: 'image',
-                  content: imgData,
-                  timestamp: new Date().toLocaleTimeString()
-                })
-              }
-            }
+      // Handle images from matplotlib
+      if (response.result?.images && response.result.images.length > 0) {
+        for (const imgData of response.result.images) {
+          if (imgData) {
+            outputItems.push({
+              type: 'image',
+              content: imgData,
+              timestamp: new Date().toLocaleTimeString()
+            })
           }
-        } catch (plotError) {
-          console.warn('No plots generated or error capturing plots:', plotError)
         }
       }
       
-      const executionTime = Date.now() - startTime
-      
-      if (stdout && stdout.trim()) {
+      // Handle stdout
+      if (response.result?.stdout && response.result.stdout.trim()) {
         outputItems.push({
           type: 'print',
-          content: stdout.trim(),
+          content: response.result.stdout.trim(),
           timestamp: new Date().toLocaleTimeString()
         })
       }
@@ -398,74 +366,25 @@ for fig in figs:
         loaderVisible.value = true
         setThemeClass(theme.value)
         
-        // Initialize package worker
-        initPackageWorker()
+        // Initialize Pyodide worker (Pyodide runs in worker, not main thread)
+        if (!initPyodideWorker()) {
+          throw new Error('Failed to initialize web worker')
+        }
         
-        // Load Pyodide CDN script dynamically (only on compiler pages)
-        await loadPyodideScript()
-        
-        // Initialize Pyodide
-        pyodide.value = await loadPyodide({
-          indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.29.0/full/'
+        // Initialize Pyodide in worker
+        await requestResponse(pyodideWorker, {
+          type: 'INIT_PYODIDE'
         })
         
-        // Notify worker about package installation start
-        const packagesToInstall = []
-        if (packageName) packagesToInstall.push(packageName)
-        packagesToInstall.push(...additionalPackages)
-        
-        if (packageWorker) {
-          packageWorker.postMessage({
-            type: 'PACKAGE_INSTALL_START',
-            data: { packages: packagesToInstall }
-          })
-        }
-        
-        // Load micropip
-        await pyodide.value.loadPackage("micropip")
-        const micropip = pyodide.value.pyimport("micropip")
-        
-        // Install main package with progress updates
-        if (packageName) {
-          if (packageWorker) {
-            packageWorker.postMessage({
-              type: 'PACKAGE_PROGRESS',
-              data: { 
-                currentPackage: packageName,
-                progress: 30
-              }
-            })
+        // Load packages in worker
+        await requestResponse(pyodideWorker, {
+          type: 'LOAD_PACKAGES',
+          data: {
+            packageName,
+            additionalPackages,
+            setupCode
           }
-          await micropip.install(packageName)
-        }
-        
-        // Install additional packages with progress updates
-        for (let i = 0; i < additionalPackages.length; i++) {
-          const pkg = additionalPackages[i]
-          if (packageWorker) {
-            packageWorker.postMessage({
-              type: 'PACKAGE_PROGRESS',
-              data: { 
-                currentPackage: pkg,
-                progress: 50 + (i / additionalPackages.length) * 40
-              }
-            })
-          }
-          await micropip.install(pkg)
-        }
-        
-        // Notify worker about completion
-        if (packageWorker) {
-          packageWorker.postMessage({
-            type: 'PACKAGE_INSTALL_COMPLETE',
-            data: { packages: packagesToInstall }
-          })
-        }
-        
-        // Run setup code if provided
-        if (setupCode) {
-          pyodide.value.runPython(setupCode)
-        }
+        })
         
         pyodideReady.value = true
         loaderVisible.value = false
@@ -476,14 +395,6 @@ for fig in figs:
       } catch (error) {
         console.error('Failed to initialize Pyodide:', error)
         loaderVisible.value = false
-        
-        // Notify worker about error
-        if (packageWorker) {
-          packageWorker.postMessage({
-            type: 'PACKAGE_INSTALL_ERROR',
-            data: { error: error.message }
-          })
-        }
         
         output.value.push({
           type: 'error',
@@ -496,9 +407,15 @@ for fig in figs:
 
   // Cleanup worker on unmount
   function cleanupWorker() {
-    if (packageWorker) {
-      packageWorker.terminate()
-      packageWorker = null
+    if (pyodideWorker) {
+      // Cancel all pending messages
+      pendingMessages.forEach(({ reject }) => {
+        reject(new Error('Worker terminated'))
+      })
+      pendingMessages.clear()
+      
+      pyodideWorker.terminate()
+      pyodideWorker = null
     }
   }
 

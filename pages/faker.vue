@@ -13,6 +13,8 @@
         :pyodideReady="pyodideReady"
         :monacoTheme="monacoTheme"
         :examples="examples"
+        :assets="assets"
+        :assetsUploading="assetsUploading"
         @update:code="updateCurrentFile"
         @toggleTheme="toggleTheme"
         @runCode="runCode" 
@@ -23,7 +25,11 @@
         @selectFile="selectFile"
         @deleteFile="deleteFile"
         @renameFile="renameFile"
-        @saveToStorage="saveToStorage" />
+        @saveToStorage="saveToStorage"
+        @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset"
+        @refreshAssets="refreshAssets"
+        @createAssetFolder="createAssetFolder" />
     </div>
 
     <!-- Information Section -->
@@ -39,7 +45,7 @@
           </p>
           
           <p class="text-base md:text-lg leading-relaxed">
-            This compiler includes <strong>Faker</strong>, enabling you to generate fake data directly in your browser. The library supports multiple locales, allowing you to generate data appropriate for different regions and languages. You can create realistic names, addresses, emails, phone numbers, company information, job titles, dates, times, text content, and many other data types. The platform provides all the tools you need for comprehensive fake data generation including localization support, diverse data providers, and extensible architecture for custom data generation.
+            This compiler includes <strong>Faker</strong>, enabling you to generate fake data directly in your browser. The library supports multiple locales, allowing you to generate data appropriate for different regions and languages. You can create realistic names, addresses, emails, phone numbers, company information, job titles, dates, times, text content, and many other data types. The platform provides all the tools you need for comprehensive fake data generation including localization support, diverse data providers, and extensible architecture for custom data generation. You can also upload and use files or folders directly in your code for data generation and testing workflows. This compiler is online and completely free to use.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
@@ -239,7 +245,13 @@ const {
   clearOutput,
   loadExample,
   initializePyodide,
-  cleanupWorker
+  cleanupWorker,
+  assets,
+  assetsUploading,
+  refreshAssets,
+  uploadAssets,
+  deleteAsset,
+  createAssetFolder
 } = useLibraryPlayground({
   packageName: 'faker',
   defaultCode,

@@ -12,6 +12,8 @@
         :pyodideReady="pyodideReady"
         :monacoTheme="monacoTheme"
         :examples="examples"
+        :assets="assets"
+        :assetsUploading="assetsUploading"
         @update:code="updateCurrentFile"
         @toggleTheme="toggleTheme"
         @runCode="runCode"
@@ -23,6 +25,10 @@
         @deleteFile="deleteFile"
         @renameFile="renameFile"
         @saveToStorage="saveToStorage"
+        @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset"
+        @refreshAssets="refreshAssets"
+        @createAssetFolder="createAssetFolder"
       />
     </div>
 
@@ -38,7 +44,7 @@
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
-            This compiler bundles the latest <strong>bitstring</strong> build so you can create <code>BitArray</code>, <code>Bits</code>, and <code>BitStream</code> objects entirely in the browser. Convert between binary, hex, integers, floats, and files, craft protocol packets, decode sensor frames, and validate bit-level algorithms without installing anything locally.
+            This compiler bundles the latest <strong>bitstring</strong> build so you can create <code>BitArray</code>, <code>Bits</code>, and <code>BitStream</code> objects entirely in the browser. Convert between binary, hex, integers, floats, and files, craft protocol packets, decode sensor frames, and validate bit-level algorithms without installing anything locally. You can also upload and use files or folders directly in your code for binary data processing and protocol workflows. This compiler is online and completely free to use.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
@@ -191,7 +197,13 @@ const {
   clearOutput,
   loadExample,
   initializePyodide,
-  cleanupWorker
+  cleanupWorker,
+  assets,
+  assetsUploading,
+  refreshAssets,
+  uploadAssets,
+  deleteAsset,
+  createAssetFolder
 } = useLibraryPlayground({
   packageName: 'bitstring',
   defaultCode,

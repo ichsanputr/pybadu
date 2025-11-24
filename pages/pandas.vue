@@ -51,7 +51,8 @@
             performing operations like data cleaning, transformation, statistical analysis, and time series manipulation. 
             The platform provides all the tools you need for comprehensive data analysis including powerful indexing and 
             slicing capabilities, GroupBy operations for split-apply-combine functionality, sophisticated missing data 
-            handling, and SQL-like operations for combining multiple datasets.
+            handling, and SQL-like operations for combining multiple datasets. You can also upload and use files or folders 
+            directly in your code for data processing and analysis workflows. This compiler is online and completely free to use.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">

@@ -13,6 +13,8 @@
         :pyodideReady="pyodideReady"
         :monacoTheme="monacoTheme"
         :examples="examples"
+        :assets="assets"
+        :assetsUploading="assetsUploading"
         @update:code="updateCurrentFile"
         @toggleTheme="toggleTheme"
         @runCode="runCode" 
@@ -23,7 +25,11 @@
         @selectFile="selectFile"
         @deleteFile="deleteFile"
         @renameFile="renameFile"
-        @saveToStorage="saveToStorage" />
+        @saveToStorage="saveToStorage"
+        @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset"
+        @refreshAssets="refreshAssets"
+        @createAssetFolder="createAssetFolder" />
     </div>
 
     <!-- Information Section -->
@@ -39,7 +45,7 @@
           </p>
           
           <p class="text-base md:text-lg leading-relaxed">
-            This compiler includes <strong>ShortUUID</strong>, enabling you to generate shorter, URL-safe UUIDs directly in your browser. You can create compact unique identifiers, convert between standard UUIDs and short UUIDs, generate random short UUIDs, and work with custom alphabets. The platform provides all the tools you need for comprehensive UUID generation including URL-safe encoding, alphabet customization, and bidirectional conversion between standard and short UUID formats.
+            This compiler includes <strong>ShortUUID</strong>, enabling you to generate shorter, URL-safe UUIDs directly in your browser. You can create compact unique identifiers, convert between standard UUIDs and short UUIDs, generate random short UUIDs, and work with custom alphabets. The platform provides all the tools you need for comprehensive UUID generation including URL-safe encoding, alphabet customization, and bidirectional conversion between standard and short UUID formats. You can also upload and use files or folders directly in your code for UUID generation and identifier management workflows. This compiler is online and completely free to use.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
@@ -206,7 +212,13 @@ const {
   clearOutput,
   loadExample,
   initializePyodide,
-  cleanupWorker
+  cleanupWorker,
+  assets,
+  assetsUploading,
+  refreshAssets,
+  uploadAssets,
+  deleteAsset,
+  createAssetFolder
 } = useLibraryPlayground({
   packageName: 'shortuuid',
   defaultCode,

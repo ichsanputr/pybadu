@@ -56,7 +56,9 @@
             publication-quality figures, complex multi-subplot layouts, and 3D visualizations instantly. The online compiler 
             supports all major Matplotlib features including line plots, scatter plots, bar charts, histograms, pie charts, 
             3D surface plots, contour plots, heatmaps, and statistical visualizations. You have full control over every 
-            aspect of your plots—from colors and labels to custom styling and annotations.
+            aspect of your plots—from colors and labels to custom styling and annotations. Additionally, you can upload 
+            and use files or folders directly in your code for data processing and visualization workflows. This compiler 
+            is online and completely free to use.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">

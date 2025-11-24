@@ -51,7 +51,9 @@
             unsupervised learning for pattern discovery. You can perform model selection using cross-validation and grid 
             search for hyperparameter tuning, apply preprocessing techniques like data scaling and normalization, use 
             feature selection tools, experiment with ensemble methods including Random Forests and Gradient Boosting, and 
-            evaluate models using comprehensive performance metrics such as accuracy, precision, recall, and F1-score.
+            evaluate models using comprehensive performance metrics such as accuracy, precision, recall, and F1-score. 
+            You can also upload and use files or folders directly in your code for machine learning workflows and data processing. 
+            This compiler is online and completely free to use.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">

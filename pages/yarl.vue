@@ -13,6 +13,8 @@
         :pyodideReady="pyodideReady"
         :monacoTheme="monacoTheme"
         :examples="examples"
+        :assets="assets"
+        :assetsUploading="assetsUploading"
         @update:code="updateCurrentFile"
         @toggleTheme="toggleTheme"
         @runCode="runCode" 
@@ -23,7 +25,11 @@
         @selectFile="selectFile"
         @deleteFile="deleteFile"
         @renameFile="renameFile"
-        @saveToStorage="saveToStorage" />
+        @saveToStorage="saveToStorage"
+        @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset"
+        @refreshAssets="refreshAssets"
+        @createAssetFolder="createAssetFolder" />
     </div>
 
     <!-- Information Section -->
@@ -39,7 +45,7 @@
           </p>
           
           <p class="text-base md:text-lg leading-relaxed">
-            This compiler includes <strong>Yarl</strong>, enabling you to parse and build URLs directly in your browser. The library provides immutable URL objects, meaning any modification creates a new URL object while preserving the original. You can easily access URL components, modify paths, add or remove query parameters, join URLs, and handle percent-encoding automatically. The platform provides all the tools you need for comprehensive URL manipulation including component access, path joining, query parameter management, and URL building from scratch.
+            This compiler includes <strong>Yarl</strong>, enabling you to parse and build URLs directly in your browser. The library provides immutable URL objects, meaning any modification creates a new URL object while preserving the original. You can easily access URL components, modify paths, add or remove query parameters, join URLs, and handle percent-encoding automatically. The platform provides all the tools you need for comprehensive URL manipulation including component access, path joining, query parameter management, and URL building from scratch. You can also upload and use files or folders directly in your code for URL processing and web development workflows. This compiler is online and completely free to use.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
@@ -232,7 +238,13 @@ const {
   clearOutput,
   loadExample,
   initializePyodide,
-  cleanupWorker
+  cleanupWorker,
+  assets,
+  assetsUploading,
+  refreshAssets,
+  uploadAssets,
+  deleteAsset,
+  createAssetFolder
 } = useLibraryPlayground({
   packageName: 'yarl',
   defaultCode,

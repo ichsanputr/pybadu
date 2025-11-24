@@ -13,6 +13,8 @@
         :pyodideReady="pyodideReady"
         :monacoTheme="monacoTheme"
         :examples="examples"
+        :assets="assets"
+        :assetsUploading="assetsUploading"
         @update:code="updateCurrentFile"
         @toggleTheme="toggleTheme"
         @runCode="runCode" 
@@ -23,7 +25,11 @@
         @selectFile="selectFile"
         @deleteFile="deleteFile"
         @renameFile="renameFile"
-        @saveToStorage="saveToStorage" />
+        @saveToStorage="saveToStorage"
+        @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset"
+        @refreshAssets="refreshAssets"
+        @createAssetFolder="createAssetFolder" />
     </div>
 
     <!-- Information Section -->
@@ -39,7 +45,7 @@
           </p>
           
           <p class="text-base md:text-lg leading-relaxed">
-            This compiler includes <strong>Tabulate</strong>, enabling you to pretty print tables from Python lists directly in your browser. The library supports multiple table formats including plain text, grid, simple, pipe, orgtbl, and more. You can create tables from lists of lists, dictionaries, or other iterable data structures, customize table headers, align columns, and format numbers. The platform provides all the tools you need for comprehensive table formatting including various output styles, column alignment options, and flexible data input formats.
+            This compiler includes <strong>Tabulate</strong>, enabling you to pretty print tables from Python lists directly in your browser. The library supports multiple table formats including plain text, grid, simple, pipe, orgtbl, and more. You can create tables from lists of lists, dictionaries, or other iterable data structures, customize table headers, align columns, and format numbers. The platform provides all the tools you need for comprehensive table formatting including various output styles, column alignment options, and flexible data input formats. You can also upload and use files or folders directly in your code for data processing and table generation workflows. This compiler is online and completely free to use.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
@@ -224,7 +230,13 @@ const {
   clearOutput,
   loadExample,
   initializePyodide,
-  cleanupWorker
+  cleanupWorker,
+  assets,
+  assetsUploading,
+  refreshAssets,
+  uploadAssets,
+  deleteAsset,
+  createAssetFolder
 } = useLibraryPlayground({
   packageName: 'tabulate',
   defaultCode,

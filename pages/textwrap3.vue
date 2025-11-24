@@ -45,7 +45,7 @@
           </p>
           
           <p class="text-base md:text-lg leading-relaxed">
-            This compiler includes <strong>Textwrap3</strong>, enabling you to perform advanced text wrapping operations directly in your browser. You can wrap long lines of text to fit within specified widths, fill paragraphs with proper line breaks, shorten text to fit within character limits, and control indentation and dedentation. The library provides all the tools you need for comprehensive text formatting including width control, line limiting, prefix/suffix support, and handling of whitespace. The platform supports all textwrap3 features for creating well-formatted, readable text output.
+            This compiler includes <strong>Textwrap3</strong>, enabling you to perform advanced text wrapping operations directly in your browser. You can wrap long lines of text to fit within specified widths, fill paragraphs with proper line breaks, shorten text to fit within character limits, and control indentation and dedentation. The library provides all the tools you need for comprehensive text formatting including width control, line limiting, prefix/suffix support, and handling of whitespace. The platform supports all textwrap3 features for creating well-formatted, readable text output. You can also upload and use files or folders directly in your code for text processing workflows. This compiler is online and completely free to use.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">

@@ -49,7 +49,9 @@
             supports all core NumPy features including array creation, manipulation with powerful indexing and slicing, 
             broadcasting for efficient element-wise operations, and a comprehensive library of mathematical functions 
             covering trigonometric, exponential, and logarithmic operations. Whether you're performing matrix operations, 
-            statistical analysis, or scientific computations, our NumPy playground offers instant execution without any setup.
+            statistical analysis, or scientific computations, our NumPy playground offers instant execution without any setup. 
+            You can also upload and use files or folders directly in your code for data processing and numerical workflows. 
+            This compiler is online and completely free to use.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">

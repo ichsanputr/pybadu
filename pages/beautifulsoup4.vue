@@ -39,7 +39,7 @@
           </p>
           
           <p class="text-base md:text-lg leading-relaxed">
-            This compiler includes <strong>BeautifulSoup4</strong> (bs4), enabling you to parse and extract data from HTML strings directly in your browser. You can work with HTML content without needing external files—simply provide HTML strings inline and BeautifulSoup4 will parse them into a navigable tree structure. The platform provides all the tools you need for comprehensive HTML parsing including tag searching, attribute extraction, CSS selector support, text extraction, and tree navigation. You can find elements by tag name, class, ID, attributes, or use CSS selectors for complex queries.
+            This compiler includes <strong>BeautifulSoup4</strong> (bs4), enabling you to parse and extract data from HTML strings directly in your browser. You can work with HTML content without needing external files—simply provide HTML strings inline and BeautifulSoup4 will parse them into a navigable tree structure. The platform provides all the tools you need for comprehensive HTML parsing including tag searching, attribute extraction, CSS selector support, text extraction, and tree navigation. You can find elements by tag name, class, ID, attributes, or use CSS selectors for complex queries. You can also upload and use files or folders directly in your code for web scraping and HTML processing workflows. This compiler is online and completely free to use.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">

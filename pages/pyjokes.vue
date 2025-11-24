@@ -13,6 +13,8 @@
         :pyodideReady="pyodideReady"
         :monacoTheme="monacoTheme"
         :examples="examples"
+        :assets="assets"
+        :assetsUploading="assetsUploading"
         @update:code="updateCurrentFile"
         @toggleTheme="toggleTheme"
         @runCode="runCode" 
@@ -23,7 +25,11 @@
         @selectFile="selectFile"
         @deleteFile="deleteFile"
         @renameFile="renameFile"
-        @saveToStorage="saveToStorage" />
+        @saveToStorage="saveToStorage"
+        @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset"
+        @refreshAssets="refreshAssets"
+        @createAssetFolder="createAssetFolder" />
     </div>
 
     <!-- Information Section -->
@@ -39,7 +45,7 @@
           </p>
           
           <p class="text-base md:text-lg leading-relaxed">
-            This compiler includes <strong>Pyjokes</strong>, enabling you to generate random programming jokes directly in your browser. The library supports multiple joke categories including general programming jokes, neutral jokes, and language-specific jokes. You can generate single jokes or multiple jokes at once, filter by category, and even specify the language for joke generation. The platform provides all the tools you need to integrate humor into your Python applications, making it perfect for learning, entertainment, or adding a fun element to your projects.
+            This compiler includes <strong>Pyjokes</strong>, enabling you to generate random programming jokes directly in your browser. The library supports multiple joke categories including general programming jokes, neutral jokes, and language-specific jokes. You can generate single jokes or multiple jokes at once, filter by category, and even specify the language for joke generation. The platform provides all the tools you need to integrate humor into your Python applications, making it perfect for learning, entertainment, or adding a fun element to your projects. You can also upload and use files or folders directly in your code for joke generation and entertainment workflows. This compiler is online and completely free to use.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
@@ -226,7 +232,13 @@ const {
   clearOutput,
   loadExample,
   initializePyodide,
-  cleanupWorker
+  cleanupWorker,
+  assets,
+  assetsUploading,
+  refreshAssets,
+  uploadAssets,
+  deleteAsset,
+  createAssetFolder
 } = useLibraryPlayground({
   packageName: 'pyjokes',
   defaultCode,

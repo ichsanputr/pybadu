@@ -13,6 +13,8 @@
         :pyodideReady="pyodideReady"
         :monacoTheme="monacoTheme"
         :examples="examples"
+        :assets="assets"
+        :assetsUploading="assetsUploading"
         @update:code="updateCurrentFile"
         @toggleTheme="toggleTheme"
         @runCode="runCode"
@@ -24,6 +26,10 @@
         @deleteFile="deleteFile"
         @renameFile="renameFile"
         @saveToStorage="saveToStorage"
+        @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset"
+        @refreshAssets="refreshAssets"
+        @createAssetFolder="createAssetFolder"
       />
     </div>
 
@@ -40,7 +46,7 @@
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
-            This compiler lets you inspect payloads, build custom encoders, and test parser settings directly in your browser. Round-trip complex objects, convert Decimals without losing precision, coerce tuples and lists, and extend <code>JSONEncoder</code> or <code>JSONDecoder</code> to satisfy strict API contracts. Every option from the upstream package—<code>object_hook</code>, <code>object_pairs_hook</code>, <code>parse_float</code>, <code>parse_int</code>, and more—is available here so you can validate serialization logic end to end.
+            This compiler lets you inspect payloads, build custom encoders, and test parser settings directly in your browser. Round-trip complex objects, convert Decimals without losing precision, coerce tuples and lists, and extend <code>JSONEncoder</code> or <code>JSONDecoder</code> to satisfy strict API contracts. Every option from the upstream package—<code>object_hook</code>, <code>object_pairs_hook</code>, <code>parse_float</code>, <code>parse_int</code>, and more—is available here so you can validate serialization logic end to end. You can also upload and use files or folders directly in your code for JSON processing and data workflows. This compiler is online and completely free to use.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
@@ -212,7 +218,13 @@ const {
   clearOutput,
   loadExample,
   initializePyodide,
-  cleanupWorker
+  cleanupWorker,
+  assets,
+  assetsUploading,
+  refreshAssets,
+  uploadAssets,
+  deleteAsset,
+  createAssetFolder
 } = useLibraryPlayground({
   packageName: 'simplejson',
   defaultCode,

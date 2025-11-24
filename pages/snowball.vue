@@ -47,7 +47,8 @@
             improved version of the Porter stemming algorithm. You can perform text normalization, reduce word variations to their 
             base forms, and improve the accuracy of text matching and search operations. The platform provides all the tools you 
             need for comprehensive text processing including multi-language support, batch processing capabilities, and efficient 
-            stemming algorithms optimized for performance.
+            stemming algorithms optimized for performance. You can also upload and use files or folders directly in your code for 
+            text processing and NLP workflows. This compiler is online and completely free to use.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">

@@ -12,6 +12,8 @@
         :pyodideReady="pyodideReady"
         :monacoTheme="monacoTheme"
         :examples="examples"
+        :assets="assets"
+        :assetsUploading="assetsUploading"
         @update:code="updateCurrentFile"
         @toggleTheme="toggleTheme"
         @runCode="runCode"
@@ -23,6 +25,10 @@
         @deleteFile="deleteFile"
         @renameFile="renameFile"
         @saveToStorage="saveToStorage"
+        @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset"
+        @refreshAssets="refreshAssets"
+        @createAssetFolder="createAssetFolder"
       />
     </div>
 
@@ -38,7 +44,7 @@
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
-            This compiler loads the full <strong>sortedcontainers</strong> toolkit so you can prototype sorted collections entirely in the browser. Create lists that auto-order inserts, maintain key-sorted dictionaries, slice ranked subsets, bisect search ranges, and benchmark workloads such as maintaining rolling leaderboards or scheduling priority queues without touching your local environment.
+            This compiler loads the full <strong>sortedcontainers</strong> toolkit so you can prototype sorted collections entirely in the browser. Create lists that auto-order inserts, maintain key-sorted dictionaries, slice ranked subsets, bisect search ranges, and benchmark workloads such as maintaining rolling leaderboards or scheduling priority queues without touching your local environment. You can also upload and use files or folders directly in your code for data processing and collection workflows. This compiler is online and completely free to use.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
@@ -198,7 +204,13 @@ const {
   clearOutput,
   loadExample,
   initializePyodide,
-  cleanupWorker
+  cleanupWorker,
+  assets,
+  assetsUploading,
+  refreshAssets,
+  uploadAssets,
+  deleteAsset,
+  createAssetFolder
 } = useLibraryPlayground({
   packageName: 'sortedcontainers',
   defaultCode,

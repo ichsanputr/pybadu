@@ -12,6 +12,8 @@
         :pyodideReady="pyodideReady"
         :monacoTheme="monacoTheme"
         :examples="examples"
+        :assets="assets"
+        :assetsUploading="assetsUploading"
         @update:code="updateCurrentFile"
         @toggleTheme="toggleTheme"
         @runCode="runCode"
@@ -23,6 +25,10 @@
         @deleteFile="deleteFile"
         @renameFile="renameFile"
         @saveToStorage="saveToStorage"
+        @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset"
+        @refreshAssets="refreshAssets"
+        @createAssetFolder="createAssetFolder"
       />
     </div>
 
@@ -38,7 +44,7 @@
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
-            This compiler brings the full Jinja2 runtime into the browser so you can prototype templates, test filters, and iterate on macros without spinning up a local server. Load Template objects from strings, register custom filters, render blocks with inheritance, and inspect the generated text instantly—ideal for polishing snippets before integrating them into an app or automation pipeline.
+            This compiler brings the full Jinja2 runtime into the browser so you can prototype templates, test filters, and iterate on macros without spinning up a local server. Load Template objects from strings, register custom filters, render blocks with inheritance, and inspect the generated text instantly—ideal for polishing snippets before integrating them into an app or automation pipeline. You can also upload and use files or folders directly in your code for template processing and content generation workflows. This compiler is online and completely free to use.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
@@ -187,7 +193,13 @@ const {
   clearOutput,
   loadExample,
   initializePyodide,
-  cleanupWorker
+  cleanupWorker,
+  assets,
+  assetsUploading,
+  refreshAssets,
+  uploadAssets,
+  deleteAsset,
+  createAssetFolder
 } = useLibraryPlayground({
   packageName: 'jinja2',
   defaultCode,

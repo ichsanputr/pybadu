@@ -12,6 +12,8 @@
         :pyodideReady="pyodideReady"
         :monacoTheme="monacoTheme"
         :examples="examples"
+        :assets="assets"
+        :assetsUploading="assetsUploading"
         @update:code="updateCurrentFile"
         @toggleTheme="toggleTheme"
         @runCode="runCode"
@@ -23,6 +25,10 @@
         @deleteFile="deleteFile"
         @renameFile="renameFile"
         @saveToStorage="saveToStorage"
+        @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset"
+        @refreshAssets="refreshAssets"
+        @createAssetFolder="createAssetFolder"
       />
     </div>
 
@@ -38,7 +44,7 @@
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
-            This compiler loads NetworkX directly in the browser so you can prototype graph logic without a local environment. Create graphs from edge lists, compute paths, examine degrees, run centrality metrics, and serialize structures for visualization. It’s perfect for testing algorithm ideas, preparing teaching material, or inspecting dataset snippets before integrating them into larger workflows.
+            This compiler loads NetworkX directly in the browser so you can prototype graph logic without a local environment. Create graphs from edge lists, compute paths, examine degrees, run centrality metrics, and serialize structures for visualization. It’s perfect for testing algorithm ideas, preparing teaching material, or inspecting dataset snippets before integrating them into larger workflows. You can also upload and use files or folders directly in your code for graph data processing and network analysis workflows. This compiler is online and completely free to use.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
@@ -190,7 +196,13 @@ const {
   clearOutput,
   loadExample,
   initializePyodide,
-  cleanupWorker
+  cleanupWorker,
+  assets,
+  assetsUploading,
+  refreshAssets,
+  uploadAssets,
+  deleteAsset,
+  createAssetFolder
 } = useLibraryPlayground({
   packageName: 'networkx',
   defaultCode,

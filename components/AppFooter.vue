@@ -74,6 +74,9 @@
             <NuxtLink to="/yarl" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               Yarl
             </NuxtLink>
+            <NuxtLink to="/faker" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              Faker
+            </NuxtLink>
           </div>
         </div>
       </div>

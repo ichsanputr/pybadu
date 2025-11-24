@@ -216,6 +216,11 @@ const additionalLibraries = [
     name: 'Yarl',
     description: 'Parse and build URLs with immutable URL objects. Handle URL components, query parameters, and path manipulation safely and conveniently.',
     path: '/yarl'
+  },
+  {
+    name: 'Faker',
+    description: 'Generate fake data for testing and demos. Create realistic names, emails, addresses, phone numbers, and more with localization support.',
+    path: '/faker'
   }
 ]
 

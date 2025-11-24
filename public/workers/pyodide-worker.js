@@ -100,7 +100,41 @@ function uploadAsset(fileName, fileData) {
 function deleteAsset(fileName) {
   try {
     const fullPath = `/assets/${fileName}`
-    pyodide.FS.unlink(fullPath)
+    const stat = pyodide.FS.stat(fullPath)
+    const isDir = pyodide.FS.isDir(stat.mode)
+
+    if (isDir) {
+      // For directories, we need to remove recursively
+      // First check if directory is empty
+      const entries = pyodide.FS.readdir(fullPath)
+      const actualEntries = entries.filter(e => e !== '.' && e !== '..')
+
+      if (actualEntries.length > 0) {
+        // Directory is not empty, remove contents recursively
+        function removeRecursive(path) {
+          const items = pyodide.FS.readdir(path)
+          for (const item of items) {
+            if (item === '.' || item === '..') continue
+            const itemPath = `${path}/${item}`
+            const itemStat = pyodide.FS.stat(itemPath)
+            if (pyodide.FS.isDir(itemStat.mode)) {
+              removeRecursive(itemPath)
+            } else {
+              pyodide.FS.unlink(itemPath)
+            }
+          }
+          pyodide.FS.rmdir(path)
+        }
+        removeRecursive(fullPath)
+      } else {
+        // Empty directory
+        pyodide.FS.rmdir(fullPath)
+      }
+    } else {
+      // Regular file
+      pyodide.FS.unlink(fullPath)
+    }
+
     return { success: true }
   } catch (error) {
     console.error('Error deleting asset:', error)

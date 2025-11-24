@@ -504,7 +504,7 @@
           <!-- Output Content -->
           <div :class="[
             'overflow-y-auto p-4 space-y-3',
-            '!h-[500px] lg:h-[calc(100vh-112px)]'
+            'h-[500px] lg:h-[calc(100vh-112px)]'
           ]">
             <div v-for="(item, index) in output" :key="index" :class="[
               'rounded-lg text-sm',
@@ -1248,7 +1248,12 @@ function confirmDeleteAsset() {
 }
 
 function selectAssetFile(name) {
-  selectedAsset.value = name
+  // If clicking on the same asset, unselect it
+  if (selectedAsset.value === name) {
+    selectedAsset.value = ''
+  } else {
+    selectedAsset.value = name
+  }
 }
 
 function createAssetFolderPrompt() {

@@ -13,6 +13,8 @@
         :pyodideReady="pyodideReady"
         :monacoTheme="monacoTheme"
         :examples="examples"
+        :assets="assets"
+        :assetsUploading="assetsUploading"
         @update:code="updateCurrentFile"
         @toggleTheme="toggleTheme"
         @runCode="runCode" 
@@ -23,7 +25,11 @@
         @selectFile="selectFile"
         @deleteFile="deleteFile"
         @renameFile="renameFile"
-        @saveToStorage="saveToStorage" />
+        @saveToStorage="saveToStorage"
+        @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset"
+        @refreshAssets="refreshAssets"
+        @createAssetFolder="createAssetFolder" />
     </div>
 
     <!-- Information Section -->
@@ -123,54 +129,47 @@ print("\\nUsing fill() (string):")
 print(wrapped_string)`
   },
   {
-    title: "Shorten Text",
-    code: `# Shorten long text to fit within a width
-long_text = "This is a very long text that needs to be shortened to fit within a specific character limit."
+    title: "Load and Process Text File",
+    code: `# This example assumes you have uploaded a text file to the assets folder
+# Upload a .txt file using the Assets panel, then modify the filename below
 
-# Shorten to 50 characters
-shortened = textwrap.shorten(long_text, width=50)
-print("Original length:", len(long_text))
-print("Shortened text:", shortened)
-print("Shortened length:", len(shortened))`
-  },
-  {
-    title: "Indentation",
-    code: `# Add indentation to wrapped text
-text = "This is a paragraph that will be wrapped and indented."
-
-# Wrap with indentation
-indented = textwrap.fill(text, width=30, initial_indent='  ', subsequent_indent='    ')
-print("Indented text:")
-print(indented)`
-  },
-  {
-    title: "Dedent Text",
-    code: `# Remove common leading whitespace
-text = """
-    This is a multi-line string
-    with common indentation
-    that needs to be removed.
-"""
-
-# Dedent removes common leading whitespace
-dedented = textwrap.dedent(text)
-print("Dedented text:")
-print(dedented)`
-  },
-  {
-    title: "Max Lines Parameter",
-    code: `# Limit the number of lines in output
-long_text = "This is a very long text that will be wrapped into multiple lines. " * 3
-
-# Wrap with max_lines limit
-wrapped = textwrap.fill(long_text, width=30, max_lines=3)
-print("Wrapped with max_lines=3:")
-print(wrapped)
-
-# Using shorten with max_lines
-shortened = textwrap.shorten(long_text, width=50, max_lines=2)
-print("\\nShortened with max_lines=2:")
-print(shortened)`
+try:
+    # Read from assets folder (change 'sample.txt' to your uploaded file name)
+    with open('/assets/sample.txt', 'r') as f:
+        content = f.read()
+    
+    print("File loaded successfully!")
+    print("Content length:", len(content), "characters")
+    print("\\nOriginal content:")
+    print(content[:200] + "..." if len(content) > 200 else content)
+    print("\\n" + "="*50 + "\\n")
+    
+    # Apply different textwrap operations
+    print("1. Wrapped to 40 characters:")
+    wrapped = textwrap.fill(content, width=40)
+    print(wrapped)
+    print("\\n" + "="*50 + "\\n")
+    
+    print("2. Wrapped with indentation:")
+    indented = textwrap.fill(content, width=35, initial_indent="  ", subsequent_indent="    ")
+    print(indented)
+    print("\\n" + "="*50 + "\\n")
+    
+    print("3. Shortened version:")
+    shortened = textwrap.shorten(content, width=100, placeholder="...")
+    print(shortened)
+    print("\\n" + "="*50 + "\\n")
+    
+    print("4. Limited to 3 lines:")
+    limited = textwrap.fill(content, width=40, max_lines=3, placeholder=" [truncated]")
+    print(limited)
+    
+except FileNotFoundError:
+    print("Error: File not found!")
+    print("Please upload a .txt file to the assets folder first.")
+    print("Then update the filename in the code above.")
+except Exception as e:
+    print(f"Error reading file: {e}")`
   }
 ]
 
@@ -205,7 +204,13 @@ const {
   clearOutput,
   loadExample,
   initializePyodide,
-  cleanupWorker
+  cleanupWorker,
+  assets,
+  assetsUploading,
+  refreshAssets,
+  uploadAssets,
+  deleteAsset,
+  createAssetFolder
 } = useLibraryPlayground({
   packageName: 'textwrap3',
   defaultCode,

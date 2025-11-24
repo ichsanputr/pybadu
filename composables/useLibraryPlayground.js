@@ -444,6 +444,12 @@ export function useLibraryPlayground(config = {}) {
       await refreshAssets()
     } catch (error) {
       console.error('Error deleting asset:', error)
+      // Show error to user
+      output.value.push({
+        type: 'error',
+        content: `Failed to delete ${fileName}: ${error.message}`,
+        timestamp: new Date().toLocaleTimeString()
+      })
     }
   }
 

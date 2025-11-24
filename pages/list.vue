@@ -221,6 +221,11 @@ const additionalLibraries = [
     name: 'Faker',
     description: 'Generate fake data for testing and demos. Create realistic names, emails, addresses, phone numbers, and more with localization support.',
     path: '/faker'
+  },
+  {
+    name: 'Textwrap3',
+    description: 'Advanced text wrapping and formatting. Wrap, fill, shorten, and format text with precise control over width, indentation, and line limits.',
+    path: '/textwrap3'
   }
 ]
 

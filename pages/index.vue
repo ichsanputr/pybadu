@@ -446,7 +446,7 @@ const testimonials = [
 
 // SEO Meta
 useHead({
-  title: 'Pybadu – Dedicated Python Library Compilers',
+  title: 'Pybadu Dedicated Python Library Compilers',
   meta: [
     {
       name: 'description',

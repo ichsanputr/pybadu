@@ -315,7 +315,7 @@ const filteredAdditionalLibraries = computed(() => {
 
 // SEO Meta
 useHead({
-  title: 'All Compilers - Pybadu',
+  title: 'All Python Compilers',
   meta: [
     {
       name: 'description',

@@ -824,37 +824,38 @@
             class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer" />
         </div>
 
-        <!-- Line Numbers -->
-        <div>
-          <label :class="['block text-sm font-medium mb-2', theme === 'dark' ? 'text-gray-300' : 'text-gray-700']">
-            Line Numbers
-          </label>
-          <select v-model="editorSettings.lineNumbers" :class="[
-            'w-full px-3 py-2 rounded-lg border',
-            theme === 'dark'
-              ? 'bg-gray-800 border-gray-700 text-gray-300'
-              : 'bg-white border-gray-300 text-gray-700'
-          ]">
-            <option value="on">On</option>
-            <option value="off">Off</option>
-            <option value="relative">Relative</option>
-          </select>
-        </div>
+        <!-- Line Numbers & Word Wrap -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label :class="['block text-sm font-medium mb-2', theme === 'dark' ? 'text-gray-300' : 'text-gray-700']">
+              Line Numbers
+            </label>
+            <select v-model="editorSettings.lineNumbers" :class="[
+              'w-full px-3 py-2 rounded-lg border',
+              theme === 'dark'
+                ? 'bg-gray-800 border-gray-700 text-gray-300'
+                : 'bg-white border-gray-300 text-gray-700'
+            ]">
+              <option value="on">On</option>
+              <option value="off">Off</option>
+              <option value="relative">Relative</option>
+            </select>
+          </div>
 
-        <!-- Word Wrap -->
-        <div>
-          <label :class="['block text-sm font-medium mb-2', theme === 'dark' ? 'text-gray-300' : 'text-gray-700']">
-            Word Wrap
-          </label>
-          <select v-model="editorSettings.wordWrap" :class="[
-            'w-full px-3 py-2 rounded-lg border',
-            theme === 'dark'
-              ? 'bg-gray-800 border-gray-700 text-gray-300'
-              : 'bg-white border-gray-300 text-gray-700'
-          ]">
-            <option value="on">On</option>
-            <option value="off">Off</option>
-          </select>
+          <div>
+            <label :class="['block text-sm font-medium mb-2', theme === 'dark' ? 'text-gray-300' : 'text-gray-700']">
+              Word Wrap
+            </label>
+            <select v-model="editorSettings.wordWrap" :class="[
+              'w-full px-3 py-2 rounded-lg border',
+              theme === 'dark'
+                ? 'bg-gray-800 border-gray-700 text-gray-300'
+                : 'bg-white border-gray-300 text-gray-700'
+            ]">
+              <option value="on">On</option>
+              <option value="off">Off</option>
+            </select>
+          </div>
         </div>
 
         <!-- Minimap -->
@@ -898,42 +899,43 @@
           </button>
         </div>
 
-        <!-- Render Whitespace -->
-        <div>
-          <label :class="['block text-sm font-medium mb-2', theme === 'dark' ? 'text-gray-300' : 'text-gray-700']">
-            Show Whitespace
-          </label>
-          <select v-model="editorSettings.renderWhitespace" :class="[
-            'w-full px-3 py-2 rounded-lg border',
-            theme === 'dark'
-              ? 'bg-gray-800 border-gray-700 text-gray-300'
-              : 'bg-white border-gray-300 text-gray-700'
-          ]">
-            <option value="none">None</option>
-            <option value="all">All</option>
-            <option value="boundary">Boundary</option>
-            <option value="selection">Selection</option>
-          </select>
-        </div>
+        <!-- Show Whitespace & Cursor Style -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label :class="['block text-sm font-medium mb-2', theme === 'dark' ? 'text-gray-300' : 'text-gray-700']">
+              Show Whitespace
+            </label>
+            <select v-model="editorSettings.renderWhitespace" :class="[
+              'w-full px-3 py-2 rounded-lg border',
+              theme === 'dark'
+                ? 'bg-gray-800 border-gray-700 text-gray-300'
+                : 'bg-white border-gray-300 text-gray-700'
+            ]">
+              <option value="none">None</option>
+              <option value="all">All</option>
+              <option value="boundary">Boundary</option>
+              <option value="selection">Selection</option>
+            </select>
+          </div>
 
-        <!-- Cursor Style -->
-        <div>
-          <label :class="['block text-sm font-medium mb-2', theme === 'dark' ? 'text-gray-300' : 'text-gray-700']">
-            Cursor Style
-          </label>
-          <select v-model="editorSettings.cursorStyle" :class="[
-            'w-full px-3 py-2 rounded-lg border',
-            theme === 'dark'
-              ? 'bg-gray-800 border-gray-700 text-gray-300'
-              : 'bg-white border-gray-300 text-gray-700'
-          ]">
-            <option value="line">Line</option>
-            <option value="block">Block</option>
-            <option value="underline">Underline</option>
-            <option value="line-thin">Line Thin</option>
-            <option value="block-outline">Block Outline</option>
-            <option value="underline-thin">Underline Thin</option>
-          </select>
+          <div>
+            <label :class="['block text-sm font-medium mb-2', theme === 'dark' ? 'text-gray-300' : 'text-gray-700']">
+              Cursor Style
+            </label>
+            <select v-model="editorSettings.cursorStyle" :class="[
+              'w-full px-3 py-2 rounded-lg border',
+              theme === 'dark'
+                ? 'bg-gray-800 border-gray-700 text-gray-300'
+                : 'bg-white border-gray-300 text-gray-700'
+            ]">
+              <option value="line">Line</option>
+              <option value="block">Block</option>
+              <option value="underline">Underline</option>
+              <option value="line-thin">Line Thin</option>
+              <option value="block-outline">Block Outline</option>
+              <option value="underline-thin">Underline Thin</option>
+            </select>
+          </div>
         </div>
       </div>
 

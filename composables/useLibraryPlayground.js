@@ -215,8 +215,23 @@ export function useLibraryPlayground(config = {}) {
     
     if (!pyodideWorker) {
       try {
+        // Get baseURL for subpath support (e.g., /pybadu/)
+        let baseURL = ''
+        if (process.client) {
+          // Extract base path from current location
+          // For /pybadu/matplotlib, baseURL should be /pybadu
+          const pathParts = window.location.pathname.split('/').filter(p => p)
+          // If path starts with a known base (like 'pybadu'), use it
+          if (pathParts.length > 0 && pathParts[0] === 'pybadu') {
+            baseURL = '/pybadu'
+          }
+        }
+        
+        const workerPath = `${baseURL}/workers/pyodide-worker.js`
+        console.log('Loading Pyodide worker from:', workerPath)
+        
         // Create worker with type: 'module' to use ES6 imports
-        pyodideWorker = new Worker('/workers/pyodide-worker.js', { type: 'module' })
+        pyodideWorker = new Worker(workerPath, { type: 'module' })
         
         pyodideWorker.addEventListener('message', (e) => {
           const { type, id, message, progress, currentPackage, result, error } = e.data

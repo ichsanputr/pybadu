@@ -24,6 +24,86 @@ async function initPyodide() {
   return pyodide
 }
 
+// Asset management functions
+function listAssets() {
+  try {
+    // Use Pyodide's FS to list /assets directory
+    const assets = []
+    const assetPath = '/assets'
+    
+    // Check if directory exists
+    if (!pyodide.FS.analyzePath(assetPath).exists) {
+      pyodide.FS.mkdirTree(assetPath)
+      return assets
+    }
+    
+    // List directory contents
+    const entries = pyodide.FS.readdir(assetPath)
+    
+    for (const entry of entries) {
+      if (entry === '.' || entry === '..') continue
+      
+      const fullPath = `${assetPath}/${entry}`
+      const stat = pyodide.FS.stat(fullPath)
+      const isDir = pyodide.FS.isDir(stat.mode)
+      
+      assets.push({
+        name: entry,
+        isDir: isDir,
+        size: isDir ? 0 : stat.size,
+        path: fullPath
+      })
+    }
+    
+    return assets
+  } catch (error) {
+    console.error('Error listing assets:', error)
+    return []
+  }
+}
+
+function uploadAsset(fileName, fileData) {
+  try {
+    const assetPath = '/assets'
+    
+    // Ensure directory exists
+    if (!pyodide.FS.analyzePath(assetPath).exists) {
+      pyodide.FS.mkdirTree(assetPath)
+    }
+    
+    // Write file
+    const fullPath = `${assetPath}/${fileName}`
+    pyodide.FS.writeFile(fullPath, fileData)
+    
+    return { success: true, path: fullPath }
+  } catch (error) {
+    console.error('Error uploading asset:', error)
+    throw error
+  }
+}
+
+function deleteAsset(fileName) {
+  try {
+    const fullPath = `/assets/${fileName}`
+    pyodide.FS.unlink(fullPath)
+    return { success: true }
+  } catch (error) {
+    console.error('Error deleting asset:', error)
+    throw error
+  }
+}
+
+function createAssetFolder(folderName) {
+  try {
+    const fullPath = `/assets/${folderName}`
+    pyodide.FS.mkdirTree(fullPath)
+    return { success: true, path: fullPath }
+  } catch (error) {
+    console.error('Error creating asset folder:', error)
+    throw error
+  }
+}
+
 // Listen for messages from main thread
 self.onmessage = async (event) => {
   const { type, id, data } = event.data
@@ -152,6 +232,49 @@ for fig in figs:
             images: images,
             success: true
           }
+        })
+        break
+
+      case 'LIST_ASSETS':
+        await initPyodide()
+        const assets = listAssets()
+        self.postMessage({
+          type: 'ASSETS_LIST',
+          id,
+          assets
+        })
+        break
+
+      case 'UPLOAD_ASSET':
+        await initPyodide()
+        const { fileName, fileData } = data
+        const uploadResult = uploadAsset(fileName, fileData)
+        self.postMessage({
+          type: 'ASSET_UPLOADED',
+          id,
+          result: uploadResult
+        })
+        break
+
+      case 'DELETE_ASSET':
+        await initPyodide()
+        const { fileName: deleteFileName } = data
+        const deleteResult = deleteAsset(deleteFileName)
+        self.postMessage({
+          type: 'ASSET_DELETED',
+          id,
+          result: deleteResult
+        })
+        break
+
+      case 'CREATE_ASSET_FOLDER':
+        await initPyodide()
+        const { folderName } = data
+        const folderResult = createAssetFolder(folderName)
+        self.postMessage({
+          type: 'ASSET_FOLDER_CREATED',
+          id,
+          result: folderResult
         })
         break
 

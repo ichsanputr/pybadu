@@ -270,17 +270,17 @@
                   Files
                 </span>
                 <div class="flex items-center space-x-1">
-                  <button @click="$refs.sidebarFileInput?.click()" :class="[
-                    'p-0.5 rounded transition-colors',
-                    theme === 'dark' ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-100 text-gray-600'
-                  ]" title="Upload file">
-                    <Icon icon="ph:upload" class="w-3 h-3" />
-                  </button>
                   <button @click="handleNewFile" :class="[
                     'p-0.5 rounded transition-colors',
                     theme === 'dark' ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-100 text-gray-600'
                   ]" title="New file">
                     <Icon icon="ph:plus" class="w-3 h-3" />
+                  </button>
+                  <button @click="$refs.sidebarFileInput?.click()" :class="[
+                    'p-0.5 rounded transition-colors',
+                    theme === 'dark' ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-100 text-gray-600'
+                  ]" title="Upload file">
+                    <Icon icon="ph:upload" class="w-3 h-3" />
                   </button>
                 </div>
               </div>
@@ -321,15 +321,91 @@
               </div>
             </div>
 
+            <!-- Assets Section -->
+            <div class="mt-6">
+              <div class="flex items-center justify-between mb-2 px-1">
+                <span
+                  :class="['text-xs font-medium uppercase tracking-wide', theme === 'dark' ? 'text-gray-400' : 'text-gray-600']">
+                  Assets
+                </span>
+                <div class="flex items-center space-x-1">
+                  <button :class="[
+                    'p-0.5 rounded transition-colors',
+                    theme === 'dark' ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-100 text-gray-600'
+                  ]" title="Files uploaded here are available at /assets/ inside Python.">
+                    <Icon icon="ph:info" class="w-3.5 h-3.5" />
+                  </button>
+                  <button @click="createAssetFolderPrompt" :class="[
+                    'p-0.5 rounded transition-colors',
+                    theme === 'dark' ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-100 text-gray-600'
+                  ]" title="Create folder in /assets">
+                    <Icon icon="ph:folder-plus" class="w-3.5 h-3.5" />
+                  </button>
+                  <button @click="triggerAssetUpload" :disabled="assetsUploading" :class="[
+                    'p-0.5 rounded transition-colors',
+                    assetsUploading
+                      ? 'opacity-60 cursor-not-allowed'
+                      : theme === 'dark'
+                        ? 'hover:bg-gray-700 text-gray-400'
+                        : 'hover:bg-gray-100 text-gray-600'
+                  ]" title="Upload files">
+                    <Icon v-if="assetsUploading" icon="ph:spinner" class="w-3.5 h-3.5 animate-spin" />
+                    <Icon v-else icon="ph:upload-simple" class="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+              <input ref="assetFileInput" type="file" multiple @change="handleAssetUpload" class="hidden" />
+              <p class="text-xs mb-2"
+                :class="theme === 'dark' ? 'text-gray-400' : 'text-gray-500'">
+                Files uploaded here are available inside Python at
+                <code :class="theme === 'dark' ? 'text-gray-200' : 'text-gray-700'">/assets/&lt;filename&gt;</code>.
+              </p>
+              
+              <!-- Asset Items List -->
+              <div v-if="assetItems.length" class="space-y-1">
+                <div v-for="asset in assetItems" :key="asset.name" :class="[
+                  'flex items-center justify-between p-2 rounded-md text-sm',
+                  theme === 'dark'
+                    ? 'bg-gray-800 text-gray-200'
+                    : 'bg-gray-50 text-gray-700'
+                ]">
+                  <div class="flex items-center space-x-2">
+                    <Icon :icon="asset.isDir ? 'ph:folder' : 'ph:file'" class="w-4 h-4 flex-shrink-0"
+                      :class="asset.isDir ? 'text-yellow-500' : ''" />
+                    <div>
+                      <p class="font-medium truncate max-w-[120px]">{{ asset.name }}</p>
+                      <p class="text-xs opacity-70">
+                        /assets/{{ asset.name }}<span v-if="!asset.isDir"> · {{ formatBytes(asset.size) }}</span>
+                      </p>
+                    </div>
+                  </div>
+                  <button @click="deleteAssetFile(asset.name)" :class="[
+                    'p-1 rounded transition-colors',
+                    theme === 'dark' ? 'hover:bg-red-500/20 text-red-300' : 'hover:bg-red-100 text-red-600'
+                  ]">
+                    <Icon icon="ph:trash" class="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+              <div v-else :class="[
+                'text-xs px-2 py-3 rounded-md border border-dashed text-center',
+                theme === 'dark'
+                  ? 'border-gray-700 text-gray-500'
+                  : 'border-gray-300 text-gray-500'
+              ]">
+                No assets uploaded yet
+              </div>
+            </div>
+
             <!-- Examples Section -->
-            <div>
+            <div class="pb-1 mt-4">
               <div class="flex items-center justify-between mb-2 px-1">
                 <span
                   :class="['text-xs font-medium uppercase tracking-wide', theme === 'dark' ? 'text-gray-400' : 'text-gray-600']">
                   Examples
                 </span>
               </div>
-              <div class="space-y-1">
+              <div>
                 <button v-for="(example, index) in examples.slice(0, 3)" :key="index"
                   @click="$emit('loadExample', example)" :class="[
                     'w-full text-left p-2 rounded-md text-sm transition-colors',
@@ -339,7 +415,7 @@
                   ]">
                   <div class="flex items-center space-x-2">
                     <Icon icon="ph:code-simple" class="w-4 h-4 flex-shrink-0" />
-                    <span class="truncate">{{ example.title }}</span>
+                    <span class="truncate !text-sm">{{ example.title }}</span>
                   </div>
                 </button>
               </div>
@@ -787,6 +863,51 @@
       </template>
     </Dialog>
 
+    <!-- Create Folder Dialog -->
+    <Dialog v-model="createFolderDialog.show" size="sm" title="Create Folder" subtitle="Enter a name for the new folder"
+      icon="ph:folder-plus" icon-variant="info" :theme="theme">
+      <div class="space-y-4">
+        <div>
+          <label :class="['block text-sm font-medium mb-2', theme === 'dark' ? 'text-gray-300' : 'text-gray-700']">
+            Folder Name
+          </label>
+          <input
+            v-model="createFolderDialog.folderName"
+            type="text"
+            placeholder="Enter folder name"
+            :class="[
+              'w-full px-3 py-2 rounded-lg border text-sm',
+              theme === 'dark'
+                ? 'bg-gray-800 border-gray-700 text-gray-300 placeholder-gray-500'
+                : 'bg-white border-gray-300 text-gray-700 placeholder-gray-400'
+            ]"
+            @keyup.enter="createAssetFolder"
+            maxlength="50"
+          />
+          <p class="text-xs mt-1" :class="theme === 'dark' ? 'text-gray-400' : 'text-gray-500'">
+            Use letters, numbers, hyphens (-), and underscores (_) only
+          </p>
+        </div>
+      </div>
+
+      <template #footer>
+        <button @click="createFolderDialog.show = false"
+          class="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors">
+          Cancel
+        </button>
+        <button @click="createAssetFolder"
+          :disabled="!createFolderDialog.folderName.trim() || createFolderDialog.isCreating" :class="[
+            'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+            !createFolderDialog.folderName.trim() || createFolderDialog.isCreating
+              ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+              : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
+          ]">
+          <Icon v-if="createFolderDialog.isCreating" icon="ph:spinner" class="w-4 h-4 inline animate-spin mr-2" />
+          {{ createFolderDialog.isCreating ? 'Creating...' : 'Create Folder' }}
+        </button>
+      </template>
+    </Dialog>
+
     <!-- Info Dialog (Custom, not using Dialog component) -->
     <div v-show="showInfoDialog"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md"
@@ -901,6 +1022,14 @@ const props = defineProps({
   activeFileId: Number,
   code: String,
   output: Array,
+  assets: {
+    type: Array,
+    default: () => []
+  },
+  assetsUploading: {
+    type: Boolean,
+    default: false
+  },
   isLoading: Boolean,
   pyodideReady: Boolean,
   monacoTheme: String,
@@ -922,7 +1051,11 @@ const emit = defineEmits([
   'selectFile',
   'deleteFile',
   'renameFile',
-  'saveToStorage'
+  'saveToStorage',
+  'uploadAssets',
+  'deleteAsset',
+  'refreshAssets',
+  'createAssetFolder'
 ])
 
 // Keyboard shortcuts
@@ -947,6 +1080,7 @@ const showFileDropdown = ref(false)
 const showMobileMenu = ref(false)
 const showSidebar = ref(true)
 const sidebarCollapsed = ref(false)
+const assetFileInput = ref(null)
 
 // Toast notifications
 const toasts = ref([])
@@ -970,6 +1104,13 @@ const shareDialog = ref({
   shareUrl: '',
   shareId: '',
   copied: false // Track if URL was copied
+})
+
+// Create folder dialog
+const createFolderDialog = ref({
+  show: false,
+  folderName: '',
+  isCreating: false
 })
 
 // Rename state
@@ -1008,6 +1149,16 @@ const monacoOptions = computed(() => ({
   fontFamily: editorSettings.value.fontFamily,
   cursorStyle: editorSettings.value.cursorStyle
 }))
+
+const assetItems = computed(() => {
+  const list = props.assets || []
+  return [...list].sort((a, b) => {
+    const dirA = a?.isDir ? 0 : 1
+    const dirB = b?.isDir ? 0 : 1
+    if (dirA !== dirB) return dirA - dirB
+    return a.name.localeCompare(b.name)
+  })
+})
 
 // Toast functions
 function showToast(message, type = 'info') {
@@ -1060,29 +1211,54 @@ function handleNewFile() {
   emit('newFile')
 }
 
-function handleFileUpload(event) {
-  const file = event.target.files?.[0]
-  if (!file) return
+function triggerAssetUpload() {
+  assetFileInput.value?.click()
+}
 
-  if (props.files.length >= 5) {
-    showToast('Maximum 5 files allowed', 'warning')
-    event.target.value = ''
+function handleAssetUpload(event) {
+  const files = Array.from(event.target.files || [])
+  if (!files.length) return
+  emit('uploadAssets', files)
+  event.target.value = ''
+}
+
+function deleteAssetFile(name) {
+  emit('deleteAsset', name)
+}
+
+function createAssetFolderPrompt() {
+  createFolderDialog.value = {
+    show: true,
+    folderName: '',
+    isCreating: false
+  }
+}
+
+async function createAssetFolder() {
+  const folderName = createFolderDialog.value.folderName.trim()
+  if (!folderName) {
+    showToast('Folder name cannot be empty', 'error')
     return
   }
 
-  const reader = new FileReader()
-  reader.onload = (e) => {
-    const content = e.target?.result
-    emit('newFile', {
-      name: file.name,
-      content: content
-    })
-    showToast('File uploaded successfully', 'success')
+  // Validate folder name (letters, numbers, - or _)
+  if (!/^[a-zA-Z0-9_-]+$/.test(folderName)) {
+    showToast('Folder name can only contain letters, numbers, - or _', 'error')
+    return
   }
-  reader.readAsText(file)
 
-  // Reset file input
-  event.target.value = ''
+  createFolderDialog.value.isCreating = true
+
+  try {
+    await new Promise(resolve => setTimeout(resolve, 500)) // Small delay for UX
+    emit('createAssetFolder', folderName)
+    createFolderDialog.value.show = false
+    showToast('Folder created successfully', 'success')
+  } catch (error) {
+    showToast('Failed to create folder', 'error')
+  } finally {
+    createFolderDialog.value.isCreating = false
+  }
 }
 
 function startRenameFile(fileId, fileName) {
@@ -1275,6 +1451,46 @@ function downloadImage(base64Data, index) {
   link.click()
   document.body.removeChild(link)
   showToast('Image downloaded successfully', 'success')
+}
+
+function formatBytes(bytes) {
+  if (!bytes && bytes !== 0) return ''
+  const units = ['B', 'KB', 'MB', 'GB']
+  let size = bytes
+  let unitIndex = 0
+  while (size >= 1024 && unitIndex < units.length - 1) {
+    size /= 1024
+    unitIndex++
+  }
+  return `${size.toFixed(size < 10 && unitIndex > 0 ? 1 : 0)} ${units[unitIndex]}`
+}
+
+function getFileIcon(asset) {
+  if (asset.isDir) return 'ph:folder'
+  
+  const ext = asset.name.toLowerCase().split('.').pop()
+  const iconMap = {
+    'py': 'simple-icons:python',
+    'js': 'simple-icons:javascript',
+    'ts': 'simple-icons:typescript',
+    'html': 'simple-icons:html5',
+    'css': 'simple-icons:css3',
+    'json': 'simple-icons:json',
+    'xml': 'ph:file-code',
+    'txt': 'ph:file-text',
+    'csv': 'ph:table',
+    'png': 'ph:image',
+    'jpg': 'ph:image',
+    'jpeg': 'ph:image',
+    'gif': 'ph:image',
+    'svg': 'ph:image',
+    'pdf': 'ph:file-pdf',
+    'zip': 'ph:file-zip',
+    'tar': 'ph:file-zip',
+    'gz': 'ph:file-zip'
+  }
+  
+  return iconMap[ext] || 'ph:file'
 }
 </script>
 

@@ -155,8 +155,9 @@
           :transition="{ delay: 0.5, duration: 0.5 }"
           class="mt-8 text-center"
         >
+        <!-- change to see all libraries -->
           <p class="text-gray-600 text-sm">
-            + {{ totalPyodidePackages - libraries.length }} more compilers available based on Pyodide packages
+            + {{ totalPyodidePackages - libraries.length }} browse all compilers on <NuxtLink to="/list" class="text-python-blue-600 font-semibold underline hover:text-python-blue-700">List Page</NuxtLink>
           </p>
         </Motion>
       </Container>

@@ -68,6 +68,12 @@
             <NuxtLink to="/tabulate" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               Tabulate
             </NuxtLink>
+            <NuxtLink to="/shortuuid" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              ShortUUID
+            </NuxtLink>
+            <NuxtLink to="/yarl" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              Yarl
+            </NuxtLink>
           </div>
         </div>
       </div>

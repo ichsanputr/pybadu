@@ -300,7 +300,7 @@
                     @click="$emit('selectFile', file.id)" @dblclick="handleDoubleClick(file.id, file.name)">
                     <Icon icon="ph:file-py" class="w-4 h-4 flex-shrink-0" />
                     <input v-if="editingFileId === file.id" v-model="editingFileName"
-                      o@keyup.enter="confirmRename(file.id)" @keyup.esc="cancelRename" @blur="confirmRename(file.id)"
+                      @keyup.enter="confirmRename(file.id)" @keyup.esc="cancelRename" @blur="confirmRename(file.id)"
                       @click.stop :class="[
                         'flex-1 bg-transparent border rounded px-1 outline-none',
                         theme === 'dark' ? 'border-gray-600' : 'border-gray-300'

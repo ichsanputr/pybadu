@@ -30,7 +30,7 @@
     <LibraryInfoSection>
       <div class="text-center mb-12">
         <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-          Online Snowball Stemmer Compiler
+          Online Python Snowball Stemmer Compiler
         </h1>
         
         <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
@@ -92,18 +92,18 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Online Snowball Stemmer Compiler',
+  title: 'Online Python Snowball Stemmer Compiler',
   meta: [
-    { name: 'description', content: 'Process text with Snowball Stemmer in your browser. Stem words, normalize text, and perform NLP operations powered by Pyodide WebAssembly. No installation required.' },
+    { name: 'description', content: 'Process text with Python Snowball Stemmer in your browser. Stem words, normalize text, and perform NLP operations powered by Pyodide WebAssembly. No installation required.' },
     { name: 'keywords', content: 'snowball stemmer, text processing, nlp, word stemming, text normalization, online compiler, pyodide, natural language processing' },
     { name: 'author', content: 'Pybadu' },
-    { property: 'og:title', content: 'Online Snowball Stemmer Compiler' },
-    { property: 'og:description', content: 'Process text with Snowball Stemmer in your browser' },
+    { property: 'og:title', content: 'Online Python Snowball Stemmer Compiler' },
+    { property: 'og:description', content: 'Process text with Python Snowball Stemmer in your browser' },
     { property: 'og:type', content: 'website' },
     { property: 'og:image', content: '/pybadu.png' },
     { name: 'twitter:card', content: 'summary_large_image' },
-    { name: 'twitter:title', content: 'Online Snowball Stemmer Compiler' },
-    { name: 'twitter:description', content: 'Process text with Snowball Stemmer in your browser' },
+    { name: 'twitter:title', content: 'Online Python Snowball Stemmer Compiler' },
+    { name: 'twitter:description', content: 'Process text with Python Snowball Stemmer in your browser' },
     { name: 'twitter:image', content: '/pybadu.png' }
   ]
 })

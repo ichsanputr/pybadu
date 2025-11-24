@@ -7,14 +7,6 @@
         ? (theme === 'dark' ? 'bg-blue-900/30 border border-blue-600' : 'bg-blue-100 border border-blue-500')
         : ''
     ]" :style="{ paddingLeft: `${level * 16 + 8}px` }">
-      <!-- Expand/collapse icon for directories -->
-      <button v-if="item.isDir" @click.stop="toggleExpanded(fullPath)"
-              class="flex-shrink-0 w-4 h-4 flex items-center justify-center">
-        <Icon :icon="isExpanded ? 'ph:caret-down' : 'ph:caret-right'"
-              :class="['w-3 h-3', theme === 'dark' ? 'text-gray-400' : 'text-gray-600']" />
-      </button>
-      <div v-else class="w-4"></div>
-
       <!-- File/Folder icon -->
       <Icon :icon="getItemIcon(item)"
             :class="['w-4 h-4 flex-shrink-0', 
@@ -24,7 +16,8 @@
             ]" />
 
       <!-- Name -->
-      <span :class="['text-sm flex-1 truncate', theme === 'dark' ? 'text-gray-200' : 'text-gray-800']" @click="$emit('select', item.fullPath)">
+      <span :class="['text-sm flex-1 truncate', theme === 'dark' ? 'text-gray-200' : 'text-gray-800']"
+            @click="selectItem">
         {{ item.name }}
       </span>
 
@@ -33,13 +26,20 @@
         {{ formatBytes(item.size) }}
       </span>
 
-      <!-- Delete button (only on hover) -->
+      <!-- Delete button (always visible, beside size) -->
       <button @click.stop="$emit('delete', item.fullPath)"
-              class="opacity-0 group-hover:opacity-100 p-1 rounded transition-all
+              class="p-1 rounded transition-all
                      hover:bg-red-100 dark:hover:bg-red-500/20
                      text-red-600 dark:text-red-300"
               :title="'Delete ' + item.name">
         <Icon icon="ph:trash" class="w-3 h-3" />
+      </button>
+
+      <!-- Expand/collapse icon for directories (moved to the right) -->
+      <button v-if="item.isDir" @click.stop="toggleExpanded(fullPath)"
+              class="flex-shrink-0 w-4 h-4 flex items-center justify-center ml-1">
+        <Icon :icon="isExpanded ? 'ph:caret-down' : 'ph:caret-right'"
+              :class="['w-3 h-3', theme === 'dark' ? 'text-gray-400' : 'text-gray-600']" />
       </button>
     </div>
 
@@ -107,6 +107,16 @@ const isSelected = computed(() => props.selectedAsset === props.item.fullPath)
 
 function toggleExpanded(path) {
   emit('toggle', path)
+}
+
+function selectItem() {
+  // Emit select event
+  emit('select', props.item.fullPath)
+  
+  // If it's a directory, also expand it
+  if (props.item.isDir) {
+    emit('toggle', fullPath.value)
+  }
 }
 
 // Get direct children of this directory

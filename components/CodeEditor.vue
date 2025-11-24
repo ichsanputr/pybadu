@@ -535,9 +535,9 @@
               </div>
 
               <!-- Text output -->
-              <div v-else class="flex items-start justify-between">
-                <pre class="whitespace-pre-wrap font-mono text-xs leading-relaxed flex-1">{{ item.content }}</pre>
-                <span class="text-xs opacity-60 ml-2 flex-shrink-0">{{ item.timestamp }}</span>
+              <div v-else class="relative">
+                <pre class="whitespace-pre-wrap font-mono text-xs leading-relaxed">{{ item.content }}</pre>
+                <span class="absolute top-[0px] right-1 text-xs opacity-60 px-2 pb-1 rounded">{{ item.timestamp }}</span>
               </div>
             </div>
 

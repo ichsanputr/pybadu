@@ -48,7 +48,7 @@
                     class="text-sm md:text-base group inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-white/20 transition-all duration-200 border-2 border-white/50"
                   >
                     <Icon icon="simple-icons:python" class="w-5 h-5" />
-                    <span>Learn about Pyodide</span>
+                    <span>Learn Pyodide</span>
                     <Icon icon="ph:arrow-square-out" class="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </a>
                 </div>

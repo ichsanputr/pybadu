@@ -670,17 +670,6 @@
                   :style="{ display: 'inline-block', width: '100%', maxWidth: '300px', height: '300px' }" 
                 />
               </div>
-
-              <!-- Square Ad 2 -->
-              <div class="mb-4 flex justify-center">
-                <Adsense 
-                  key="editor-ad-2"
-                  client="ca-pub-1356911639243870" 
-                  ad-slot="4242301831"
-                  kind="square"
-                  :style="{ display: 'inline-block', width: '100%', maxWidth: '300px', height: '300px' }" 
-                />
-              </div>
             </ClientOnly>
           </div>
         </section>

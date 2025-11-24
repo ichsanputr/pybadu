@@ -412,6 +412,7 @@
                         'flex-1 bg-transparent border rounded px-1 outline-none',
                         theme === 'dark' ? 'border-gray-600' : 'border-gray-300'
                       ]"
+                      maxlength="8"
                       autofocus
                     />
                     <span v-else class="truncate">{{ file.name }}</span>
@@ -1040,7 +1041,7 @@
     <Dialog 
       v-model="showInfoDialog"
       size="lg"
-      title="Pyodide Information"
+      title="PyBadu Information"
       subtitle="Notes and tips about code execution"
       icon="ph:info"
       icon-variant="info"
@@ -1066,14 +1067,14 @@
         </div>
 
         <div>
-          <h4 class="font-semibold mb-2">Tips for Best Results</h4>
-          <ul class="space-y-1 list-disc list-inside pl-2">
-            <li>Use <strong>Shift + Enter</strong> to quickly run your code</li>
-            <li>Keep computations lightweight for faster execution</li>
-            <li>Use print() statements to debug your code</li>
-            <li>Your files are auto-saved to browser storage</li>
-            <li>For matplotlib plots, use plt.show() to display</li>
-          </ul>
+          <h4 class="font-semibold mb-2">How Code Execution Works</h4>
+          <p class="text-sm leading-relaxed mb-2">
+            When you press the Run button, your code from the active file is executed in Pyodide. The system first captures all print() output, then runs your Python code. For matplotlib compilers, any plots created with plt.show() are automatically captured and displayed as images.
+          </p>
+          <h4 class="font-semibold mb-2 mt-4">Tips for Best Results</h4>
+          <p class="text-sm leading-relaxed mb-2">
+            Use <strong>Shift + Enter</strong> to quickly run your code. Keep computations lightweight for faster execution and use print() statements to debug your code.
+          </p>
         </div>
       </div>
     </Dialog>
@@ -1297,15 +1298,7 @@ function handleDoubleClick(fileId, fileName) {
 }
 
 function confirmRename(fileId) {
-  const trimmedName = editingFileName.value.trim()
-  
-  if (!trimmedName) {
-    showToast('File name cannot be empty', 'error')
-    cancelRename()
-    return
-  }
-  
-  // Get original file
+  // Get original file first
   const originalFile = props.files.find(f => f.id === fileId)
   if (!originalFile) {
     cancelRename()
@@ -1317,14 +1310,39 @@ function confirmRename(fileId) {
   const dotIndex = originalName.lastIndexOf('.')
   const extension = dotIndex > 0 ? originalName.substring(dotIndex) : '.py'
   
-  // Ensure new name doesn't include extension
+  // Get the current input value
+  const trimmedName = editingFileName.value?.trim() || ''
+  
+  // If input is empty, use the original name without extension
   let newNameWithoutExt = trimmedName
+  if (!newNameWithoutExt) {
+    // If user cleared the input, restore original name
+    const originalNameWithoutExt = dotIndex > 0 ? originalName.substring(0, dotIndex) : originalName.replace(extension, '')
+    newNameWithoutExt = originalNameWithoutExt
+  }
+  
+  // Remove extension if user included it in the input
   if (newNameWithoutExt.includes('.')) {
     newNameWithoutExt = newNameWithoutExt.substring(0, newNameWithoutExt.lastIndexOf('.'))
   }
   
+  // Validate file name is not empty after processing
+  if (!newNameWithoutExt || newNameWithoutExt.length === 0) {
+    showToast('File name cannot be empty', 'error')
+    cancelRename()
+    return
+  }
+  
+  // Validate file name length (max 8 characters, excluding extension)
+  if (newNameWithoutExt.length > 8) {
+    showToast('File name must be 8 characters or less', 'error')
+    cancelRename()
+    return
+  }
+  
   const newName = newNameWithoutExt + extension
   
+  // Only emit if name actually changed
   if (newName !== originalName) {
     emit('renameFile', { fileId, newName })
     showToast('File renamed successfully', 'success')

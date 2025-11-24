@@ -180,14 +180,11 @@ export function useLibraryPlayground(config = {}) {
   async function runCode() {
     if (!pyodideReady.value || !currentFileContent.value.trim()) return
     
+    // Show loader immediately when button is clicked
+    isLoading.value = true
+    
     // Start execution immediately
     const startTime = Date.now()
-    
-    // Add small delay before showing loading state (300ms)
-    setTimeout(() => {
-      if (isLoading.value) return // Already set
-      isLoading.value = true
-    }, 300)
     
     // Add minimum 1 second delay for better UX
     const minDelay = 1000
@@ -212,6 +209,9 @@ captured_output = sys.stdout.getvalue()
 sys.stdout = sys.__stdout__
 captured_output
       `)
+      
+      // Collect all output items first (don't display yet)
+      const outputItems = []
       
       // Handle matplotlib plots
       if (packageName.includes('matplotlib')) {
@@ -240,7 +240,7 @@ for fig in figs:
             const images = canvas.split(',')
             for (const imgData of images) {
               if (imgData) {
-                output.value.push({
+                outputItems.push({
                   type: 'image',
                   content: imgData,
                   timestamp: new Date().toLocaleTimeString()
@@ -256,7 +256,7 @@ for fig in figs:
       const executionTime = Date.now() - startTime
       
       if (stdout && stdout.trim()) {
-        output.value.push({
+        outputItems.push({
           type: 'print',
           content: stdout.trim(),
           timestamp: new Date().toLocaleTimeString()
@@ -270,11 +270,17 @@ for fig in figs:
       }
       
       const totalTime = Date.now() - startTime
-      output.value.push({
+      outputItems.push({
         type: 'success', 
         content: `✓ Code executed successfully in ${totalTime}ms`,
         timestamp: new Date().toLocaleTimeString()
       })
+      
+      // Wait 500ms before showing output
+      await new Promise(resolve => setTimeout(resolve, 500))
+      
+      // Now display all collected output items
+      output.value.push(...outputItems)
       
     } catch (error) {
       console.error('Error running Python code:', error)
@@ -284,6 +290,9 @@ for fig in figs:
       if (elapsed < minDelay) {
         await new Promise(resolve => setTimeout(resolve, minDelay - elapsed))
       }
+      
+      // Wait 500ms before showing error output
+      await new Promise(resolve => setTimeout(resolve, 500))
       
       output.value.push({
         type: 'error',

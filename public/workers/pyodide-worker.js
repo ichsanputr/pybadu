@@ -27,7 +27,7 @@ async function initPyodide() {
 // Asset management functions
 function listAssets() {
   try {
-    // Use Pyodide's FS to list /assets directory
+    // Use Pyodide's FS to list /assets directory recursively
     const assets = []
     const assetPath = '/assets'
     
@@ -37,23 +37,38 @@ function listAssets() {
       return assets
     }
     
-    // List directory contents
-    const entries = pyodide.FS.readdir(assetPath)
-    
-    for (const entry of entries) {
-      if (entry === '.' || entry === '..') continue
-      
-      const fullPath = `${assetPath}/${entry}`
-      const stat = pyodide.FS.stat(fullPath)
-      const isDir = pyodide.FS.isDir(stat.mode)
-      
-      assets.push({
-        name: entry,
-        isDir: isDir,
-        size: isDir ? 0 : stat.size,
-        path: fullPath
-      })
+    // Recursive function to list all files and folders
+    function listDirectoryRecursive(dirPath, relativePath = '') {
+      try {
+        const entries = pyodide.FS.readdir(dirPath)
+        
+        for (const entry of entries) {
+          if (entry === '.' || entry === '..') continue
+          
+          const fullPath = `${dirPath}/${entry}`
+          const itemRelativePath = relativePath ? `${relativePath}/${entry}` : entry
+          const stat = pyodide.FS.stat(fullPath)
+          const isDir = pyodide.FS.isDir(stat.mode)
+          
+          assets.push({
+            name: itemRelativePath,
+            isDir: isDir,
+            size: isDir ? 0 : stat.size,
+            path: fullPath
+          })
+          
+          // If it's a directory, recursively list its contents
+          if (isDir) {
+            listDirectoryRecursive(fullPath, itemRelativePath)
+          }
+        }
+      } catch (error) {
+        console.error('Error listing directory:', dirPath, error)
+      }
     }
+    
+    // Start recursive listing from /assets
+    listDirectoryRecursive(assetPath)
     
     return assets
   } catch (error) {

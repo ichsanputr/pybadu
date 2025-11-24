@@ -24,7 +24,7 @@
             ]" />
 
       <!-- Name -->
-      <span :class="['text-sm flex-1 truncate', theme === 'dark' ? 'text-gray-200' : 'text-gray-800']" @click="$emit('select', item.name)">
+      <span :class="['text-sm flex-1 truncate', theme === 'dark' ? 'text-gray-200' : 'text-gray-800']" @click="$emit('select', item.fullPath)">
         {{ item.name }}
       </span>
 
@@ -114,37 +114,31 @@ const children = computed(() => {
   if (!props.item.isDir || !props.assets || !Array.isArray(props.assets)) return []
 
   const parentPath = props.item.fullPath
-  const prefix = parentPath ? `${parentPath}/` : ''
-
+  
+  // Find all assets that are direct children of this directory
   return props.assets
-    .filter(asset => asset.name.startsWith(prefix) && asset.name !== parentPath)
+    .filter(asset => {
+      // Asset should start with parent path + '/'
+      const expectedPrefix = parentPath ? `${parentPath}/` : ''
+      if (!asset.name.startsWith(expectedPrefix)) return false
+      
+      // Remove the prefix to get relative path
+      const relativePath = asset.name.substring(expectedPrefix.length)
+      
+      // Should not contain further slashes (direct children only)
+      return !relativePath.includes('/')
+    })
     .map(asset => {
-      const relativePath = asset.name.substring(prefix.length)
-      const firstSlashIndex = relativePath.indexOf('/')
-
-      // Only include direct children (no nested paths)
-      if (firstSlashIndex === -1) {
-        return {
-          name: relativePath,
-          isDir: asset.isDir,
-          size: asset.size,
-          fullPath: asset.name
-        }
-      }
-
-      // For directories, include the first level
-      const dirName = relativePath.substring(0, firstSlashIndex)
+      const expectedPrefix = parentPath ? `${parentPath}/` : ''
+      const relativePath = asset.name.substring(expectedPrefix.length)
+      
       return {
-        name: dirName,
-        isDir: true,
-        size: 0,
-        fullPath: `${parentPath}/${dirName}`
+        name: relativePath,
+        isDir: asset.isDir,
+        size: asset.size,
+        fullPath: asset.name
       }
     })
-    .filter((item, index, arr) => 
-      // Remove duplicates
-      arr.findIndex(x => x.name === item.name) === index
-    )
 })
 
 function getItemIcon(item) {

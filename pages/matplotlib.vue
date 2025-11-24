@@ -337,8 +337,7 @@ const {
   refreshAssets,
   uploadAssets,
   deleteAsset,
-  createAssetFolder,
-  createSampleAssets
+  createAssetFolder
 } = useLibraryPlayground({
   packageName: 'matplotlib',
   defaultCode,
@@ -361,8 +360,6 @@ plt.rcParams['figure.dpi'] = 100
 
 onMounted(async () => {
   await initializePyodide()
-  // Create sample assets for testing
-  await createSampleAssets()
 })
 
 onBeforeUnmount(() => {

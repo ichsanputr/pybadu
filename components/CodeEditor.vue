@@ -1218,7 +1218,17 @@ function triggerAssetUpload() {
 function handleAssetUpload(event) {
   const files = Array.from(event.target.files || [])
   if (!files.length) return
-  emit('uploadAssets', files)
+  
+  // Check if a folder is selected
+  let targetFolder = ''
+  if (selectedAsset.value) {
+    const selectedAssetObj = props.assets.find(asset => asset.name === selectedAsset.value)
+    if (selectedAssetObj && selectedAssetObj.isDir) {
+      targetFolder = selectedAsset.value
+    }
+  }
+  
+  emit('uploadAssets', files, targetFolder)
   event.target.value = ''
 }
 

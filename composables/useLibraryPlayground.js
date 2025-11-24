@@ -400,7 +400,7 @@ export function useLibraryPlayground(config = {}) {
     }
   }
 
-  async function uploadAssets(files) {
+  async function uploadAssets(files, targetFolder = '') {
     if (!pyodideWorker || !files.length) return
     
     assetsUploading.value = true
@@ -410,10 +410,13 @@ export function useLibraryPlayground(config = {}) {
         const fileData = await file.arrayBuffer()
         const uint8Array = new Uint8Array(fileData)
         
+        // Prepend target folder path if specified
+        const fileName = targetFolder ? `${targetFolder}/${file.name}` : file.name
+        
         await requestResponse(pyodideWorker, {
           type: 'UPLOAD_ASSET',
           data: {
-            fileName: file.name,
+            fileName: fileName,
             fileData: uint8Array
           }
         })
@@ -461,126 +464,6 @@ export function useLibraryPlayground(config = {}) {
     }
   }
 
-  async function createSampleAssets() {
-    if (!pyodideWorker) return
-    
-    try {
-      // Create a sample folder
-      await requestResponse(pyodideWorker, {
-        type: 'CREATE_ASSET_FOLDER',
-        data: {
-          folderName: 'sample_data'
-        }
-      })
-      
-      // Create a sample text file
-      const sampleText = `# Sample data file
-This is a sample text file created for testing the assets functionality.
-You can access this file in your Python code using:
-
-with open('/assets/sample_data/sample.txt', 'r') as f:
-    content = f.read()
-    print(content)
-
-This demonstrates how uploaded files are available in the /assets/ directory.
-`
-      
-      const textEncoder = new TextEncoder()
-      const textData = textEncoder.encode(sampleText)
-      
-      await requestResponse(pyodideWorker, {
-        type: 'UPLOAD_ASSET',
-        data: {
-          fileName: 'sample_data/sample.txt',
-          fileData: textData
-        }
-      })
-      
-      // Create a sample CSV file
-      const csvContent = `name,age,city
-Alice,25,New York
-Bob,30,London
-Charlie,35,Paris
-Diana,28,Berlin`
-      
-      const csvData = textEncoder.encode(csvContent)
-      
-      await requestResponse(pyodideWorker, {
-        type: 'UPLOAD_ASSET',
-        data: {
-          fileName: 'sample_data/data.csv',
-          fileData: csvData
-        }
-      })
-      
-      // Upload fs.md content as a markdown file
-      const fsMdContent = `# Dealing with the file system
-
-Pyodide includes a file system provided by Emscripten. In JavaScript, the
-Pyodide file system can be accessed through pyodide.FS which re-exports
-the Emscripten File System API.
-
-## Example: Reading from the file system
-
-\`\`\`pyodide
-pyodide.runPython(\`
-  from pathlib import Path
-
-  Path("/hello.txt").write_text("hello world!")
-\`)
-
-let file = pyodide.FS.readFile("/hello.txt", { encoding: "utf8" })
-console.log(file) // ==> "hello world!"
-\`\`\`
-
-## Example: Writing to the file system
-
-\`\`\`pyodide
-let data = "hello world!"
-pyodide.FS.writeFile("/hello.txt", data, { encoding: "utf8" })
-pyodide.runPython(\`
-  from pathlib import Path
-
-  print(Path("/hello.txt").read_text())
-\`)
-\`\`\`
-
-## Mounting a file system
-
-The default file system used in Pyodide is MEMFS, which is a virtual
-in-memory file system. The data stored in MEMFS will be lost when the
-page is reloaded.
-
-If you wish for files to persist, you can mount other file systems.
-Other file systems provided by Emscripten are \`IDBFS\`, \`NODEFS\`,
-\`PROXYFS\`, \`WORKERFS\`.
-
-For instance, to store data persistently between page reloads, one could
-mount a folder with the IDBFS file system:
-
-\`\`\`pyodide
-let mountDir = "/mnt"
-pyodide.FS.mkdirTree(mountDir)
-pyodide.FS.mount(pyodide.FS.filesystems.IDBFS, {}, mountDir)
-\`\`\`
-`
-      
-      const fsMdData = textEncoder.encode(fsMdContent)
-      
-      await requestResponse(pyodideWorker, {
-        type: 'UPLOAD_ASSET',
-        data: {
-          fileName: 'fs_documentation.md',
-          fileData: fsMdData
-        }
-      })
-      
-      await refreshAssets()
-    } catch (error) {
-      console.error('Error creating sample assets:', error)
-    }
-  }
-
   async function initializePyodide() {
     if (process.client) {
       try {
@@ -609,9 +492,6 @@ pyodide.FS.mount(pyodide.FS.filesystems.IDBFS, {}, mountDir)
         
         pyodideReady.value = true
         loaderVisible.value = false
-        
-        // Auto-create sample assets for testing
-        await createSampleAssets()
         
         // Don't auto-run code on page load to improve performance
         // User can manually run code when ready
@@ -674,8 +554,7 @@ pyodide.FS.mount(pyodide.FS.filesystems.IDBFS, {}, mountDir)
     refreshAssets,
     uploadAssets,
     deleteAsset,
-    createAssetFolder,
-    createSampleAssets
+    createAssetFolder
   }
 }
 

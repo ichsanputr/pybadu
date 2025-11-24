@@ -6,7 +6,7 @@
         v-for="item in rootItems"
         :key="item.name"
         :item="item"
-        :path="'/' + item.name"
+        :path="item.name"
         :level="0"
         :theme="theme"
         :selected-asset="selectedAsset"
@@ -62,36 +62,36 @@ function toggleExpanded(path) {
   }
 }
 
-// Group items by their parent path
+// Group items by their parent path - simplified approach
 const groupedItems = computed(() => {
   const groups = {}
   if (!props.assets || !Array.isArray(props.assets)) return groups
   
+  // Initialize root group
+  groups[''] = []
+  
   props.assets.forEach(item => {
+    // For each asset, add it to its parent group
     const parts = item.name.split('/')
-    let currentPath = ''
-
-    for (let i = 0; i < parts.length; i++) {
-      const part = parts[i]
-      const parentPath = currentPath
-      currentPath = currentPath ? `${currentPath}/${part}` : part
-
-      if (!groups[parentPath]) {
-        groups[parentPath] = []
-      }
-
-      // Only add if not already present
-      const existing = groups[parentPath].find(x => x.name === part)
-      if (!existing) {
-        groups[parentPath].push({
-          name: part,
-          isDir: i < parts.length - 1 || item.isDir,
-          size: item.size,
-          fullPath: item.name
-        })
-      }
+    const parentPath = parts.length > 1 ? parts.slice(0, -1).join('/') : ''
+    const itemName = parts[parts.length - 1]
+    
+    if (!groups[parentPath]) {
+      groups[parentPath] = []
+    }
+    
+    // Only add if not already present
+    const existing = groups[parentPath].find(x => x.name === itemName)
+    if (!existing) {
+      groups[parentPath].push({
+        name: itemName,
+        isDir: item.isDir,
+        size: item.size,
+        fullPath: item.name
+      })
     }
   })
+  
   return groups
 })
 

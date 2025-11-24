@@ -65,6 +65,9 @@
             <NuxtLink to="/pyjokes" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               Pyjokes
             </NuxtLink>
+            <NuxtLink to="/tabulate" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              Tabulate
+            </NuxtLink>
           </div>
         </div>
       </div>

@@ -50,6 +50,9 @@ export default defineNuxtConfig({
       ]
     }
   },
+  features: {
+    inlineStyles: false,
+  },
   postcss: {
     plugins: {
       tailwindcss: {},

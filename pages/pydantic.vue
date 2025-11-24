@@ -12,6 +12,8 @@
         :pyodideReady="pyodideReady"
         :monacoTheme="monacoTheme"
         :examples="examples"
+        :assets="assets"
+        :assetsUploading="assetsUploading"
         @update:code="updateCurrentFile"
         @toggleTheme="toggleTheme"
         @runCode="runCode"
@@ -23,6 +25,10 @@
         @deleteFile="deleteFile"
         @renameFile="renameFile"
         @saveToStorage="saveToStorage"
+        @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset"
+        @refreshAssets="refreshAssets"
+        @createAssetFolder="createAssetFolder"
       />
     </div>
 
@@ -38,7 +44,7 @@
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
-            This compiler bundles Pydantic entirely in the browser so you can model schemas, test validators, and inspect error output without installing dependencies or configuring virtualenvs—it’s completely free to use. Prototype request bodies, normalize data snapshots, explore field constraints, and verify custom validators before wiring them into APIs or ETL jobs.
+            This compiler bundles Pydantic entirely in the browser so you can model schemas, test validators, and inspect error output without installing dependencies or configuring virtualenvs. Upload files and folders to work with local data for validation, prototype request bodies, normalize data snapshots, explore field constraints, and verify custom validators before wiring them into APIs or ETL jobs. This online compiler is completely free and requires no installation.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
@@ -189,6 +195,8 @@ const {
   loaderVisible,
   currentFileContent,
   monacoTheme,
+  assets,
+  assetsUploading,
   updateCurrentFile,
   createNewFile,
   selectFile,
@@ -200,6 +208,10 @@ const {
   clearCode,
   clearOutput,
   loadExample,
+  refreshAssets,
+  uploadAssets,
+  deleteAsset,
+  createAssetFolder,
   initializePyodide,
   cleanupWorker
 } = useLibraryPlayground({

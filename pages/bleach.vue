@@ -12,6 +12,8 @@
         :pyodideReady="pyodideReady"
         :monacoTheme="monacoTheme"
         :examples="examples"
+        :assets="assets"
+        :assetsUploading="assetsUploading"
         @update:code="updateCurrentFile"
         @toggleTheme="toggleTheme"
         @runCode="runCode"
@@ -23,6 +25,10 @@
         @deleteFile="deleteFile"
         @renameFile="renameFile"
         @saveToStorage="saveToStorage"
+        @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset"
+        @refreshAssets="refreshAssets"
+        @createAssetFolder="createAssetFolder"
       />
     </div>
 
@@ -38,7 +44,7 @@
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
-            This compiler ships Bleach directly in the browser so you can test sanitization policies without a local server. Paste HTML, tweak allowed tags or attributes, register linkify callbacks, and compare cleaned vs. raw output instantly. It’s a handy sandbox for validating WYSIWYG inputs, Markdown converters, or API payloads before deploying rules into production.
+            This compiler ships Bleach directly in the browser so you can test sanitization policies without a local server. Paste HTML, tweak allowed tags or attributes, register linkify callbacks, and compare cleaned vs. raw output instantly. It’s a handy sandbox for validating WYSIWYG inputs, Markdown converters, or API payloads before deploying rules into production. You can also upload and use files or folders directly in your code for HTML sanitization and content processing workflows. This compiler is online and completely free to use.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
@@ -171,7 +177,13 @@ const {
   clearOutput,
   loadExample,
   initializePyodide,
-  cleanupWorker
+  cleanupWorker,
+  assets,
+  assetsUploading,
+  refreshAssets,
+  uploadAssets,
+  deleteAsset,
+  createAssetFolder
 } = useLibraryPlayground({
   packageName: 'bleach',
   defaultCode,

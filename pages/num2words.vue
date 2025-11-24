@@ -12,6 +12,8 @@
         :pyodideReady="pyodideReady"
         :monacoTheme="monacoTheme"
         :examples="examples"
+        :assets="assets"
+        :assetsUploading="assetsUploading"
         @update:code="updateCurrentFile"
         @toggleTheme="toggleTheme"
         @runCode="runCode"
@@ -23,6 +25,10 @@
         @deleteFile="deleteFile"
         @renameFile="renameFile"
         @saveToStorage="saveToStorage"
+        @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset"
+        @refreshAssets="refreshAssets"
+        @createAssetFolder="createAssetFolder"
       />
     </div>
 
@@ -38,7 +44,7 @@
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
-            This compiler bundles num2words in the browser so you can try locale tweaks and converter options instantly—no installation, dependencies, or setup required, and it’s completely free. Experiment with `lang` fallbacks, switch between cardinal/ordinal/currency outputs, and verify complex numbers before pushing changes into billing systems or localization pipelines.
+            This compiler bundles num2words in the browser so you can try locale tweaks and converter options instantly. Upload files and folders to work with local number data for conversion, experiment with `lang` fallbacks, switch between cardinal/ordinal/currency outputs, and verify complex numbers before pushing changes into billing systems or localization pipelines. This online compiler is completely free and requires no installation.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
@@ -160,6 +166,8 @@ const {
   loaderVisible,
   currentFileContent,
   monacoTheme,
+  assets,
+  assetsUploading,
   updateCurrentFile,
   createNewFile,
   selectFile,
@@ -171,6 +179,10 @@ const {
   clearCode,
   clearOutput,
   loadExample,
+  refreshAssets,
+  uploadAssets,
+  deleteAsset,
+  createAssetFolder,
   initializePyodide,
   cleanupWorker
 } = useLibraryPlayground({

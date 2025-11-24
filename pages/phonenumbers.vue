@@ -12,6 +12,8 @@
         :pyodideReady="pyodideReady"
         :monacoTheme="monacoTheme"
         :examples="examples"
+        :assets="assets"
+        :assetsUploading="assetsUploading"
         @update:code="updateCurrentFile"
         @toggleTheme="toggleTheme"
         @runCode="runCode"
@@ -23,6 +25,10 @@
         @deleteFile="deleteFile"
         @renameFile="renameFile"
         @saveToStorage="saveToStorage"
+        @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset"
+        @refreshAssets="refreshAssets"
+        @createAssetFolder="createAssetFolder"
       />
     </div>
 
@@ -38,7 +44,7 @@
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
-            This compiler bundles phonenumbers in the browser so you can test number handling without installing dependencies or setting up CLIs—completely free. Parse strings from any country, validate user input, format numbers for SMS gateways, detect carrier/region metadata, and generate sanitized output before wiring the logic into signup forms, CRM imports, or messaging services.
+            This compiler bundles phonenumbers in the browser so you can test number handling without installing dependencies or setting up CLIs. Upload files and folders to work with local phone number data, parse strings from any country, validate user input, format numbers for SMS gateways, detect carrier/region metadata, and generate sanitized output before wiring the logic into signup forms, CRM imports, or messaging services. This online compiler is completely free and requires no installation.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
@@ -168,6 +174,8 @@ const {
   loaderVisible,
   currentFileContent,
   monacoTheme,
+  assets,
+  assetsUploading,
   updateCurrentFile,
   createNewFile,
   selectFile,
@@ -179,6 +187,10 @@ const {
   clearCode,
   clearOutput,
   loadExample,
+  refreshAssets,
+  uploadAssets,
+  deleteAsset,
+  createAssetFolder,
   initializePyodide,
   cleanupWorker
 } = useLibraryPlayground({

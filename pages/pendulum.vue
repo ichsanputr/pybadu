@@ -12,6 +12,8 @@
         :pyodideReady="pyodideReady"
         :monacoTheme="monacoTheme"
         :examples="examples"
+        :assets="assets"
+        :assetsUploading="assetsUploading"
         @update:code="updateCurrentFile"
         @toggleTheme="toggleTheme"
         @runCode="runCode"
@@ -23,6 +25,10 @@
         @deleteFile="deleteFile"
         @renameFile="renameFile"
         @saveToStorage="saveToStorage"
+        @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset"
+        @refreshAssets="refreshAssets"
+        @createAssetFolder="createAssetFolder"
       />
     </div>
 
@@ -38,7 +44,7 @@
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
-            This compiler bundles Pendulum entirely in the browser so you can experiment with timezone conversions, period arithmetic, and locale-friendly formatting without installing dependencies or configuring environments—it’s free and ready to run. Inspect DST transitions, compare deltas, parse ISO strings, and prototype dashboards or reminders before deploying to production.
+            This compiler bundles Pendulum entirely in the browser so you can experiment with timezone conversions, period arithmetic, and locale-friendly formatting without installing dependencies or configuring environments. Upload files and folders to work with local datetime data, inspect DST transitions, compare deltas, parse ISO strings, and prototype dashboards or reminders before deploying to production. This online compiler is completely free and requires no installation.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
@@ -158,6 +164,8 @@ const {
   loaderVisible,
   currentFileContent,
   monacoTheme,
+  assets,
+  assetsUploading,
   updateCurrentFile,
   createNewFile,
   selectFile,
@@ -169,6 +177,10 @@ const {
   clearCode,
   clearOutput,
   loadExample,
+  refreshAssets,
+  uploadAssets,
+  deleteAsset,
+  createAssetFolder,
   initializePyodide,
   cleanupWorker
 } = useLibraryPlayground({

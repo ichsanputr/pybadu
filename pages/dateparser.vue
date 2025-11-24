@@ -13,6 +13,8 @@
         :pyodideReady="pyodideReady"
         :monacoTheme="monacoTheme"
         :examples="examples"
+        :assets="assets"
+        :assetsUploading="assetsUploading"
         @update:code="updateCurrentFile"
         @toggleTheme="toggleTheme"
         @runCode="runCode" 
@@ -23,7 +25,11 @@
         @selectFile="selectFile"
         @deleteFile="deleteFile"
         @renameFile="renameFile"
-        @saveToStorage="saveToStorage" />
+        @saveToStorage="saveToStorage"
+        @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset"
+        @refreshAssets="refreshAssets"
+        @createAssetFolder="createAssetFolder" />
     </div>
 
     <!-- Information Section -->
@@ -39,7 +45,7 @@
           </p>
           
           <p class="text-base md:text-lg leading-relaxed">
-            This compiler bundles <strong>Dateparser</strong>, allowing you to experiment with natural language date parsing directly in your browser. You can parse relative expressions, control preferred date order, work with multiple languages, auto-detect time zones, and search entire paragraphs for embedded dates. The playground exposes the full API including the <code>dateparser.parse</code> helper, advanced settings, and the <code>search_dates</code> utility for extracting multiple matches.
+            This compiler bundles Dateparser, allowing you to experiment with natural language date parsing directly in your browser. Upload files and folders to work with local date data, parse relative expressions, control preferred date order, work with multiple languages, auto-detect time zones, and search entire paragraphs for embedded dates. The playground exposes the full API including the dateparser.parse helper, advanced settings, and the search_dates utility for extracting multiple matches. This online compiler is completely free and requires no installation.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
@@ -185,6 +191,8 @@ const {
   loaderVisible,
   currentFileContent,
   monacoTheme,
+  assets,
+  assetsUploading,
   updateCurrentFile,
   createNewFile,
   selectFile,
@@ -196,6 +204,10 @@ const {
   clearCode,
   clearOutput,
   loadExample,
+  refreshAssets,
+  uploadAssets,
+  deleteAsset,
+  createAssetFolder,
   initializePyodide,
   cleanupWorker
 } = useLibraryPlayground({

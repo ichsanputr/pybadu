@@ -13,6 +13,8 @@
         :pyodideReady="pyodideReady"
         :monacoTheme="monacoTheme"
         :examples="examples"
+        :assets="assets"
+        :assetsUploading="assetsUploading"
         @update:code="updateCurrentFile"
         @toggleTheme="toggleTheme"
         @runCode="runCode"
@@ -24,6 +26,10 @@
         @deleteFile="deleteFile"
         @renameFile="renameFile"
         @saveToStorage="saveToStorage"
+        @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset"
+        @refreshAssets="refreshAssets"
+        @createAssetFolder="createAssetFolder"
       />
     </div>
 
@@ -40,7 +46,7 @@
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
-            This playground bundles <strong>jmespath</strong> so you can explore queries entirely in the browser using Pyodide. Load sample payloads, refine expressions, and print the JSON result instantly. Experiment with filters, wildcards, slicing, function pipelines like <code>max_by</code> or <code>sort_by</code>, and multi-select projections in a safe sandbox without touching your backend.
+            This playground bundles jmespath so you can explore queries entirely in the browser using Pyodide. Upload files and folders to work with local JSON data, load sample payloads, refine expressions, and print the JSON result instantly. Experiment with filters, wildcards, slicing, function pipelines like max_by or sort_by, and multi-select projections in a safe sandbox without touching your backend. This online compiler is completely free and requires no installation.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
@@ -186,6 +192,8 @@ const {
   loaderVisible,
   currentFileContent,
   monacoTheme,
+  assets,
+  assetsUploading,
   updateCurrentFile,
   createNewFile,
   selectFile,
@@ -197,6 +205,10 @@ const {
   clearCode,
   clearOutput,
   loadExample,
+  refreshAssets,
+  uploadAssets,
+  deleteAsset,
+  createAssetFolder,
   initializePyodide,
   cleanupWorker
 } = useLibraryPlayground({

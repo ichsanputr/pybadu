@@ -11,13 +11,7 @@
         <!-- Default Branding Section with Meteor Effect -->
         <slot name="branding">
           <div class="mt-16 relative">
-            <Motion
-              as="div"
-              :initial="{ opacity: 0, scale: 0.95 }"
-              :while-in-view="{ opacity: 1, scale: 1 }"
-              :transition="{ duration: 0.6 }"
-              class="text-center bg-gradient-to-br from-python-blue-600 via-python-blue-500 to-python-yellow-500 rounded-3xl p-12 relative overflow-hidden"
-            >
+            <div class="text-center bg-gradient-to-br from-python-blue-600 via-python-blue-500 to-python-yellow-500 rounded-3xl p-12 relative overflow-hidden">
               <!-- Meteor effect -->
               <Meteor :number="10" class-name="text-white/50" />
               
@@ -53,18 +47,12 @@
                   </a>
                 </div>
               </div>
-            </Motion>
+            </div>
           </div>
         </slot>
 
         <!-- Technology Stack Badges -->
-        <Motion
-          as="div"
-          :initial="{ opacity: 0 }"
-          :while-in-view="{ opacity: 1 }"
-          :transition="{ delay: 0.4, duration: 0.6 }"
-          class="mt-12 flex flex-wrap items-center justify-center gap-4"
-        >
+        <div class="mt-12 flex flex-wrap items-center justify-center gap-4">
           <div
             v-for="tech in techStack"
             :key="tech.name"
@@ -73,14 +61,13 @@
             <Icon :icon="tech.icon" class="w-5 h-5" :class="tech.color" />
             <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ tech.name }}</span>
           </div>
-        </Motion>
+        </div>
       </div>
     </div>
   </section>
 </template>
 
 <script setup>
-import { Motion } from 'motion-v'
 import { Icon } from '@iconify/vue'
 import { useColorMode } from '@vueuse/core'
 

@@ -285,7 +285,7 @@
                 </div>
               </div>
               <input ref="sidebarFileInput" type="file" accept=".py,.txt" @change="handleFileUpload" class="hidden" />
-              <div class="space-y-1">
+              <div>
                 <div v-for="file in files" :key="file.id" :class="[
                   'w-full flex items-center justify-between p-2 rounded-md text-sm transition-colors group',
                   activeFileId === file.id
@@ -332,7 +332,7 @@
                   <button :class="[
                     'p-0.5 rounded transition-colors',
                     theme === 'dark' ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-100 text-gray-600'
-                  ]" title="Files uploaded here are available at /assets/ inside Python.">
+                  ]" title="Access uploaded files in Python at /assets/. Use it for example open('/assets/filename').">
                     <Icon icon="ph:info" class="w-3.5 h-3.5" />
                   </button>
                   <button @click="createAssetFolderPrompt" :class="[

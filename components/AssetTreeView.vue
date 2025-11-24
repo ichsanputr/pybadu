@@ -18,9 +18,14 @@
     </div>
 
     <!-- Empty state -->
-    <div v-if="!assets.length" class="text-center py-4 text-sm text-gray-500">
-      <Icon icon="ph:folder" :class="['w-8 h-8 mx-auto mb-2 opacity-50', theme === 'dark' ? 'text-gray-400' : 'text-gray-600']" />
-      <p :class="theme === 'dark' ? 'text-gray-400' : 'text-gray-600'">No assets uploaded yet</p>
+    <div v-if="!assets.length" :class="[
+      'text-center p-3 my-5 rounded-lg border-2 border-dashed',
+      theme === 'dark' 
+        ? 'border-gray-600 bg-gray-800/20' 
+        : 'border-gray-300 bg-gray-50/50'
+    ]">
+      <div :class="['text-xs font-medium', theme === 'dark' ? 'text-gray-400' : 'text-gray-600']">No assets uploaded yet</div>
+      <div :class="['text-xs mt-1', theme === 'dark' ? 'text-gray-500' : 'text-gray-500']">Upload files to get started</div>
     </div>
   </div>
 </template>

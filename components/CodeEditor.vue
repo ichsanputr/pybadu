@@ -553,6 +553,97 @@
           </div>
         </section>
 
+        <!-- Mobile Assets Panel (below output on mobile only) -->
+        <section :class="[
+          'lg:hidden border-t',
+          'w-full',
+          theme === 'dark' ? 'border-gray-700' : 'border-gray-200 bg-gray-50'
+        ]">
+          <!-- Assets Header -->
+          <div :class="[
+            'flex items-center justify-between px-4 py-2 border-b text-sm flex-shrink-0',
+            theme === 'dark'
+              ? 'bg-gray-800/50 border-gray-700 text-gray-400'
+              : 'bg-gray-50 border-gray-200 text-gray-600'
+          ]">
+            <div class="flex items-center space-x-2">
+              <Icon icon="ph:folder" class="w-4 h-4" />
+              <span>Assets</span>
+              <div v-if="assets.length > 0" :class="[
+                'px-1.5 py-0.5 rounded text-xs',
+                theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'
+              ]">
+                {{ assets.length }}
+              </div>
+            </div>
+
+            <div class="flex items-center space-x-2">
+              <!-- Upload button -->
+              <button @click="triggerAssetUpload" :disabled="assetsUploading" :class="[
+                'text-xs px-2 py-1 rounded transition-colors',
+                assetsUploading
+                  ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                  : theme === 'dark'
+                    ? 'hover:bg-gray-700 text-gray-400'
+                    : 'hover:bg-gray-200 text-gray-600'
+              ]" title="Upload files">
+                <Icon :icon="assetsUploading ? 'ph:spinner' : 'ph:upload'" :class="assetsUploading ? 'animate-spin' : ''" class="w-3 h-3" />
+              </button>
+
+              <!-- Create folder button -->
+              <button @click="createAssetFolderPrompt" :class="[
+                'text-xs px-2 py-1 rounded transition-colors',
+                theme === 'dark'
+                  ? 'hover:bg-gray-700 text-gray-400'
+                  : 'hover:bg-gray-200 text-gray-600'
+              ]" title="Create folder">
+                <Icon icon="ph:folder-plus" class="w-3 h-3" />
+              </button>
+
+              <!-- Info button -->
+              <button @click="showInfoDialog = true" :class="[
+                'text-xs px-2 py-1 rounded transition-colors',
+                theme === 'dark'
+                  ? 'hover:bg-gray-700 text-gray-400'
+                  : 'hover:bg-gray-200 text-gray-600'
+              ]" title="Assets information">
+                <Icon icon="ph:info" class="w-3 h-3" />
+              </button>
+            </div>
+          </div>
+
+          <!-- Assets Content -->
+          <div class="overflow-y-auto p-2 flex flex-col justify-center" style="max-height: 300px; min-height: 300px;">
+            <!-- Upload status -->
+            <div v-if="assetsUploading" :class="[
+              'flex items-center space-x-2 p-3 rounded-lg mb-3 text-sm',
+              theme === 'dark' ? 'bg-blue-900/20 text-blue-300' : 'bg-blue-50 text-blue-700'
+            ]">
+              <Icon icon="ph:spinner" class="w-4 h-4 animate-spin" />
+              <span>Uploading files...</span>
+            </div>
+
+            <!-- Asset Tree -->
+            <AssetTreeView
+              :assets="assetItems"
+              :theme="theme"
+              :selected-asset="selectedAsset"
+              @select="selectAssetFile"
+              @delete="deleteAssetFile"
+              @toggle="emit('refreshAssets')"
+            />
+          </div>
+
+          <!-- Hidden file input -->
+          <input
+            ref="assetFileInput"
+            type="file"
+            multiple
+            class="hidden"
+            @change="handleAssetUpload"
+          />
+        </section>
+
         <!-- Ads Panel -->
         <section :class="[
           'hidden lg:flex flex-col border-l',

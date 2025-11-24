@@ -243,6 +243,21 @@ const additionalLibraries = [
     path: '/sortedcontainers'
   },
   {
+    name: 'Jinja2',
+    description: 'Powerful templating engine with filters, macros, and inheritance for generating HTML, emails, docs, or automation outputs.',
+    path: '/jinja2'
+  },
+  {
+    name: 'NetworkX',
+    description: 'Create and analyze graphs with Python. Build networks, run shortest paths, centrality, spanning trees, and export data for visualization.',
+    path: '/networkx'
+  },
+  {
+    name: 'Bleach',
+    description: 'Mozilla’s HTML sanitizer for stripping unsafe tags, filtering CSS, linkifying URLs, and keeping user-generated content XSS-safe.',
+    path: '/bleach'
+  },
+  {
     name: 'JMESPath',
     description: 'Query JSON with XPath-like expressions. Filter, project, and aggregate structured data using the declarative JMESPath language.',
     path: '/jmespath'

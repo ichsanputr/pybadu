@@ -71,6 +71,12 @@ export function useLibraryPlayground(config = {}) {
   // Theme is stateless - always starts with dark, not saved to localStorage
   const theme = ref('dark')
 
+  // Apply dark theme immediately on compiler pages (before any rendering)
+  if (process.client) {
+    // Apply dark class immediately to prevent flash of light theme
+    document.documentElement.classList.add('dark')
+  }
+
   // Auto-save files when they change (output is never saved)
   watch(files, () => {
     saveFilesToStorage()

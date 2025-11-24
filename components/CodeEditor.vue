@@ -509,6 +509,7 @@
       </aside>
 
       <!-- Editor & Output & Ads -->
+       <!-- Oke -->
       <main class="flex-1 flex flex-col lg:flex-row overflow-hidden">
         <!-- Code Editor -->
         <section class="w-full lg:w-[35%] xl:w-[40%] h-[60vh] lg:h-auto" :class="[

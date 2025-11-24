@@ -80,6 +80,17 @@
             <NuxtLink to="/textwrap3" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               Textwrap3
             </NuxtLink>
+            <NuxtLink to="/jmespath" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              JMESPath
+            </NuxtLink>
+            <NuxtLink to="/dateparser" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              Dateparser
+            </NuxtLink>
+          </div>
+          <div class="mt-4">
+            <NuxtLink to="/list" class="inline-flex items-center text-sm text-gray-200 hover:text-python-yellow-400 transition-colors">
+              See all compilers →
+            </NuxtLink>
           </div>
         </div>
       </div>

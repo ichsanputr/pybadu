@@ -226,6 +226,31 @@ const additionalLibraries = [
     name: 'Textwrap3',
     description: 'Advanced text wrapping and formatting. Wrap, fill, shorten, and format text with precise control over width, indentation, and line limits.',
     path: '/textwrap3'
+  },
+  {
+    name: 'simplejson',
+    description: 'Fast JSON encoder/decoder used by Python’s stdlib. Customize hooks, preserve Decimal precision, and build optimized serializers.',
+    path: '/simplejson'
+  },
+  {
+    name: 'bitstring',
+    description: 'Create and analyze binary data with BitArray, BitStream, and pack helpers. Slice, search, and reinterpret bits for protocols and telemetry.',
+    path: '/bitstring'
+  },
+  {
+    name: 'sortedcontainers',
+    description: 'Pure-Python SortedList, SortedDict, and SortedSet types with fast inserts, bisect helpers, and memory-efficient ordered collections.',
+    path: '/sortedcontainers'
+  },
+  {
+    name: 'JMESPath',
+    description: 'Query JSON with XPath-like expressions. Filter, project, and aggregate structured data using the declarative JMESPath language.',
+    path: '/jmespath'
+  },
+  {
+    name: 'Dateparser',
+    description: 'Parse natural language date expressions. Convert phrases like “tomorrow at 5pm” or “last Friday” into timezone-aware datetime objects.',
+    path: '/dateparser'
   }
 ]
 

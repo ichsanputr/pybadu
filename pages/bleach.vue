@@ -99,7 +99,7 @@ const examples = [
     title: 'Basic Cleaning',
     code: `import bleach
 
-dirty = "<p>Hello<script>alert(1)</script></p>"
+dirty = "<p>Hello<script>alert(1)<\\/script></p>"
 print(bleach.clean(dirty))`
   },
   {
@@ -146,7 +146,7 @@ print(bleach.clean(html, tags=[], attributes={}, strip=True))`
 
 const defaultCode = `import bleach
 
-dirty = "<script>bad()</script>"
+dirty = "<script>bad()<\\/script>"
 print(bleach.clean(dirty))`
 
 const {

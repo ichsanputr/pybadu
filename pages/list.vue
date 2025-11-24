@@ -258,6 +258,41 @@ const additionalLibraries = [
     path: '/bleach'
   },
   {
+    name: 'html2text',
+    description: 'Convert HTML into Markdown-style plain text. Configure line width, link handling, and formatting for emails, previews, and indexing.',
+    path: '/html2text'
+  },
+  {
+    name: 'validators',
+    description: 'Lightweight helpers for validating emails, URLs, IPs, UUIDs, credit cards, and more without defining schemas.',
+    path: '/validators'
+  },
+  {
+    name: 'phonenumbers',
+    description: 'Google’s libphonenumber port for Python. Parse, validate, format, and enrich international phone numbers with carrier/region metadata.',
+    path: '/phonenumbers'
+  },
+  {
+    name: 'Pydantic',
+    description: 'Type-hint driven data validation and settings management. Model schemas, enforce constraints, and serialize/deserialize JSON effortlessly.',
+    path: '/pydantic'
+  },
+  {
+    name: 'Pendulum',
+    description: 'User-friendly timezone-aware datetimes. Convert zones, format durations, and produce human-readable differences with drop-in datetime compatibility.',
+    path: '/pendulum'
+  },
+  {
+    name: 'num2words',
+    description: 'Convert numbers to natural language text across dozens of locales, including cardinal, ordinal, year, and currency formats.',
+    path: '/num2words'
+  },
+  {
+    name: 'SymPy',
+    description: 'Run symbolic math with the pure-Python CAS. Differentiate, solve, simplify, and generate code without leaving the browser.',
+    path: '/sympy'
+  },
+  {
     name: 'JMESPath',
     description: 'Query JSON with XPath-like expressions. Filter, project, and aggregate structured data using the declarative JMESPath language.',
     path: '/jmespath'

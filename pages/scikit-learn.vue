@@ -119,11 +119,7 @@ useHead({
 const examples = [
   {
     title: "Linear Regression",
-    code: `import numpy as np
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, r2_score
-
-# Generate sample data
+    code: `# Generate sample data
 np.random.seed(42)
 X = np.array([[1], [2], [3], [4], [5], [6], [7], [8], [9], [10]])
 y = 2 * X.flatten() + 1 + np.random.randn(10) * 0.5
@@ -148,12 +144,7 @@ for i in range(5):
   },
   {
     title: "Classification with Logistic Regression",
-    code: `import numpy as np
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, classification_report
-
-# Generate sample data
+    code: `# Generate sample data
 np.random.seed(42)
 X = np.random.randn(100, 2)
 y = (X[:, 0] + X[:, 1] > 0).astype(int)
@@ -179,11 +170,7 @@ print(classification_report(y_test, y_pred))`
   },
   {
     title: "K-Means Clustering",
-    code: `import numpy as np
-from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_score
-
-# Generate sample data
+    code: `# Generate sample data
 np.random.seed(42)
 X = np.vstack([
     np.random.randn(30, 2) + [2, 2],
@@ -210,12 +197,7 @@ for cluster, count in zip(unique, counts):
   },
   {
     title: "Decision Tree Classifier",
-    code: `import numpy as np
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, confusion_matrix
-
-# Generate sample data
+    code: `# Generate sample data
 np.random.seed(42)
 X = np.random.randn(150, 4)
 y = (X[:, 0] + X[:, 1] > X[:, 2] + X[:, 3]).astype(int)
@@ -243,12 +225,7 @@ print(confusion_matrix(y_test, y_pred))`
   },
   {
     title: "Random Forest",
-    code: `import numpy as np
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-
-# Generate sample data
+    code: `# Generate sample data
 np.random.seed(42)
 X = np.random.randn(200, 5)
 y = ((X[:, 0] + X[:, 1]) > (X[:, 2] + X[:, 3])).astype(int)
@@ -280,11 +257,7 @@ for i, importance in enumerate(rf.feature_importances_):
   },
   {
     title: "Principal Component Analysis",
-    code: `import numpy as np
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
-
-# Generate sample data
+    code: `# Generate sample data
 np.random.seed(42)
 X = np.random.randn(100, 5)
 
@@ -310,11 +283,7 @@ print(f"\\nTransformed data shape: {X_pca.shape}")`
   }
 ]
 
-const defaultCode = `import numpy as np
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, r2_score
-
-# Generate sample data
+const defaultCode = `# Generate sample data
 np.random.seed(42)
 X = np.array([[1], [2], [3], [4], [5]])
 y = np.array([2, 4, 5, 4, 5])
@@ -363,10 +332,17 @@ const {
   packageName: 'scikit-learn',
   defaultCode,
   examples,
-  additionalPackages: ['numpy'],
+  additionalPackages: [],
   setupCode: `
 import numpy as np
-from sklearn import *
+from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score, mean_squared_error, accuracy_score, classification_report, confusion_matrix, silhouette_score
+from sklearn.cluster import KMeans
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
   `
 })
 

@@ -118,10 +118,7 @@ useHead({
 const examples = [
   {
     title: "Basic Line Plot",
-    code: `import matplotlib.pyplot as plt
-import numpy as np
-
-# Create sample data
+    code: `# Create sample data
 x = np.linspace(0, 10, 100)
 y = np.sin(x)
 
@@ -139,10 +136,7 @@ print("Basic line plot created!")`
   },
   {
     title: "Multiple Functions",
-    code: `import matplotlib.pyplot as plt
-import numpy as np
-
-# Generate data
+    code: `# Generate data
 x = np.linspace(0, 2*np.pi, 100)
 y1 = np.sin(x)
 y2 = np.cos(x)
@@ -176,10 +170,7 @@ print("Multiple function plots created!")`
   },
   {
     title: "Scatter Plot",
-    code: `import matplotlib.pyplot as plt
-import numpy as np
-
-# Generate random data
+    code: `# Generate random data
 np.random.seed(42)
 x = np.random.randn(100)
 y = 2*x + np.random.randn(100)
@@ -204,10 +195,7 @@ print("Scatter plot with trend line created!")`
   },
   {
     title: "Bar Chart",
-    code: `import matplotlib.pyplot as plt
-import numpy as np
-
-# Data for bar chart
+    code: `# Data for bar chart
 categories = ['Python', 'JavaScript', 'Java', 'C++', 'Go', 'Rust']
 values = [85, 70, 65, 60, 45, 40]
 colors = ['#3776ab', '#f7df1e', '#ed8b00', '#00599c', '#00add8', '#ce422b']
@@ -234,10 +222,7 @@ print("Bar chart created!")`
   },
   {
     title: "Histogram",
-    code: `import matplotlib.pyplot as plt
-import numpy as np
-
-# Generate random data
+    code: `# Generate random data
 np.random.seed(42)
 data = np.random.normal(100, 15, 1000)
 
@@ -266,9 +251,7 @@ print(f"Histogram created! Mean: {mean_val:.2f}, Std: {std_val:.2f}")`
   },
   {
     title: "3D Surface Plot",
-    code: `import matplotlib.pyplot as plt
-import numpy as np
-from mpl_toolkits.mplot3d import Axes3D
+    code: `from mpl_toolkits.mplot3d import Axes3D
 
 # Create 3D data
 x = np.linspace(-5, 5, 50)
@@ -301,10 +284,7 @@ print("3D surface plot created!")`
   }
 ]
 
-const defaultCode = `import matplotlib.pyplot as plt
-import numpy as np
-
-# Create sample data
+const defaultCode = `# Create sample data
 x = np.linspace(0, 10, 100)
 y = np.sin(x)
 

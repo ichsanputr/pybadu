@@ -117,9 +117,7 @@ useHead({
 const examples = [
   {
     title: "Array Basics",
-    code: `import numpy as np
-
-# Create arrays
+    code: `# Create arrays
 arr1 = np.array([1, 2, 3, 4, 5])
 arr2 = np.array([[1, 2, 3], [4, 5, 6]])
 
@@ -138,9 +136,7 @@ print("Min:", arr1.min())`
   },
   {
     title: "Array Creation",
-    code: `import numpy as np
-
-# Different ways to create arrays
+    code: `# Different ways to create arrays
 zeros = np.zeros((3, 4))
 ones = np.ones((2, 3))
 identity = np.eye(4)
@@ -161,9 +157,7 @@ print("Linspace:", linspace)`
   },
   {
     title: "Matrix Operations",
-    code: `import numpy as np
-
-# Matrix multiplication
+    code: `# Matrix multiplication
 A = np.array([[1, 2], [3, 4]])
 B = np.array([[5, 6], [7, 8]])
 
@@ -195,9 +189,7 @@ print(inv)`
   },
   {
     title: "Statistical Operations",
-    code: `import numpy as np
-
-# Generate random data
+    code: `# Generate random data
 np.random.seed(42)
 data = np.random.randn(100)
 
@@ -221,9 +213,7 @@ print(f"\\nCorrelation coefficient: {correlation:.4f}")`
   },
   {
     title: "Broadcasting",
-    code: `import numpy as np
-
-# Broadcasting example
+    code: `# Broadcasting example
 arr = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
 print("Original array:")
 print(arr)
@@ -247,9 +237,7 @@ print(result3)`
   },
   {
     title: "Linear Algebra",
-    code: `import numpy as np
-
-# Solve linear equations: Ax = b
+    code: `# Solve linear equations: Ax = b
 A = np.array([[3, 1], [1, 2]])
 b = np.array([9, 8])
 
@@ -275,9 +263,7 @@ print("Singular values:", s)`
   }
 ]
 
-const defaultCode = `import numpy as np
-
-# Create a sample array
+const defaultCode = `# Create a sample array
 arr = np.array([1, 2, 3, 4, 5])
 
 print("Array:", arr)

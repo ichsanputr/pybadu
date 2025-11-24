@@ -56,23 +56,8 @@
         <div>
           <h3 class="text-white font-semibold mb-4">Additional Libraries</h3>
           <div class="grid grid-cols-2 gap-x-4 gap-y-2">
-            <NuxtLink to="/scipy" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
-              SciPy
-            </NuxtLink>
-            <NuxtLink to="/beautifulsoup4" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
-              BeautifulSoup4
-            </NuxtLink>
-            <NuxtLink to="/pillow" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
-              Pillow
-            </NuxtLink>
-            <NuxtLink to="/nltk" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
-              NLTK
-            </NuxtLink>
-            <NuxtLink to="/regex" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
-              Regex
-            </NuxtLink>
-            <NuxtLink to="/pytz" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
-              PyTZ
+            <NuxtLink to="/snowball" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              Snowball Stemmer
             </NuxtLink>
           </div>
         </div>

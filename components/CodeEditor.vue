@@ -645,12 +645,14 @@
                 </div>
               </div>
 
-            <div v-if="output.length === 0" :class="[
+            <div class=" h-full flex items-center justify-center" v-if="output.length === 0" :class="[
               'text-center py-8 text-sm',
               theme === 'dark' ? 'text-gray-500' : 'text-gray-400'
             ]">
-              <Icon icon="ph:terminal" class="w-8 h-8 mx-auto mb-2 opacity-50" />
+              <div class="flex flex-col items-center justify-center">
+                <Icon icon="ph:terminal" class="w-8 h-8 mx-auto mb-2 opacity-50" />
               <p>Run your Python code to see output here</p>
+              </div>
             </div>
           </div>
         </section>

@@ -361,40 +361,13 @@
                 <code :class="theme === 'dark' ? 'text-gray-200' : 'text-gray-700'">/assets/&lt;filename&gt;</code>.
               </p>
               
-              <!-- Asset Items List -->
-              <div v-if="assetItems.length" class="space-y-1">
-                <div v-for="asset in assetItems" :key="asset.name" :class="[
-                  'flex items-center justify-between p-2 rounded-md text-sm',
-                  theme === 'dark'
-                    ? 'bg-gray-800 text-gray-200'
-                    : 'bg-gray-50 text-gray-700'
-                ]">
-                  <div class="flex items-center space-x-2">
-                    <Icon :icon="asset.isDir ? 'ph:folder' : 'ph:file'" class="w-4 h-4 flex-shrink-0"
-                      :class="asset.isDir ? 'text-yellow-500' : ''" />
-                    <div>
-                      <p class="font-medium truncate max-w-[120px]">{{ asset.name }}</p>
-                      <p class="text-xs opacity-70">
-                        /assets/{{ asset.name }}<span v-if="!asset.isDir"> · {{ formatBytes(asset.size) }}</span>
-                      </p>
-                    </div>
-                  </div>
-                  <button @click="deleteAssetFile(asset.name)" :class="[
-                    'p-1 rounded transition-colors',
-                    theme === 'dark' ? 'hover:bg-red-500/20 text-red-300' : 'hover:bg-red-100 text-red-600'
-                  ]">
-                    <Icon icon="ph:trash" class="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-              <div v-else :class="[
-                'text-xs px-2 py-3 rounded-md border border-dashed text-center',
-                theme === 'dark'
-                  ? 'border-gray-700 text-gray-500'
-                  : 'border-gray-300 text-gray-500'
-              ]">
-                No assets uploaded yet
-              </div>
+              <!-- Asset Items Tree View -->
+              <AssetTreeView
+                :assets="props.assets"
+                :theme="theme"
+                :selected-asset="selectedAsset"
+                @delete="deleteAssetFile"
+                @select="selectAssetFile" />
             </div>
 
             <!-- Examples Section -->
@@ -443,8 +416,8 @@
               'w-full p-2 rounded-md transition-colors',
               activeFileId === file.id
                 ? theme === 'dark'
-                  ? 'bg-yellow-900/30 text-yellow-400'
-                  : 'bg-blue-100 text-blue-600'
+                  ? 'bg-python-yellow-900/30 text-python-yellow-400'
+                  : 'bg-python-blue-100 text-python-blue-600'
                 : theme === 'dark'
                   ? 'text-gray-400 hover:bg-gray-700'
                   : 'text-gray-600 hover:bg-gray-100'
@@ -616,6 +589,25 @@
         <button @click="confirmDeleteFile"
           class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors">
           Delete File
+        </button>
+      </template>
+    </Dialog>
+
+    <!-- Delete Asset Confirmation Dialog -->
+    <Dialog v-model="deleteAssetDialog.show" size="sm" title="Delete Asset" subtitle="This action cannot be undone"
+      icon="ph:trash" icon-variant="error" :theme="theme">
+      <p class="text-sm text-gray-700 dark:text-gray-300 mb-6">
+        Are you sure you want to delete <strong>{{ deleteAssetDialog.assetName }}</strong>?
+      </p>
+
+      <template #footer>
+        <button @click="deleteAssetDialog.show = false"
+          class="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors">
+          Cancel
+        </button>
+        <button @click="confirmDeleteAsset"
+          class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors">
+          Delete Asset
         </button>
       </template>
     </Dialog>
@@ -1011,6 +1003,7 @@ import Dialog from '~/components/ui/Dialog.vue'
 import MonacoEditor from '~/components/MonacoEditor.vue'
 import Adsense from '~/components/Adsense.vue'
 import Toast from '~/components/ui/Toast.vue'
+import AssetTreeView from '~/components/AssetTreeView.vue'
 
 defineOptions({
   name: 'CodeEditor'
@@ -1081,6 +1074,7 @@ const showMobileMenu = ref(false)
 const showSidebar = ref(true)
 const sidebarCollapsed = ref(false)
 const assetFileInput = ref(null)
+const selectedAsset = ref('')
 
 // Toast notifications
 const toasts = ref([])
@@ -1094,6 +1088,12 @@ const deleteDialog = ref({
   show: false,
   fileId: null,
   fileName: ''
+})
+
+// Delete asset confirmation dialog
+const deleteAssetDialog = ref({
+  show: false,
+  assetName: ''
 })
 
 // Share dialog - new version with file selection
@@ -1223,7 +1223,22 @@ function handleAssetUpload(event) {
 }
 
 function deleteAssetFile(name) {
-  emit('deleteAsset', name)
+  deleteAssetDialog.value = {
+    show: true,
+    assetName: name
+  }
+}
+
+function confirmDeleteAsset() {
+  if (deleteAssetDialog.value.assetName) {
+    emit('deleteAsset', deleteAssetDialog.value.assetName)
+    showToast('Asset deleted successfully', 'success')
+  }
+  deleteAssetDialog.value.show = false
+}
+
+function selectAssetFile(name) {
+  selectedAsset.value = name
 }
 
 function createAssetFolderPrompt() {

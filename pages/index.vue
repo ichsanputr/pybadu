@@ -427,13 +427,13 @@ const testimonials = [
   {
     img: 'https://avatars.githubusercontent.com/u/78834298?v=4',
     quote: 'Pybadu has transformed how I teach Python data science. Students can experiment with NumPy and Pandas instantly without installation hassles. It\'s a game-changer for online education.',
-    name: 'Muhammad Ichsanul Fadhil',
-    role: 'Software Engineer & Rust Developer'
+    name: 'Angger Raka Sanjaya',
+    role: 'Python Developer'
   },
   {
     img: 'https://avatars.githubusercontent.com/u/69036480?v=4',
     quote: 'The dedicated environment for each library is brilliant. I can test Scikit-learn models without setting up virtual environments. Perfect for research and experimentation.',
-    name: 'Deri Kurniawan',
+    name: 'Muhammad Ichsanul Fadhil',
     role: 'Full Stack Developer'
   },
   {

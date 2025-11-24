@@ -511,7 +511,7 @@
       <!-- Editor & Output & Ads -->
       <main class="flex-1 flex flex-col lg:flex-row overflow-hidden">
         <!-- Code Editor -->
-        <section class="w-full lg:w-[35%] xl:w-[40%] h-[50vh] lg:h-auto" :class="[
+        <section class="w-full lg:w-[35%] xl:w-[40%] h-[60vh] lg:h-auto" :class="[
           'flex flex-col border-r',
           theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
         ]">
@@ -559,7 +559,7 @@
         <!-- Output Panel -->
         <section :class="[
           'flex flex-col border-t lg:border-t-0 lg:border-l',
-          'w-full lg:w-[35%] xl:w-[35%] h-[50vh] lg:h-auto',
+          'w-full lg:w-[35%] xl:w-[35%] h-[60vh] lg:h-auto',
           theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
         ]">
           <!-- Output Header -->

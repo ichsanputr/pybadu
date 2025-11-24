@@ -32,7 +32,7 @@
           :transition="{ delay: 0.4, duration: 0.6 }"
           class="text-xl md:text-2xl lg:text-3xl font-bold text-center text-gray-800 dark:text-gray-200"
         >
-          Dedicated Python Library Playground
+          Dedicated Python Library Compilers
         </Motion>
 
         <Motion
@@ -42,8 +42,7 @@
           :transition="{ delay: 0.6, duration: 0.6 }"
           class="text-base md:text-lg lg:text-xl text-center max-w-3xl text-gray-600 dark:text-gray-400 px-4"
         >
-          Experience specialized compilers for each Python library. Run NumPy, Pandas, Matplotlib, 
-          and Scikit-learn with dedicated environments powered by Pyodide WebAssembly.
+          Explore Python libraries directly in your browser using fast, isolated execution environments that give you a smooth, installation-free coding experience.
         </Motion>
 
         <Motion
@@ -392,28 +391,28 @@ const libraries = [
     description: 'Scientific algorithms & optimization',
     icon: 'simple-icons:scipy',
     bgClass: 'bg-gradient-to-br from-blue-600 to-cyan-600',
-    href: '#'
+    href: '/list'
   },
   {
     name: 'SymPy',
     description: 'Symbolic mathematics',
     icon: 'ph:math-operations',
     bgClass: 'bg-gradient-to-br from-teal-500 to-green-600',
-    href: '#'
+    href: '/list'
   },
   {
     name: 'NetworkX',
     description: 'Network analysis & graph theory',
     icon: 'ph:graph',
     bgClass: 'bg-gradient-to-br from-indigo-500 to-blue-600',
-    href: '#'
+    href: '/list'
   },
   {
     name: 'Bokeh',
     description: 'Interactive visualizations',
     icon: 'ph:chart-line-up',
     bgClass: 'bg-gradient-to-br from-pink-500 to-rose-600',
-    href: '#'
+    href: '/list'
   }
 ]
 
@@ -447,11 +446,11 @@ const testimonials = [
 
 // SEO Meta
 useHead({
-  title: 'Pybadu – Dedicated Python Library Playground',
+  title: 'Pybadu – Dedicated Python Library Compilers',
   meta: [
     {
       name: 'description',
-      content: 'Pybadu is a specialized Python library playground powered by Pyodide WebAssembly. Experience dedicated compilers for NumPy, Pandas, Matplotlib, SciPy, Scikit-learn, and more directly in your browser. Part of the BudiBadu ecosystem.'
+      content: 'Explore Python libraries directly in your browser using fast, isolated execution environments that give you a smooth, installation-free coding experience. Powered by Pyodide WebAssembly. Part of the BudiBadu ecosystem.'
     },
     {
       name: 'keywords', 
@@ -459,7 +458,7 @@ useHead({
     },
     {
       property: 'og:title',
-      content: 'Pybadu – Dedicated Python Library Playground'
+      content: 'Pybadu – Dedicated Python Library Compilers'
     },
     {
       property: 'og:type',
@@ -467,7 +466,7 @@ useHead({
     },
     {
       property: 'og:description',
-      content: 'Specialized Python library playground with dedicated compilers for each library. Run NumPy, Pandas, Matplotlib and more in your browser.'
+      content: 'Explore Python libraries directly in your browser using fast, isolated execution environments that give you a smooth, installation-free coding experience.'
     },
     {
       property: 'og:url',

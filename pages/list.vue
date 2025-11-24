@@ -42,7 +42,7 @@
             Default Libraries
           </h2>
           <p class="text-sm md:text-base text-gray-600">
-            Core Python libraries for data science, visualization, and machine learning.
+            Core Python libraries and popular packages available in Pyodide.
           </p>
         </div>
 
@@ -79,7 +79,7 @@
             Additional Libraries
           </h2>
           <p class="text-sm md:text-base text-gray-600">
-            Specialized libraries for text processing, web scraping, and data formatting.
+            Additional libraries created by the community and hosted on PyPI.
           </p>
         </div>
 

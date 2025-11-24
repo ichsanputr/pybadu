@@ -160,14 +160,57 @@ export function useLibraryPlayground(config = {}) {
     theme.value = theme.value === 'light' ? 'dark' : 'light'
   }
 
+  // Web worker for package loading status
+  let packageWorker = null
+
+  // Load Pyodide CDN script dynamically (only on compiler pages)
+  function loadPyodideScript() {
+    return new Promise((resolve, reject) => {
+      // Check if already loaded
+      if (window.loadPyodide) {
+        resolve()
+        return
+      }
+
+      // Check if script is already being loaded
+      if (document.querySelector('script[src*="pyodide.js"]')) {
+        // Wait for it to load
+        waitForPyodide().then(resolve).catch(reject)
+        return
+      }
+
+      // Create and load script
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/pyodide/v0.29.0/full/pyodide.js'
+      script.async = true
+      script.crossOrigin = 'anonymous'
+      
+      script.onload = () => {
+        waitForPyodide().then(resolve).catch(reject)
+      }
+      
+      script.onerror = () => {
+        reject(new Error('Failed to load Pyodide script'))
+      }
+      
+      document.head.appendChild(script)
+    })
+  }
+
   function waitForPyodide() {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       if (window.loadPyodide) {
         resolve()
       } else {
+        let attempts = 0
+        const maxAttempts = 100 // 10 seconds max wait
+        
         const checkPyodide = () => {
+          attempts++
           if (window.loadPyodide) {
             resolve()
+          } else if (attempts >= maxAttempts) {
+            reject(new Error('Pyodide loader timeout'))
           } else {
             setTimeout(checkPyodide, 100)
           }
@@ -175,6 +218,37 @@ export function useLibraryPlayground(config = {}) {
         checkPyodide()
       }
     })
+  }
+
+  // Initialize package worker
+  function initPackageWorker() {
+    if (typeof Worker !== 'undefined' && !packageWorker) {
+      try {
+        packageWorker = new Worker('/workers/pyodide-worker.js')
+        
+        packageWorker.addEventListener('message', (e) => {
+          const { type, status, message, progress, currentPackage } = e.data
+          
+          if (type === 'PACKAGE_STATUS') {
+            // Update loading status (can be used for progress UI if needed)
+            if (status === 'complete') {
+              console.log('Packages installed:', message)
+            } else if (status === 'error') {
+              console.error('Package installation error:', e.data.error)
+            } else if (status === 'loading') {
+              // Progress update (can be used for progress bar)
+              console.log(`Package loading: ${currentPackage || '...'} (${progress}%)`)
+            }
+          }
+        })
+        
+        packageWorker.addEventListener('error', (error) => {
+          console.error('Package worker error:', error)
+        })
+      } catch (error) {
+        console.warn('Web Worker not available, continuing without worker:', error)
+      }
+    }
   }
 
   async function runCode() {
@@ -324,21 +398,68 @@ for fig in figs:
         loaderVisible.value = true
         setThemeClass(theme.value)
         
-        await waitForPyodide()
+        // Initialize package worker
+        initPackageWorker()
         
-        pyodide.value = await loadPyodide()
+        // Load Pyodide CDN script dynamically (only on compiler pages)
+        await loadPyodideScript()
         
+        // Initialize Pyodide
+        pyodide.value = await loadPyodide({
+          indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.29.0/full/'
+        })
+        
+        // Notify worker about package installation start
+        const packagesToInstall = []
+        if (packageName) packagesToInstall.push(packageName)
+        packagesToInstall.push(...additionalPackages)
+        
+        if (packageWorker) {
+          packageWorker.postMessage({
+            type: 'PACKAGE_INSTALL_START',
+            data: { packages: packagesToInstall }
+          })
+        }
+        
+        // Load micropip
         await pyodide.value.loadPackage("micropip")
         const micropip = pyodide.value.pyimport("micropip")
         
-        // Install main package
+        // Install main package with progress updates
         if (packageName) {
+          if (packageWorker) {
+            packageWorker.postMessage({
+              type: 'PACKAGE_PROGRESS',
+              data: { 
+                currentPackage: packageName,
+                progress: 30
+              }
+            })
+          }
           await micropip.install(packageName)
         }
         
-        // Install additional packages
-        for (const pkg of additionalPackages) {
+        // Install additional packages with progress updates
+        for (let i = 0; i < additionalPackages.length; i++) {
+          const pkg = additionalPackages[i]
+          if (packageWorker) {
+            packageWorker.postMessage({
+              type: 'PACKAGE_PROGRESS',
+              data: { 
+                currentPackage: pkg,
+                progress: 50 + (i / additionalPackages.length) * 40
+              }
+            })
+          }
           await micropip.install(pkg)
+        }
+        
+        // Notify worker about completion
+        if (packageWorker) {
+          packageWorker.postMessage({
+            type: 'PACKAGE_INSTALL_COMPLETE',
+            data: { packages: packagesToInstall }
+          })
         }
         
         // Run setup code if provided
@@ -355,12 +476,29 @@ for fig in figs:
       } catch (error) {
         console.error('Failed to initialize Pyodide:', error)
         loaderVisible.value = false
+        
+        // Notify worker about error
+        if (packageWorker) {
+          packageWorker.postMessage({
+            type: 'PACKAGE_INSTALL_ERROR',
+            data: { error: error.message }
+          })
+        }
+        
         output.value.push({
           type: 'error',
           content: `Failed to initialize: ${error.message}`,
           timestamp: new Date().toLocaleTimeString()
         })
       }
+    }
+  }
+
+  // Cleanup worker on unmount
+  function cleanupWorker() {
+    if (packageWorker) {
+      packageWorker.terminate()
+      packageWorker = null
     }
   }
 
@@ -388,7 +526,8 @@ for fig in figs:
     clearCode,
     clearOutput,
     loadExample,
-    initializePyodide
+    initializePyodide,
+    cleanupWorker
   }
 }
 

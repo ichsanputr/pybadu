@@ -43,11 +43,6 @@ export default defineNuxtConfig({
       ],
       script: [
         {
-          src: 'https://cdn.jsdelivr.net/pyodide/v0.29.0/full/pyodide.js',
-          async: true,
-          crossorigin: 'anonymous'
-        },
-        {
           src: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1356911639243870',
           async: true,
           crossorigin: 'anonymous'

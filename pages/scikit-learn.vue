@@ -81,7 +81,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, onBeforeUnmount } from 'vue'
 import { useHead } from '#app'
 import CodeEditor from '~/components/CodeEditor.vue'
 import LibraryInfoSection from '~/components/LibraryInfoSection.vue'
@@ -357,7 +357,8 @@ const {
   clearCode,
   clearOutput,
   loadExample,
-  initializePyodide
+  initializePyodide,
+  cleanupWorker
 } = useLibraryPlayground({
   packageName: 'scikit-learn',
   defaultCode,
@@ -371,6 +372,10 @@ from sklearn import *
 
 onMounted(async () => {
   await initializePyodide()
+})
+
+onBeforeUnmount(() => {
+  cleanupWorker()
 })
 </script>
 

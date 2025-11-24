@@ -235,7 +235,7 @@
     </header>
 
     <!-- Main Layout -->
-    <div class="flex-none flex overflow-hidden h-[calc(100vh-52px)]">
+    <div class="flex-none flex overflow-hidden h-full sm:h-[calc(100vh-52px)]">
       <!-- Sidebar (Desktop) -->
       <aside v-if="showSidebar" :class="[
         'hidden md:flex flex-col border-r transition-all duration-200',

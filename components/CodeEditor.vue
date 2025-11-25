@@ -247,9 +247,9 @@
         <!-- Sidebar Header -->
         <div class="flex items-center justify-between p-3 border-b"
           :class="theme === 'dark' ? 'border-gray-700' : 'border-gray-200'">
-          <h3 v-if="!sidebarCollapsed"
+          <h3 v-if="!sidebarCollapsed" class="capitalize"
             :class="['font-medium text-sm', theme === 'dark' ? 'text-white' : 'text-gray-900']">
-            {{ libraryName }}
+            {{ libraryName }} Compiler
           </h3>
           <button @click="sidebarCollapsed = !sidebarCollapsed" :class="[
             'p-1 rounded transition-colors',

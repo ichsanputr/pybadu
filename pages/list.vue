@@ -182,6 +182,16 @@ const defaultLibraries = [
     name: 'Scikit-learn',
     description: 'Machine learning tools and algorithms. Build predictive models, perform classification, regression, and clustering tasks.',
     path: '/scikit-learn'
+  },
+  {
+    name: 'zfpy',
+    description: 'Compress and decompress multidimensional floating-point and integer arrays with zfp compression. Support lossless and lossy compression modes with configurable error tolerances for scientific computing.',
+    path: '/zfpy'
+  },
+  {
+    name: 'WordCloud',
+    description: 'Create beautiful word cloud visualizations from text data. Generate visual representations where word size indicates frequency, with custom colors, shapes, and styling options.',
+    path: '/wordcloud'
   }
 ]
 
@@ -299,7 +309,7 @@ const additionalLibraries = [
   },
   {
     name: 'Dateparser',
-    description: 'Parse natural language date expressions. Convert phrases like “tomorrow at 5pm” or “last Friday” into timezone-aware datetime objects.',
+    description: 'Parse natural language date expressions. Convert phrases like "tomorrow at 5pm" or "last Friday" into timezone-aware datetime objects.',
     path: '/dateparser'
   }
 ]

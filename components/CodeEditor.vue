@@ -521,11 +521,11 @@
               <div v-if="item.type === 'image'" class="relative group">
                 <img :src="`data:image/png;base64,${item.content}`" alt="Plot output"
                   class="w-full h-auto rounded-lg" />
-                <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div class="absolute top-2 right-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                   <button @click="downloadImage(item.content, index)" :class="[
                     'p-2 rounded-lg text-sm font-medium transition-colors',
-                    'bg-white/90 hover:bg-white text-gray-700 shadow-lg'
-                  ]" title="Download image">
+                    'text-white shadow-lg'
+                  ]" style="background-color: #214767;" title="Download image">
                     <Icon icon="ph:download" class="w-4 h-4" />
                   </button>
                 </div>

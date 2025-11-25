@@ -59,5 +59,10 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  compatibilityDate: '2024-10-22'
+  compatibilityDate: '2024-10-22',
+  router: {
+    options: {
+      scrollBehaviorType: 'smooth'
+    }
+  }
 });

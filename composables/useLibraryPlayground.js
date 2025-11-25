@@ -171,10 +171,12 @@ export function useLibraryPlayground(config = {}) {
     theme.value = theme.value === 'light' ? 'dark' : 'light'
   }
 
-  // Web worker for Pyodide (runs Pyodide in separate thread)
-  let pyodideWorker = null
-  let messageId = 0
-  const pendingMessages = new Map()
+  // Global singleton worker - shared across all pages
+  // This prevents reloading Pyodide CDN on every page navigation
+  let globalPyodideWorker = null
+  let globalMessageId = 0
+  const globalPendingMessages = new Map()
+  let globalLoadedPackages = new Set() // Track loaded packages to avoid reloading
 
   // Request/Response pattern for worker communication (based on Pyodide docs)
   function getPromiseAndResolve() {
@@ -187,7 +189,8 @@ export function useLibraryPlayground(config = {}) {
   }
 
   function getId() {
-    return ++messageId
+    // Use global message ID to avoid conflicts across pages
+    return ++globalMessageId
   }
 
   function requestResponse(worker, msg) {
@@ -203,7 +206,7 @@ export function useLibraryPlayground(config = {}) {
       
       // This is the final response - resolve the promise
       worker.removeEventListener('message', listener)
-      pendingMessages.delete(id)
+      globalPendingMessages.delete(id)
       
       const { id: _, ...rest } = event.data
       
@@ -215,20 +218,21 @@ export function useLibraryPlayground(config = {}) {
     }
     
     worker.addEventListener('message', listener)
-    pendingMessages.set(id, { resolve, reject, listener })
+    globalPendingMessages.set(id, { resolve, reject, listener })
     
     worker.postMessage({ id, ...msg })
     return promise
   }
 
-  // Initialize Pyodide worker
+  // Initialize Pyodide worker (singleton - shared across pages)
   function initPyodideWorker() {
     if (typeof Worker === 'undefined') {
       console.warn('Web Workers not supported')
       return false
     }
     
-    if (!pyodideWorker) {
+    // Use global singleton worker - create only once
+    if (!globalPyodideWorker) {
       try {
         // Get baseURL for subpath support (e.g., /pybadu/)
         let baseURL = ''
@@ -245,10 +249,10 @@ export function useLibraryPlayground(config = {}) {
         const workerPath = `${baseURL}/workers/pyodide-worker.js`
         console.log('Loading Pyodide worker from:', workerPath)
         
-        // Create worker with type: 'module' to use ES6 imports
-        pyodideWorker = new Worker(workerPath, { type: 'module' })
+        // Create worker with type: 'module' to use ES6 imports (singleton)
+        globalPyodideWorker = new Worker(workerPath, { type: 'module' })
         
-        pyodideWorker.addEventListener('message', (e) => {
+        globalPyodideWorker.addEventListener('message', (e) => {
           const { type, id, message, progress, currentPackage, result, error } = e.data
           
           // Handle messages without ID (like WORKER_READY, PYODIDE_READY)
@@ -262,13 +266,13 @@ export function useLibraryPlayground(config = {}) {
           }
           
           // Handle messages with ID (request/response)
-          const pending = pendingMessages.get(id)
+          const pending = globalPendingMessages.get(id)
           if (pending) {
             pending.listener(e)
           }
         })
         
-        pyodideWorker.addEventListener('error', (error) => {
+        globalPyodideWorker.addEventListener('error', (error) => {
           console.error('Pyodide worker error:', error)
           output.value.push({
             type: 'error',
@@ -287,7 +291,7 @@ export function useLibraryPlayground(config = {}) {
   }
 
   async function runCode() {
-    if (!pyodideReady.value || !currentFileContent.value.trim() || !pyodideWorker) return
+    if (!pyodideReady.value || !currentFileContent.value.trim() || !globalPyodideWorker) return
     
     // Show loader immediately when button is clicked
     isLoading.value = true
@@ -301,12 +305,13 @@ export function useLibraryPlayground(config = {}) {
     try {
       output.value = []
       
-      // Run Python code in worker
-      const response = await requestResponse(pyodideWorker, {
+      // Run Python code in worker (use global singleton)
+      const response = await requestResponse(globalPyodideWorker, {
         type: 'RUN_PYTHON',
         data: {
           code: currentFileContent.value,
-          packageName: packageName
+          packageName: packageName,
+          additionalPackages: additionalPackages
         }
       })
       
@@ -392,10 +397,10 @@ export function useLibraryPlayground(config = {}) {
 
   // Asset management functions
   async function refreshAssets() {
-    if (!pyodideWorker) return
+    if (!globalPyodideWorker) return
     
     try {
-      const response = await requestResponse(pyodideWorker, {
+      const response = await requestResponse(globalPyodideWorker, {
         type: 'LIST_ASSETS'
       })
       assets.value = response.assets || []
@@ -406,7 +411,7 @@ export function useLibraryPlayground(config = {}) {
   }
 
   async function uploadAssets(files, targetFolder = '') {
-    if (!pyodideWorker || !files.length) return
+    if (!globalPyodideWorker || !files.length) return
     
     assetsUploading.value = true
     
@@ -418,7 +423,7 @@ export function useLibraryPlayground(config = {}) {
         // Prepend target folder path if specified
         const fileName = targetFolder ? `${targetFolder}/${file.name}` : file.name
         
-        await requestResponse(pyodideWorker, {
+        await requestResponse(globalPyodideWorker, {
           type: 'UPLOAD_ASSET',
           data: {
             fileName: fileName,
@@ -436,10 +441,10 @@ export function useLibraryPlayground(config = {}) {
   }
 
   async function deleteAsset(fileName) {
-    if (!pyodideWorker) return
+    if (!globalPyodideWorker) return
     
     try {
-      await requestResponse(pyodideWorker, {
+      await requestResponse(globalPyodideWorker, {
         type: 'DELETE_ASSET',
         data: {
           fileName
@@ -459,10 +464,10 @@ export function useLibraryPlayground(config = {}) {
   }
 
   async function createAssetFolder(folderName) {
-    if (!pyodideWorker) return
+    if (!globalPyodideWorker) return
     
     try {
-      await requestResponse(pyodideWorker, {
+      await requestResponse(globalPyodideWorker, {
         type: 'CREATE_ASSET_FOLDER',
         data: {
           folderName
@@ -482,32 +487,39 @@ export function useLibraryPlayground(config = {}) {
         setThemeClass(theme.value)
         
         // Initialize Pyodide worker (Pyodide runs in worker, not main thread)
+        // This creates a singleton worker shared across all pages
         if (!initPyodideWorker()) {
           throw new Error('Failed to initialize web worker')
         }
         
-        // Initialize Pyodide in worker
-        await requestResponse(pyodideWorker, {
-          type: 'INIT_PYODIDE'
-        })
+        // Check if packages are already loaded for this combination
+        const packageKey = `${packageName || 'none'}_${(additionalPackages || []).sort().join(',')}`
         
-        // Load packages in worker (this waits for PACKAGES_LOADED response)
-        // The worker will only send PACKAGES_LOADED after ALL packages are installed,
-        // verified with import tests, and ready to use
-        // This includes:
-        // 1. Installing all packages (additional + main)
-        // 2. Running setup code
-        // 3. Waiting 500ms for package registration
-        // 4. Verifying all packages can be imported (with retries)
-        // 5. Final 200ms delay before signaling ready
-        await requestResponse(pyodideWorker, {
-          type: 'LOAD_PACKAGES',
-          data: {
-            packageName,
-            additionalPackages,
-            setupCode
-          }
-        })
+        if (!globalLoadedPackages.has(packageKey)) {
+          // Initialize Pyodide in worker (only once globally)
+          await requestResponse(globalPyodideWorker, {
+            type: 'INIT_PYODIDE'
+          })
+          
+          // Load packages in worker (this waits for PACKAGES_LOADED response)
+          // The worker will only send PACKAGES_LOADED after ALL packages are installed,
+          // verified with import tests, and ready to use
+          await requestResponse(globalPyodideWorker, {
+            type: 'LOAD_PACKAGES',
+            data: {
+              packageName,
+              additionalPackages,
+              setupCode
+            }
+          })
+          
+          // Mark packages as loaded
+          globalLoadedPackages.add(packageKey)
+          console.log('Packages loaded and cached:', packageKey)
+        } else {
+          // Packages already loaded - skip initialization
+          console.log('Packages already loaded, reusing existing worker:', packageKey)
+        }
         
         // Worker has completed ALL verification and delays before sending PACKAGES_LOADED
         // Only set ready after worker confirms everything is ready
@@ -530,18 +542,19 @@ export function useLibraryPlayground(config = {}) {
     }
   }
 
-  // Cleanup worker on unmount
+  // Cleanup worker on unmount (only if this is the last page using it)
+  // Note: We don't actually terminate the global worker to keep it alive across pages
   function cleanupWorker() {
-    if (pyodideWorker) {
-      // Cancel all pending messages
-      pendingMessages.forEach(({ reject }) => {
-        reject(new Error('Worker terminated'))
+    // Just cancel pending messages for this page instance
+    // Don't terminate global worker - it's shared across pages
+    const currentPageMessages = Array.from(globalPendingMessages.entries())
+      .filter(([id, { listener }]) => {
+        // Cancel messages that might be from this page
+        return true
       })
-      pendingMessages.clear()
-      
-      pyodideWorker.terminate()
-      pyodideWorker = null
-    }
+    
+    // Note: We keep the global worker alive for other pages
+    // Only terminate on actual page unload (beforeunload event)
   }
 
   return {

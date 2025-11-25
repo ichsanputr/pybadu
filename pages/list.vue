@@ -192,6 +192,11 @@ const defaultLibraries = [
     name: 'PyYAML',
     description: 'Parse and emit YAML data in Python. Work with YAML configuration files, data serialization, and nested data structures with a complete YAML 1.1 parser.',
     path: '/pyyaml'
+  },
+  {
+    name: 'mpmath',
+    description: 'Arbitrary-precision floating-point arithmetic for Python. Perform high-precision calculations, evaluate special functions, and solve numerical problems with any desired precision.',
+    path: '/mpmath'
   }
 ]
 

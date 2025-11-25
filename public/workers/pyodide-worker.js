@@ -215,6 +215,35 @@ self.onmessage = async (event) => {
           await pyodideInstance.runPythonAsync(setupCode)
         }
 
+        // Small delay to ensure packages are fully registered
+        await new Promise(resolve => setTimeout(resolve, 100))
+
+        // Verify main package is importable (with common name variations)
+        if (packageName) {
+          const importNames = [
+            packageName,
+            packageName.replace('-', '_'),
+            packageName === 'scikit-learn' ? 'sklearn' : null,
+            packageName === 'beautifulsoup4' ? 'bs4' : null,
+            packageName === 'snowballstemmer' ? 'snowballstemmer' : null
+          ].filter(Boolean)
+          
+          let imported = false
+          for (const importName of importNames) {
+            try {
+              await pyodideInstance.runPythonAsync(`import ${importName}`)
+              imported = true
+              break
+            } catch (e) {
+              // Try next name
+            }
+          }
+          
+          if (!imported) {
+            console.warn(`Could not verify import for ${packageName}, but continuing...`)
+          }
+        }
+
         self.postMessage({
           type: 'PACKAGES_LOADED',
           id,

@@ -486,7 +486,7 @@ export function useLibraryPlayground(config = {}) {
           type: 'INIT_PYODIDE'
         })
         
-        // Load packages in worker
+        // Load packages in worker (this waits for PACKAGES_LOADED response)
         await requestResponse(pyodideWorker, {
           type: 'LOAD_PACKAGES',
           data: {
@@ -496,6 +496,10 @@ export function useLibraryPlayground(config = {}) {
           }
         })
         
+        // Add small delay to ensure packages are fully registered in Pyodide
+        await new Promise(resolve => setTimeout(resolve, 300))
+        
+        // Now mark as ready - packages should be fully loaded and verified
         pyodideReady.value = true
         loaderVisible.value = false
         

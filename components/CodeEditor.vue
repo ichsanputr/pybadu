@@ -125,10 +125,10 @@
             : theme === 'dark'
               ? 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
               : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
-        ]">
+        ]" :title="!pyodideReady ? 'Loading packages...' : isLoading ? 'Running code...' : 'Run code (Shift+Enter)'">
           <Icon :icon="!pyodideReady || isLoading ? 'ph:spinner' : 'ph:play'"
             :class="['w-4 h-4', !pyodideReady || isLoading ? 'animate-spin' : '']" />
-          <span class="hidden sm:inline">{{ !pyodideReady ? 'Loading...' : isLoading ? 'Running...' : 'Run' }}</span>
+          <span class="hidden sm:inline">{{ !pyodideReady ? 'Loading packages...' : isLoading ? 'Running...' : 'Run' }}</span>
         </button>
 
         <!-- Desktop Buttons (Hidden on Mobile) -->

@@ -197,6 +197,21 @@ const defaultLibraries = [
     name: 'mpmath',
     description: 'Arbitrary-precision floating-point arithmetic for Python. Perform high-precision calculations, evaluate special functions, and solve numerical problems with any desired precision.',
     path: '/mpmath'
+  },
+  {
+    name: 'msprime',
+    description: 'Simulate population genetics data with coalescent models. Generate genealogical trees and genomic sequence data for population genetics research and evolutionary biology.',
+    path: '/msprime'
+  },
+  {
+    name: 'MarkupSafe',
+    description: 'Safely escape HTML and XML characters to prevent XSS attacks. Handle untrusted strings securely in web applications with automatic escaping and safe string marking.',
+    path: '/markupsafe'
+  },
+  {
+    name: 'orjson',
+    description: 'Fast, correct JSON library for Python. High-performance JSON serialization and deserialization with native support for dataclasses, datetime, and numpy arrays.',
+    path: '/orjson'
   }
 ]
 

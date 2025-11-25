@@ -49,6 +49,24 @@
             <NuxtLink to="/scikit-learn" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               Scikit-learn
             </NuxtLink>
+            <NuxtLink to="/zfpy" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              zfpy
+            </NuxtLink>
+            <NuxtLink to="/pyyaml" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              PyYAML
+            </NuxtLink>
+            <NuxtLink to="/mpmath" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              mpmath
+            </NuxtLink>
+            <NuxtLink to="/msprime" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              msprime
+            </NuxtLink>
+            <NuxtLink to="/markupsafe" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              MarkupSafe
+            </NuxtLink>
+            <NuxtLink to="/orjson" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              orjson
+            </NuxtLink>
           </div>
         </div>
 

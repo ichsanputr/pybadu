@@ -178,29 +178,36 @@ self.onmessage = async (event) => {
         await pyodideInstance.loadPackage('micropip')
         const micropip = pyodideInstance.pyimport('micropip')
 
-        // Install main package
+        // Install additional packages first (dependencies)
+        const totalPackages = (additionalPackages?.length || 0) + (packageName ? 1 : 0)
+        let installedCount = 0
+        
+        if (additionalPackages && additionalPackages.length > 0) {
+          for (let i = 0; i < additionalPackages.length; i++) {
+            const pkg = additionalPackages[i]
+            self.postMessage({
+              type: 'PACKAGE_PROGRESS',
+              id,
+              currentPackage: pkg,
+              progress: 30 + (installedCount / totalPackages) * 60,
+              message: `Installing ${pkg}...`
+            })
+            await micropip.install(pkg)
+            installedCount++
+          }
+        }
+
+        // Install main package after dependencies
         if (packageName) {
           self.postMessage({
             type: 'PACKAGE_PROGRESS',
             id,
             currentPackage: packageName,
-            progress: 30,
+            progress: 30 + (installedCount / totalPackages) * 60,
             message: `Installing ${packageName}...`
           })
           await micropip.install(packageName)
-        }
-
-        // Install additional packages
-        for (let i = 0; i < additionalPackages.length; i++) {
-          const pkg = additionalPackages[i]
-          self.postMessage({
-            type: 'PACKAGE_PROGRESS',
-            id,
-            currentPackage: pkg,
-            progress: 50 + (i / additionalPackages.length) * 40,
-            message: `Installing ${pkg}...`
-          })
-          await micropip.install(pkg)
+          installedCount++
         }
 
         // Run setup code if provided
@@ -224,7 +231,7 @@ self.onmessage = async (event) => {
         await pyodideForRun.runPythonAsync(`
 import sys
 from io import StringIO
-${pkgName && pkgName.includes('matplotlib') ? `
+${pkgName && (pkgName.includes('matplotlib') || pkgName.includes('seaborn')) ? `
 import matplotlib.pyplot as plt
 plt.close('all')
 ` : ''}
@@ -243,7 +250,7 @@ captured_output
 
         // Handle matplotlib plots
         let images = []
-        if (pkgName && pkgName.includes('matplotlib')) {
+        if (pkgName && (pkgName.includes('matplotlib') || pkgName.includes('seaborn'))) {
           try {
             const canvas = await pyodideForRun.runPythonAsync(`
 import matplotlib.pyplot as plt

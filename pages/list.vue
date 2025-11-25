@@ -46,7 +46,7 @@
           </p>
         </div>
 
-        <div class="space-y-3 md:space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
           <NuxtLink
             v-for="compiler in filteredDefaultLibraries"
             :key="compiler.path"
@@ -83,7 +83,7 @@
           </p>
         </div>
 
-        <div class="space-y-3 md:space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
           <NuxtLink
             v-for="compiler in filteredAdditionalLibraries"
             :key="compiler.path"
@@ -331,6 +331,11 @@ const additionalLibraries = [
     name: 'Dateparser',
     description: 'Parse natural language date expressions. Convert phrases like "tomorrow at 5pm" or "last Friday" into timezone-aware datetime objects.',
     path: '/dateparser'
+  },
+  {
+    name: 'Seaborn',
+    description: 'Statistical data visualization library built on Matplotlib. Create beautiful and informative statistical graphics with high-level plotting functions.',
+    path: '/seaborn'
   }
 ]
 

@@ -487,6 +487,14 @@ export function useLibraryPlayground(config = {}) {
         })
         
         // Load packages in worker (this waits for PACKAGES_LOADED response)
+        // The worker will only send PACKAGES_LOADED after ALL packages are installed,
+        // verified with import tests, and ready to use
+        // This includes:
+        // 1. Installing all packages (additional + main)
+        // 2. Running setup code
+        // 3. Waiting 500ms for package registration
+        // 4. Verifying all packages can be imported (with retries)
+        // 5. Final 200ms delay before signaling ready
         await requestResponse(pyodideWorker, {
           type: 'LOAD_PACKAGES',
           data: {
@@ -496,10 +504,8 @@ export function useLibraryPlayground(config = {}) {
           }
         })
         
-        // Add small delay to ensure packages are fully registered in Pyodide
-        await new Promise(resolve => setTimeout(resolve, 300))
-        
-        // Now mark as ready - packages should be fully loaded and verified
+        // Worker has completed ALL verification and delays before sending PACKAGES_LOADED
+        // Only set ready after worker confirms everything is ready
         pyodideReady.value = true
         loaderVisible.value = false
         

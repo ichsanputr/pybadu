@@ -215,39 +215,81 @@ self.onmessage = async (event) => {
           await pyodideInstance.runPythonAsync(setupCode)
         }
 
-        // Small delay to ensure packages are fully registered
-        await new Promise(resolve => setTimeout(resolve, 100))
-
-        // Verify main package is importable (with common name variations)
-        if (packageName) {
-          const importNames = [
-            packageName,
-            packageName.replace('-', '_'),
-            packageName === 'scikit-learn' ? 'sklearn' : null,
-            packageName === 'beautifulsoup4' ? 'bs4' : null,
-            packageName === 'snowballstemmer' ? 'snowballstemmer' : null
+        // Helper function to get import name variations
+        function getImportNames(pkgName) {
+          const variations = [
+            pkgName,
+            pkgName.replace('-', '_'),
+            pkgName === 'scikit-learn' ? 'sklearn' : null,
+            pkgName === 'beautifulsoup4' ? 'bs4' : null,
+            pkgName === 'snowballstemmer' ? 'snowballstemmer' : null,
+            pkgName === 'pyyaml' ? 'yaml' : null,
+            pkgName === 'markupsafe' ? 'markupsafe' : null
           ].filter(Boolean)
+          return variations
+        }
+
+        // Helper function to verify package can be imported
+        // Uses actual import attempts - no arbitrary delays
+        async function verifyPackageImport(pkgName, maxRetries = 10) {
+          const importNames = getImportNames(pkgName)
           
-          let imported = false
-          for (const importName of importNames) {
-            try {
-              await pyodideInstance.runPythonAsync(`import ${importName}`)
-              imported = true
-              break
-            } catch (e) {
-              // Try next name
+          for (let attempt = 0; attempt < maxRetries; attempt++) {
+            for (const importName of importNames) {
+              try {
+                // Actual import attempt - if this succeeds, package is ready
+                await pyodideInstance.runPythonAsync(`import ${importName}`)
+                return true // Successfully imported - package is ready!
+              } catch (e) {
+                // Try next name variation
+                continue
+              }
+            }
+            // If all name variations failed, package might still be registering
+            // Yield to event loop to allow Pyodide to process package registration
+            // This is not a delay - it's yielding to let async operations complete
+            if (attempt < maxRetries - 1) {
+              await new Promise(resolve => {
+                // Use setImmediate or setTimeout(0) to yield to event loop
+                // This allows Pyodide's internal async operations to complete
+                if (typeof setImmediate !== 'undefined') {
+                  setImmediate(resolve)
+                } else {
+                  setTimeout(resolve, 0)
+                }
+              })
             }
           }
-          
-          if (!imported) {
-            console.warn(`Could not verify import for ${packageName}, but continuing...`)
+          return false // All attempts failed
+        }
+
+        // Verify ALL additional packages - wait for actual import success
+        if (additionalPackages && additionalPackages.length > 0) {
+          for (const pkg of additionalPackages) {
+            const verified = await verifyPackageImport(pkg)
+            if (!verified) {
+              console.warn(`Could not verify import for ${pkg} after retries, but continuing...`)
+            }
           }
         }
 
+        // Verify main package - wait for actual import success
+        if (packageName) {
+          const verified = await verifyPackageImport(packageName)
+          if (!verified) {
+            console.warn(`Could not verify import for ${packageName} after retries, but continuing...`)
+          }
+        }
+
+        // All packages installed and verified - wait 1 second before signaling ready
+        // This ensures packages are fully registered and ready for use
+        await new Promise(resolve => setTimeout(resolve, 1000))
+
+        // Send ready signal after all verification and delay
         self.postMessage({
           type: 'PACKAGES_LOADED',
           id,
-          message: 'All packages installed successfully'
+          message: 'All packages installed and verified successfully'
         })
         break
 

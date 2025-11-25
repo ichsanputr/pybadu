@@ -195,8 +195,13 @@ export function useLibraryPlayground(config = {}) {
     const id = getId()
     
     const listener = (event) => {
-      if (event.data?.id !== id) return
+      // Ignore messages without id or with different id
+      if (!event.data?.id || event.data.id !== id) return
       
+      // Ignore progress messages (they don't have id anymore, but double-check)
+      if (event.data.type === 'PACKAGE_PROGRESS') return
+      
+      // This is the final response - resolve the promise
       worker.removeEventListener('message', listener)
       pendingMessages.delete(id)
       

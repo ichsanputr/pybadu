@@ -185,9 +185,9 @@ self.onmessage = async (event) => {
         if (additionalPackages && additionalPackages.length > 0) {
           for (let i = 0; i < additionalPackages.length; i++) {
             const pkg = additionalPackages[i]
+            // Progress messages don't need id - they're not part of request/response
             self.postMessage({
               type: 'PACKAGE_PROGRESS',
-              id,
               currentPackage: pkg,
               progress: 30 + (installedCount / totalPackages) * 60,
               message: `Installing ${pkg}...`
@@ -199,9 +199,9 @@ self.onmessage = async (event) => {
 
         // Install main package after dependencies
         if (packageName) {
+          // Progress messages don't need id - they're not part of request/response
           self.postMessage({
             type: 'PACKAGE_PROGRESS',
-            id,
             currentPackage: packageName,
             progress: 30 + (installedCount / totalPackages) * 60,
             message: `Installing ${packageName}...`
@@ -285,6 +285,7 @@ self.onmessage = async (event) => {
         // This ensures packages are fully registered and ready for use
         await new Promise(resolve => setTimeout(resolve, 1000))
 
+        console.log('All packages installed and verified successfully')
         // Send ready signal after all verification and delay
         self.postMessage({
           type: 'PACKAGES_LOADED',

@@ -189,9 +189,9 @@ const defaultLibraries = [
     path: '/zfpy'
   },
   {
-    name: 'WordCloud',
-    description: 'Create beautiful word cloud visualizations from text data. Generate visual representations where word size indicates frequency, with custom colors, shapes, and styling options.',
-    path: '/wordcloud'
+    name: 'PyYAML',
+    description: 'Parse and emit YAML data in Python. Work with YAML configuration files, data serialization, and nested data structures with a complete YAML 1.1 parser.',
+    path: '/pyyaml'
   }
 ]
 

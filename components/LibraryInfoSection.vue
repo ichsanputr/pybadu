@@ -22,7 +22,7 @@
                 
                 <p class="text-base md:text-lg text-white/90 mb-8 max-w-2xl mx-auto">
                   Specialized Online Python compiler powered by Pyodide WebAssembly.
-                  Run Python directly in your browser with zero setup.
+                  Run Python Library directly in your browser with zero setup.
                 </p>
                 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4">

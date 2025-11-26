@@ -228,6 +228,11 @@ const additionalLibraries = [
     path: '/beautifulsoup4'
   },
   {
+    name: 'lxml',
+    description: 'Process XML and HTML with high performance. Parse documents, use XPath queries, XSLT transformations, and ElementTree API for comprehensive markup processing.',
+    path: '/lxml'
+  },
+  {
     name: 'Pyjokes',
     description: 'Generate random programming jokes. Add humor to your applications or simply enjoy a quick laugh during coding sessions.',
     path: '/pyjokes'
@@ -336,6 +341,26 @@ const additionalLibraries = [
     name: 'Seaborn',
     description: 'Statistical data visualization library built on Matplotlib. Create beautiful and informative statistical graphics with high-level plotting functions.',
     path: '/seaborn'
+  },
+  {
+    name: 'sqlparse',
+    description: 'Non-validating SQL parser for Python. Parse, split, and format SQL statements with customizable indentation and keyword casing for better code readability.',
+    path: '/sqlparse'
+  },
+  {
+    name: 'blinker',
+    description: 'Fast, simple object-to-object and broadcast signaling system. Create event-driven applications with signals, receivers, and sender-specific connections for loose coupling.',
+    path: '/blinker'
+  },
+  {
+    name: 'PyJWT',
+    description: 'JSON Web Token implementation in Python. Create, encode, decode, and verify JWT tokens for secure token-based authentication and authorization in web applications.',
+    path: '/pyjwt'
+  },
+  {
+    name: 'python-dateutil',
+    description: 'Powerful extensions to the standard datetime module. Parse dates from strings, calculate relative deltas, work with timezones, and handle recurrence rules for advanced date manipulation.',
+    path: '/dateutil'
   }
 ]
 

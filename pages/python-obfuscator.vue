@@ -714,6 +714,24 @@ class ObfuscatorTransformer(ast.NodeTransformer):
         self.generic_visit(node)
         return node
 
+    def visit_TypeVar(self, node):
+        """Rename type variables in generic definitions (Python 3.12+)"""
+        node.name = self.get_renamed(node.name)
+        self.generic_visit(node)
+        return node
+        
+    def visit_ParamSpec(self, node):
+        """Rename ParamSpec variables (Python 3.12+)"""
+        node.name = self.get_renamed(node.name)
+        self.generic_visit(node)
+        return node
+
+    def visit_TypeVarTuple(self, node):
+        """Rename TypeVarTuple variables (Python 3.12+)"""
+        node.name = self.get_renamed(node.name)
+        self.generic_visit(node)
+        return node
+
     def visit_JoinedStr(self, node):
         """Handle f-strings - don't encode strings inside them"""
         old_in_fstring = self.in_fstring

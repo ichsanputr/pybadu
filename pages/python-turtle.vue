@@ -43,6 +43,15 @@
                         }}</span>
                     </button>
 
+                    <!-- Stop Button -->
+                    <button v-if="isRunning" @click="stopTurtleCode" :class="[
+                        'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+                        'bg-red-600 hover:bg-red-700 text-white'
+                    ]">
+                        <Icon icon="ph:stop" class="w-4 h-4" />
+                        <span class="hidden sm:inline">Stop</span>
+                    </button>
+
                     <!-- Clear Canvas -->
                     <button @click="clearCanvas" :class="[
                         'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
@@ -407,7 +416,7 @@ const examples = {
     fractal_tree: `import turtle
 
 t = turtle.Turtle()
-t.screen.bgcolor('black')
+turtle.Screen().bgcolor('black')
 t.color('green')
 t.left(90)
 t.speed(0)
@@ -442,7 +451,7 @@ turtle.done()`,
 
 t = turtle.Turtle()
 t.speed(0)
-t.screen.bgcolor("black")
+turtle.Screen().bgcolor("black")
 colors = ["red", "purple", "blue", "green", "orange", "yellow"]
 
 for x in range(360):
@@ -479,7 +488,7 @@ turtle.done()`,
 
 t = turtle.Turtle()
 t.speed(0)
-t.screen.bgcolor("black")
+turtle.bgcolor("black")
 t.pensize(2)
 
 for i in range(36):
@@ -681,10 +690,17 @@ function builtinRead(x) {
     return window.Sk.builtinFiles["files"][x];
 }
 
+const stopExecution = ref(false)
+
+function stopTurtleCode() {
+    stopExecution.value = true
+}
+
 async function runTurtleCode() {
     if (!code.value.trim() || isRunning.value || !skulptReady.value) return
 
     isRunning.value = true
+    stopExecution.value = false
     output.value = []
     clearCanvas()
 
@@ -693,7 +709,9 @@ async function runTurtleCode() {
         window.Sk.pre = "output"
         window.Sk.configure({
             output: outf,
-            read: builtinRead
+            read: builtinRead,
+            yieldLimit: 100, // Check for interrupts frequently
+            execLimit: null // Allow long running animations, but we can stop them manually
         })
 
             // Set Turtle target
@@ -702,6 +720,12 @@ async function runTurtleCode() {
         // Run the code
         const promise = window.Sk.misceval.asyncToPromise(function () {
             return window.Sk.importMainWithBody("<stdin>", false, code.value, true)
+        }, {
+            "*": () => {
+                if (stopExecution.value) {
+                    throw "Execution interrupted by user"
+                }
+            }
         })
 
         await promise
@@ -712,13 +736,21 @@ async function runTurtleCode() {
         })
 
     } catch (error) {
-        console.error('Skulpt error:', error)
-        output.value.push({
-            type: 'error',
-            content: error.toString()
-        })
+        if (error === "Execution interrupted by user") {
+            output.value.push({
+                type: 'warning',
+                content: '⚠ Execution stopped by user'
+            })
+        } else {
+            console.error('Skulpt error:', error)
+            output.value.push({
+                type: 'error',
+                content: error.toString()
+            })
+        }
     } finally {
         isRunning.value = false
+        stopExecution.value = false
     }
 }
 

@@ -565,7 +565,7 @@ class ObfuscatorTransformer(ast.NodeTransformer):
             'break', 'class', 'continue', 'def', 'del', 'elif', 'else', 'except',
             'finally', 'for', 'from', 'global', 'if', 'import', 'in', 'is',
             'lambda', 'nonlocal', 'not', 'or', 'pass', 'raise', 'return',
-            'try', 'while', 'with', 'yield'
+            'try', 'while', 'with', 'yield', 'match', 'case'
         ])
         
         # Built-in types and functions - never rename
@@ -637,10 +637,6 @@ class ObfuscatorTransformer(ast.NodeTransformer):
     
     def visit_Name(self, node):
         """Rename user-defined variables"""
-        # Don't rename inside f-strings
-        if self.in_fstring:
-            return node
-        
         # Only rename in Store or Load contexts
         if isinstance(node.ctx, (ast.Store, ast.Load)):
             # Check if this is part of an attribute (e.g., obj.attr)
@@ -697,6 +693,27 @@ class ObfuscatorTransformer(ast.NodeTransformer):
         # Don't visit node.attr - it's just a string, not a Name node
         return node
     
+    def visit_MatchAs(self, node):
+        """Rename match statement variables"""
+        if node.name:
+            node.name = self.get_renamed(node.name)
+        self.generic_visit(node)
+        return node
+    
+    def visit_MatchStar(self, node):
+        """Rename match statement star variables"""
+        if node.name:
+            node.name = self.get_renamed(node.name)
+        self.generic_visit(node)
+        return node
+    
+    def visit_MatchMapping(self, node):
+        """Rename match statement mapping variables"""
+        if node.rest:
+            node.rest = self.get_renamed(node.rest)
+        self.generic_visit(node)
+        return node
+
     def visit_JoinedStr(self, node):
         """Handle f-strings - don't encode strings inside them"""
         old_in_fstring = self.in_fstring

@@ -447,7 +447,7 @@ definePageMeta({
 })
 
 useHead({
-    title: 'Python Code Obfuscator - Free Online Tool',
+    title: 'Online Python Code Obfuscator',
     meta: [
         { name: 'description', content: 'Free online Python code obfuscator. Protect your Python source code by making it harder to read and reverse-engineer. Browser-based, no registration required.' },
         { name: 'keywords', content: 'python obfuscator, code obfuscation, python protection, source code protection, obfuscate python, python security' },
@@ -553,6 +553,13 @@ class ObfuscatorTransformer(ast.NodeTransformer):
     def __init__(self):
         self.var_map = {}
         self.counter = 0
+        self.parent_stack = []
+        self.in_fstring = False
+        
+        # Track imported names
+        self.imported_names = set()
+        
+        # Python keywords - never rename
         self.keywords = set([
             'False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await',
             'break', 'class', 'continue', 'def', 'del', 'elif', 'else', 'except',
@@ -560,6 +567,8 @@ class ObfuscatorTransformer(ast.NodeTransformer):
             'lambda', 'nonlocal', 'not', 'or', 'pass', 'raise', 'return',
             'try', 'while', 'with', 'yield'
         ])
+        
+        # Built-in types and functions - never rename
         self.builtins = set([
             'abs', 'all', 'any', 'ascii', 'bin', 'bool', 'bytearray', 'bytes',
             'callable', 'chr', 'classmethod', 'compile', 'complex', 'delattr',
@@ -570,51 +579,152 @@ class ObfuscatorTransformer(ast.NodeTransformer):
             'memoryview', 'min', 'next', 'object', 'oct', 'open', 'ord',
             'pow', 'print', 'property', 'range', 'repr', 'reversed', 'round',
             'set', 'setattr', 'slice', 'sorted', 'staticmethod', 'str', 'sum',
-            'super', 'tuple', 'type', 'vars', 'zip', '__import__'
+            'super', 'tuple', 'type', 'vars', 'zip', '__import__',
+            'Exception', 'BaseException', 'StopIteration', 'ZeroDivisionError',
+            'ValueError', 'TypeError', 'AttributeError', 'KeyError', 'IndexError',
+            'RuntimeError', 'NotImplementedError', 'OSError', 'IOError',
+            'ArithmeticError', 'AssertionError', 'EOFError', 'ImportError',
+            'LookupError', 'MemoryError', 'NameError', 'ReferenceError',
+            'SyntaxError', 'SystemError', 'UnicodeError'
         ])
+        
+        # Reserved names - never rename
+        self.reserved = set(['self', 'cls', 'args', 'kwargs'])
     
-    def get_obfuscated_name(self, original):
-        if original in self.keywords or original in self.builtins:
-            return original
-        if original not in self.var_map:
-            self.var_map[original] = f'_0x{self.counter:x}'
+    def should_never_rename(self, name):
+        """Names that should NEVER be renamed under any circumstances"""
+        return (
+            name in self.keywords or
+            name in self.builtins or
+            name in self.imported_names or
+            name in self.reserved or
+            name.startswith('__') and name.endswith('__') or
+            name == '__main__'
+        )
+    
+    def get_renamed(self, name):
+        """Get the renamed version of a name, or create one if it doesn't exist"""
+        if self.should_never_rename(name):
+            return name
+        
+        if name not in self.var_map:
+            self.var_map[name] = f'_0x{self.counter:x}'
             self.counter += 1
-        return self.var_map[original]
+        
+        return self.var_map[name]
+    
+    def visit(self, node):
+        """Track parent nodes"""
+        self.parent_stack.append(node)
+        result = super().visit(node)
+        self.parent_stack.pop()
+        return result
+    
+    def visit_Import(self, node):
+        """Track imported modules"""
+        for alias in node.names:
+            name = alias.asname if alias.asname else alias.name.split('.')[0]
+            self.imported_names.add(name)
+        return node
+    
+    def visit_ImportFrom(self, node):
+        """Track imported names"""
+        for alias in node.names:
+            if alias.name != '*':
+                name = alias.asname if alias.asname else alias.name
+                self.imported_names.add(name)
+        return node
     
     def visit_Name(self, node):
-        # Rename variables but not keywords or builtins
-        if isinstance(node.ctx, (ast.Store, ast.Load, ast.Del)):
-            if node.id not in self.keywords and node.id not in self.builtins:
-                node.id = self.get_obfuscated_name(node.id)
+        """Rename user-defined variables"""
+        # Don't rename inside f-strings
+        if self.in_fstring:
+            return node
+        
+        # Only rename in Store or Load contexts
+        if isinstance(node.ctx, (ast.Store, ast.Load)):
+            # Check if this is part of an attribute (e.g., obj.attr)
+            # Don't rename if it's the object being accessed
+            if len(self.parent_stack) >= 2:
+                parent = self.parent_stack[-2]
+                if isinstance(parent, ast.Attribute) and parent.value == node:
+                    # This is the object part of obj.attr - rename it
+                    node.id = self.get_renamed(node.id)
+                    return node
+            
+            # Regular name - rename it
+            node.id = self.get_renamed(node.id)
+        
+        return node
+    
+    def visit_arg(self, node):
+        """Rename function arguments"""
+        if not self.should_never_rename(node.arg):
+            node.arg = self.get_renamed(node.arg)
         return node
     
     def visit_FunctionDef(self, node):
-        # Rename function names
+        """Rename function definitions"""
         if not node.name.startswith('__'):
-            node.name = self.get_obfuscated_name(node.name)
-        
-        # Rename parameters
-        for arg in node.args.args:
-            if arg.arg not in self.keywords:
-                arg.arg = self.get_obfuscated_name(arg.arg)
-        
-        # Process function body
+            node.name = self.get_renamed(node.name)
+        self.generic_visit(node)
+        return node
+    
+    def visit_AsyncFunctionDef(self, node):
+        """Rename async function definitions"""
+        if not node.name.startswith('__'):
+            node.name = self.get_renamed(node.name)
         self.generic_visit(node)
         return node
     
     def visit_ClassDef(self, node):
-        # Rename class names
-        if not node.name.startswith('__'):
-            node.name = self.get_obfuscated_name(node.name)
+        """Rename class definitions"""
+        node.name = self.get_renamed(node.name)
         self.generic_visit(node)
         return node
     
+    def visit_ExceptHandler(self, node):
+        """Preserve exception variable names"""
+        if node.name:
+            self.reserved.add(node.name)
+        self.generic_visit(node)
+        return node
+    
+    def visit_Attribute(self, node):
+        """Handle attribute access - never rename the attribute name itself"""
+        # Only visit the value (the object), not the attr (the attribute name)
+        self.visit(node.value)
+        # Don't visit node.attr - it's just a string, not a Name node
+        return node
+    
+    def visit_JoinedStr(self, node):
+        """Handle f-strings - don't encode strings inside them"""
+        old_in_fstring = self.in_fstring
+        self.in_fstring = True
+        self.generic_visit(node)
+        self.in_fstring = old_in_fstring
+        return node
+    
     def visit_Constant(self, node):
-        # Encode string constants
+        """Encode string constants"""
+        # Don't encode inside f-strings
+        if self.in_fstring:
+            return node
+        
+        # Don't encode __main__
+        if isinstance(node.value, str) and node.value == '__main__':
+            return node
+        
+        # Don't encode if it's an attribute name
+        if len(self.parent_stack) >= 2:
+            parent = self.parent_stack[-2]
+            if isinstance(parent, ast.Attribute):
+                return node
+        
+        # Encode string literals
         if isinstance(node.value, str) and len(node.value) > 0:
             try:
                 encoded = base64.b64encode(node.value.encode()).decode()
-                # Create a call to decode the string
                 return ast.Call(
                     func=ast.Attribute(
                         value=ast.Call(
@@ -638,6 +748,7 @@ class ObfuscatorTransformer(ast.NodeTransformer):
                 )
             except:
                 pass
+        
         return node
 
 def obfuscate_code(source_code):
@@ -645,9 +756,25 @@ def obfuscate_code(source_code):
         # Parse the code
         tree = ast.parse(source_code)
         
+        # Check if first statement is a docstring (module docstring)
+        has_module_docstring = False
+        module_docstring = None
+        if (tree.body and 
+            isinstance(tree.body[0], ast.Expr) and 
+            isinstance(tree.body[0].value, ast.Constant) and 
+            isinstance(tree.body[0].value.value, str)):
+            has_module_docstring = True
+            module_docstring = tree.body[0]
+            # Remove it temporarily so transformer doesn't encode it
+            tree.body.pop(0)
+        
         # Transform the AST
         transformer = ObfuscatorTransformer()
         new_tree = transformer.visit(tree)
+        
+        # Re-insert module docstring at the top if it existed
+        if has_module_docstring and module_docstring:
+            new_tree.body.insert(0, module_docstring)
         
         # Fix missing locations
         ast.fix_missing_locations(new_tree)

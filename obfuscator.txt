@@ -1,0 +1,163 @@
+stop renaming built-in classes (Exception, object, BaseException)
+
+stop renaming built-in methods (append, extend, items, keys, values, split, join, read, write, exists, unlink, sleep, etc.)
+
+stop renaming magic methods (enter, exit, iter, next, str, init, repr)
+
+stop renaming exception variables (except ZeroDivisionError as e)
+
+stop renaming imported symbol names unless you rebuild all references
+
+stop renaming attributes of built-in objects (list.append, dict.get, deque.append, Counter, Path methods)
+
+stop renaming annotation return types into invalid expressions
+
+stop renaming decorator parameters incorrectly
+
+stop renaming variables inside decorators (args, kwargs)
+
+stop renaming lambda parameters incorrectly
+
+stop renaming f-string internal variables incorrectly
+
+stop injecting base64 decode calls inside f-strings
+
+stop modifying JoinedStr in AST incorrectly
+
+stop renaming context manager variable names incorrectly
+
+stop renaming exception class names into unreadable forms
+
+stop renaming non-local variables incorrectly
+
+stop renaming loop variables incorrectly if they appear in comprehensions
+
+stop renaming variables inside list comprehensions incorrectly
+
+stop renaming generator variables incorrectly
+
+stop renaming async function names referenced inside asyncio.create_task
+
+stop renaming async_worker incorrectly inside async_demo
+
+stop renaming module-level variables inside formatted strings incorrectly
+
+stop renaming dictionary keys encoded in base64 incorrectly
+
+stop renaming fields of dataclasses incorrectly (name, tags)
+
+stop renaming dataclass attributes without updating references
+
+stop renaming class names without updating instantiation sites
+
+stop renaming class method names without updating calls
+
+stop renaming staticmethod and classmethod references incorrectly
+
+stop renaming user-defined exception class incorrectly
+
+stop renaming variables that are part of attribute expressions
+
+stop renaming variables inside type hints incorrectly
+
+stop renaming variables in return statements incorrectly
+
+stop renaming variables referenced after exception blocks incorrectly
+
+stop replacing all strings with base64 inside type annotations (invalid)
+
+stop encoding critical identifiers (like "main") incorrectly
+
+stop altering control-flow variables used in try/except/finally
+
+stop renaming variables used for iteration over dictionaries
+
+stop renaming function parameters inconsistently across calls
+
+stop renaming names before they are defined in AST
+
+fix base64 logic to avoid decoding every short string (ruins readability)
+
+fix renaming map to ensure no variable is referenced before assignment
+
+fix renaming map so that all renamed identifiers are consistent globally
+
+fix AST traversal so that parent nodes are preserved correctly
+
+fix attribute renaming so only user-defined class attributes are renamed
+
+fix handling of dataclass field names
+
+fix handling of Enums (don’t rename member names incorrectly)
+
+fix auto-encoding of strings that break syntax
+
+fix type annotation mutation so they remain valid Python
+
+fix decorator wrapping so original function name is preserved via wraps()
+
+fix indentation output in obfuscated code
+
+fix printing of debug decorator (it uses variables you renamed incorrectly)
+
+fix call to .close() inside exit (name mismatch)
+
+fix renamed variables inside async section (_0x45, _0x43, etc.)
+
+fix list comprehension variables reused outside comprehension
+
+fix renaming of built-in names like range, len, list, dict
+
+fix renaming applied to import names like asyncio, math, random
+
+fix renaming applied to exception object names (except DemoError as e)
+
+fix renaming of path operations (file_path, path, etc.)
+
+fix renaming inside with-blocks incorrectly
+
+fix renaming of loop counters used again later
+
+fix handling of return type inside enter (currently illegal)
+
+fix renaming of boolean expressions inside f-strings
+
+fix renaming of function arguments in async code
+
+fix failing rename of class variables (_counter, _0xf)
+
+fix incorrect replacement of literal dict keys
+
+fix invalid renaming in dictionary comprehensions
+
+fix invalid renaming in generator expressions
+
+fix base64 decode expression injection in wrong places
+
+fix renaming of dynamic attributes (getattr, setattr)
+
+ensure f-strings are preserved structurally
+
+ensure renaming never introduces references to undefined variables
+
+ensure exceptions thrown reference the correct error variable
+
+ensure user-defined classes keep consistent mapping across references
+
+ensure lambda expressions keep correct variable scope
+
+ensure async task names refer to correct function names
+
+ensure decorated functions are called with correct renamed parameters
+
+ensure that obfuscation never produces invalid type expressions
+
+ensure AST→source generator preserves valid Python
+
+ensure no renaming breaks context managers or generators
+
+ensure comprehensions still capture correct variables
+
+ensure syntax with yield remains legal
+
+ensure magic constants like "main" remain untouched

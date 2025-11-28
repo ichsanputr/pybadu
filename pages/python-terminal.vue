@@ -124,15 +124,34 @@
                         </div>
 
                         <!-- Current Input Line -->
-                        <div v-if="pyodideReady" class="flex items-start">
+                        <div v-if="pyodideReady" class="flex items-start relative">
                             <span class="text-green-500 mr-2">&gt;&gt;&gt;</span>
                             <div class="flex-1 relative">
                                 <input ref="terminalInput" v-model="currentInput" @keydown.enter="executeCommand"
-                                    @keydown.up="navigateHistory('up')" @keydown.down="navigateHistory('down')"
-                                    @keydown.tab.prevent="handleTab" :disabled="isExecuting" :class="[
+                                    @keydown.up.prevent="navigateHistoryOrSuggestions('up')"
+                                    @keydown.down.prevent="navigateHistoryOrSuggestions('down')"
+                                    @keydown.tab.prevent="handleTab" @input="handleInput" :disabled="isExecuting"
+                                    :class="[
                                         'w-full bg-transparent outline-none border-none',
                                         theme === 'dark' ? 'text-gray-100' : 'text-gray-900'
                                     ]" placeholder="Type Python code here..." autocomplete="off" spellcheck="false" />
+
+                                <!-- Suggestions Dropdown -->
+                                <div v-if="showSuggestions && suggestions.length > 0" :class="[
+                                    'absolute left-0 bottom-full mb-1 w-64 max-h-48 overflow-y-auto rounded-md shadow-lg border z-20',
+                                    theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                                ]">
+                                    <div v-for="(suggestion, index) in suggestions" :key="index"
+                                        @click="selectSuggestion(suggestion)" :class="[
+                                            'px-3 py-1.5 cursor-pointer text-sm font-mono',
+                                            index === selectedSuggestionIndex
+                                                ? (theme === 'dark' ? 'bg-python-blue-600 text-white' : 'bg-python-blue-100 text-python-blue-800')
+                                                : (theme === 'dark' ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100')
+                                        ]">
+                                        {{ suggestion }}
+                                    </div>
+                                </div>
+
                                 <div v-if="isExecuting" class="absolute right-0 top-0">
                                     <Icon icon="ph:spinner" class="w-4 h-4 animate-spin text-python-blue-500" />
                                 </div>
@@ -305,6 +324,11 @@ const pyodideReady = ref(false)
 const terminalInput = ref(null)
 const terminalContainer = ref(null)
 
+// Suggestions state
+const suggestions = ref([])
+const showSuggestions = ref(false)
+const selectedSuggestionIndex = ref(0)
+
 let pyodideWorker = null
 let messageId = 0
 const pendingMessages = new Map()
@@ -367,6 +391,21 @@ async function resetPython() {
     scrollToBottom()
 }
 
+function navigateHistoryOrSuggestions(direction) {
+    // If suggestions are showing, navigate them
+    if (showSuggestions.value && suggestions.value.length > 0) {
+        if (direction === 'up') {
+            selectedSuggestionIndex.value = (selectedSuggestionIndex.value - 1 + suggestions.value.length) % suggestions.value.length
+        } else {
+            selectedSuggestionIndex.value = (selectedSuggestionIndex.value + 1) % suggestions.value.length
+        }
+        return
+    }
+
+    // Otherwise navigate history
+    navigateHistory(direction)
+}
+
 function navigateHistory(direction) {
     if (commandHistory.value.length === 0) return
 
@@ -386,12 +425,47 @@ function navigateHistory(direction) {
     }
 }
 
+function handleInput() {
+    // Hide suggestions when typing normally (unless tab is pressed later)
+    showSuggestions.value = false
+}
+
 function handleTab() {
-    // Tab completion - placeholder for future implementation
-    console.log('Tab completion not yet implemented')
+    if (!currentInput.value.trim()) return
+
+    // If suggestions are already showing, select the current one
+    if (showSuggestions.value && suggestions.value.length > 0) {
+        selectSuggestion(suggestions.value[selectedSuggestionIndex.value])
+        return
+    }
+
+    // Filter history for unique matches starting with current input
+    const input = currentInput.value
+    const matches = [...new Set(commandHistory.value)] // Unique history items
+        .filter(cmd => cmd.startsWith(input) && cmd !== input)
+        .slice(0, 10) // Limit to 10 suggestions
+
+    if (matches.length > 0) {
+        suggestions.value = matches
+        showSuggestions.value = true
+        selectedSuggestionIndex.value = 0
+    }
+}
+
+function selectSuggestion(suggestion) {
+    currentInput.value = suggestion
+    showSuggestions.value = false
+    suggestions.value = []
+    focusInput()
 }
 
 async function executeCommand() {
+    // If suggestions are showing and Enter is pressed, select the suggestion instead of executing
+    if (showSuggestions.value && suggestions.value.length > 0) {
+        selectSuggestion(suggestions.value[selectedSuggestionIndex.value])
+        return
+    }
+
     if (!currentInput.value.trim() || isExecuting.value || !pyodideReady.value) return
 
     const command = currentInput.value

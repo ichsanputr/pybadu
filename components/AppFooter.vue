@@ -70,10 +70,6 @@
           <div class="mt-4">
             <h3 class="text-white font-semibold mb-4">Another Pages</h3>
             <div class="grid grid-cols-2 gap-x-4 gap-y-2">
-              <NuxtLink to="/code-tester" @click="handleSmoothScroll"
-                class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
-                Python Code Tester
-              </NuxtLink>
               <NuxtLink to="/python-obfuscator" @click="handleSmoothScroll"
                 class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
                 Python Obfuscator

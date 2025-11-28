@@ -1,0 +1,478 @@
+---
+title: "Examples using WebR"
+format: html
+toc: true
+---
+
+## Starting webR
+
+Once webR has been [downloaded](downloading.qmd) and made available for use, it can be initialised by creating a new instance of the [`WebR`](api/js/classes/WebR.WebR.md) class.
+
+``` javascript
+const webR = new WebR();
+```
+
+A configuration object of type [`WebROptions`](api/js/interfaces/WebR.WebROptions.md) can be passed to the above constructor. This optional argument provides access to advanced webR settings such as WebAssembly binary URLs, communication channel settings, and control over the Emscripten environment that the WebAssembly binaries are to be executed in.
+
+### Awaiting initialisation
+
+WebR is ready to use once the promise returned by [`WebR.init()`](api/js/classes/WebR.WebR.md#init) resolves. In a modern asynchronous JavaScript environment (e.g. within an [`async function`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function)), the [`await`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await) keyword can be used to ensure webR has finished starting before continuing.
+
+``` javascript
+await webR.init();
+```
+
+## Example Snippets
+
+### Evaluating R code and retrieving results
+
+This example demonstrates running R code with [`WebR.evalR()`](api/js/classes/WebR.WebR.md#evalr) and getting the result [in the form of an `RObject` proxy](objects.qmd). The result is then [converted into a JavaScript object](convert-r-to-js.qmd) before being output to the JavaScript console.
+
+::: {.panel-tabset}
+## JavaScript
+
+``` javascript
+let result = await webR.evalR('rnorm(10,5,1)');
+let output = await result.toArray();
+
+console.log('Result of running `rnorm` from webR: ', output);
+```
+
+## TypeScript
+
+``` typescript
+import type { RDouble } from 'webr';
+
+let result = await webR.evalR('rnorm(10,5,1)') as RDouble;
+let output = await result.toArray();
+
+console.log('Result of running `rnorm` from webR: ', output);
+```
+
+:::
+
+    Result of running `rnorm` from webR: [4.811743371393964,
+    3.9713199286446246, 5.752161964201946, 4.699964764731866,
+    6.793839154500917, 5.80036239061935, 5.342100112394279,
+    5.555879371932934, 4.314676418095938, 5.113592217724398]
+
+The `options` argument of [`WebR.evalR()`](api/js/classes/WebR.WebR.md#evalr) has been designed so that the default is sufficient for general R evaluation. However, the default behaviour can be changed by passing an `options` argument of type [`EvalROptions`](api/js/interfaces/WebRChan.EvalROptions.md), if required.
+
+See the [Evaluating R Code](evaluating.qmd) section for more detailed documentation.
+
+### Capturing console output from R code
+
+The following snippet demonstrates using a webR [shelter](objects.qmd#shelter) to capture R output during evaluation. This differs from the example above in that the output is retrieved in the form of lines of text from the `stdout` stream, rather than a reference to an R object [in the form of an `RObject` proxy](objects.qmd).
+
+Once the result is no longer needed, the shelter is purged for the purpose of [memory management](objects.qmd#memory-management).
+
+``` javascript
+let shelter = await new webR.Shelter();
+let result = await shelter.captureR('print(rnorm(10,5,1))');
+
+console.log('Output obtained from running `rnorm` from webR:')
+console.log(result.output);
+
+shelter.purge();
+```
+
+    Output obtained from running `rnorm` from webR:
+    [
+      {type: 'stdout', data: ' [1] 5.322551 6.924352 4.592612 6.357413 7.198339 5.152446 4.185396'}
+      {type: 'stdout', data: ' [8] 4.995504 6.034569 6.295957'}
+    ]
+
+### Executing an R function from JavaScript
+
+The following snippet demonstrates executing an R function from JavaScript. A reference to the R function is first obtained as an [`RFunction`](api/js/modules/RMain.md#rfunction) JavaScript proxy, and then executed in a similar way to a normal JavaScript function.
+
+::: {.panel-tabset}
+## JavaScript
+
+``` javascript
+let sin = await webR.evalR('sin');
+let result = await sin([1,2,3]);
+
+console.log('Result of running `await sin([1,2,3])`:')
+console.log(result.values);
+```
+
+## TypeScript
+
+``` typescript
+import type { RFunction } from 'webr';
+
+let sin = await webR.evalR('sin') as RFunction;
+let result = await sin([1,2,3]);
+
+console.log('Result of running `await sin([1,2,3])`:')
+console.log(result);
+```
+
+:::
+
+    Result of running `await sin([1,2,3])`:
+    {
+      type: 'double',
+      names: null,
+      values: [ 0.8414709848078965, 0.9092974268256817, 0.1411200080598672 ]
+    }
+
+### Evaluating R code within an environment
+
+The `options` argument of [`WebR.evalR()`](api/js/classes/WebR.WebR.md#evalr) can be used to control how R code is executed. In this example the options argument is used to create a new environment for the R code to be evaluated in.
+
+::: {.panel-tabset}
+## JavaScript
+
+``` javascript
+let result = await webR.evalR('foo + bar', {
+  env: { foo: 1234, bar: 1, baz: 'abc' }
+});
+let output = await result.toNumber();
+
+console.log(output);
+```
+
+## TypeScript
+
+``` typescript
+import type { RDouble } from 'webr';
+
+let result = await webR.evalR('foo + bar', {
+  env: { foo: 1234, bar: 1, baz: 'abc' }
+}) as RDouble;
+
+let output = await result.toNumber();
+console.log(output);
+```
+
+:::
+
+    1235
+
+### Bind a JavaScript object into the R global environment
+
+The following snippet demonstrates binding a JavaScript object into the R global environment. The JavaScript object is automatically converted into an R object, and the value is then used in the subsequent R evaluation.
+
+::: {.panel-tabset}
+## JavaScript
+
+``` javascript
+await webR.objs.globalEnv.bind('arr', [2,4,6,8,9]);
+let result = await webR.evalR('sample(arr, 3)');
+let output = await result.toArray();
+
+console.log(output);
+```
+
+## TypeScript
+
+``` typescript
+import type { RDouble } from 'webr';
+
+await webR.objs.globalEnv.bind('arr', [2,4,6,8,9]);
+let result = await webR.evalR('sample(arr, 3)') as RDouble;
+let output = await result.toArray();
+
+console.log(output);
+```
+
+:::
+
+    [2, 9, 6]
+
+### Testing and narrowing R object types
+
+Since functions such as [`WebR.evalR()`](api/js/classes/WebR.WebR.md#evalr) may run arbitrary R code, it is not always clear what type of R object will be returned. To help manage the ambiguity, webR provides [type predicate functions](api/js/modules/RMain.md#functions) for several types of `RObject`.
+
+These functions return boolean `true` if the argument's R object type matches, and so different actions can be taken at runtime depending on the type of a given R object. This is particularly useful for TypeScript users, where the compiler is able to use the functions to narrow the R object type automatically.
+
+In this example, an R numeric, character, or list could be returned randomly by the `sample` function. Type predicate functions are used to detect and handle each case.
+
+``` typescript
+import { isRDouble, isRCharacter, isRList } from 'webr';
+
+let result = await webR.evalR(`
+  sample( list(50.75, "foo", list(1,2,3)) , 1)[[1]]
+`);
+
+if (isRDouble(result)) {
+  let output = await result.toNumber();
+  console.log('A number: ', output)
+} else if (isRCharacter(result)) {
+  let output = await result.toString();
+  console.log('A string: ', output)
+} else if (isRList(result)) {
+  let output = (await result.toArray()).length;
+  console.log('A list with ', output, 'elements.')
+}
+```
+
+### Cleaning up after an R object is no longer in use
+
+R object references in the form of an `RObject` are subject to [memory management](objects.qmd#memory-management) and should be destroyed when they are no longer required. This signals to R that the object referenced may be deleted by the garbage collector.
+
+::: {.panel-tabset}
+## JavaScript
+
+``` javascript
+let result = await webR.evalR('rnorm(3,5,1)');
+let output = await result.toArray();
+console.log(output);
+
+webR.destroy(result);
+```
+
+## TypeScript
+
+``` typescript
+import type { RDouble } from 'webr';
+
+let result = await webR.evalR('rnorm(3,5,1)') as RDouble;
+let output = await result.toArray();
+console.log(output);
+
+webR.destroy(result);
+```
+
+:::
+
+    [5.373198157561013, 4.493213148077507, 5.134879842881727]
+
+### Plotting with a HTML canvas element
+
+::: callout-note
+See the [Plotting](plotting.qmd) section for further information about plotting with webR.
+:::
+
+WebR's support package includes a built in graphics device, [`webr::canvas()`](api/r.html#canvas). When R uses this device, messages are sent to the main thread containing bitmap image data. The image data can then be displayed using a HTML [Canvas](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) element on the page.
+
+In this example, R executes a plotting command and webR's output message queue is then [flushed](api/js/classes/WebR.WebR.md#flush). The image data is retrieved from the output messages and drawn to the HTML Canvas element with fixed `id="plot-canvas"`.
+
+``` html
+<canvas id="plot-canvas" width="1008" height="1008"></canvas>
+
+<script type="module">
+    import { WebR } from 'https://webr.r-wasm.org/{{< env WEBR_VERSION_TAG >}}/webr.mjs';
+    const webR = new WebR();
+
+    await webR.evalRVoid(`
+      webr::canvas()
+      plot(rnorm(1000), rnorm(1000),
+           xlab="x axis label", ylab="y axis label",
+           main="An rnorm plot")
+      dev.off()
+    `);
+
+    const msgs = await webR.flush();
+    msgs.forEach(msg => {
+      if (msg.type === 'canvas' && msg.data.event === 'canvasImage') {
+        const canvas = document.getElementById('plot-canvas');
+        canvas.getContext('2d').drawImage(msg.data.image, 0, 0);
+      } else {
+        console.log(msg);
+      }
+    });
+</script>
+```
+
+### Capturing plots while evaluating R code
+
+When evaluating R code using [`captureR()`](api/js/classes/WebR.Shelter.md#capturer), plots generated by the [`webr::canvas()`](api/r.html#canvas) graphics device may be captured and stored for display later, rather than immediately issued as an output message as in the previous example.
+
+Once captured, the image data can be retained and displayed later using a HTML [Canvas](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) element on the page.
+
+::: {.panel-tabset}
+## JavaScript
+
+``` javascript
+// Evaluate R code, capturing all output
+const shelter = await new webR.Shelter();
+const capture = await shelter.captureR("hist(rnorm(10000))");
+
+// Draw the first (and only) captured image to the page
+if (capture.images.length > 0) {
+  const img = capture.images[0];
+  const canvas = document.getElementById("plot-canvas");
+  canvas.width = img.width;
+  canvas.height = img.height;
+  canvas.getContext("2d").drawImage(img, 0, 0, img.width, img.height);
+}
+
+shelter.purge();
+```
+
+## TypeScript
+
+``` typescript
+// Evaluate R code, capturing all output
+const shelter = await new webR.Shelter();
+const capture = await shelter.captureR("hist(rnorm(10000))");
+
+// Draw the first (in this case only) captured image to the page
+if (capture.images.length > 0) {
+  const img = capture.images[0];
+  const canvas = document.getElementById("plot-canvas") as HTMLCanvasElement;
+  canvas.width = img.width;
+  canvas.height = img.height;
+  canvas.getContext("2d")!.drawImage(img, 0, 0, img.width, img.height);
+}
+
+shelter.purge();
+```
+
+:::
+
+## Fully worked examples
+
+### Creating an interactive webR REPL console
+
+The following HTML document loads webR from CDN and creates a simple interactive R console. This demonstrates using the [`Console`](api/js/classes/WebR.Console.md) class with JavaScript callbacks to interface with the built-in R REPL.
+
+``` html
+<html>
+  <head>
+    <title>WebR Test Console</title>
+  </head>
+  <body>
+    <div>
+      <pre><code id="out">Loading webR, please wait...</code></pre>
+      <input spellcheck="false" autocomplete="off" id="input" type="text">
+      <button onclick="globalThis.sendInput()" id="run">Run</button>
+    </div>
+    
+    <script type="module">
+      /* Create a webR console using the Console helper class */
+      import { Console } from 'https://webr.r-wasm.org/{{< env WEBR_VERSION_TAG >}}/webr.mjs';
+      const webRConsole = new Console({
+        stdout: line => document.getElementById('out').append(line + '\n'),
+        stderr: line => document.getElementById('out').append(line + '\n'),
+        prompt: p => document.getElementById('out').append(p),
+      });
+      webRConsole.run();
+      
+      /* Write to the webR console using the ``stdin()`` method */
+      let input = document.getElementById('input');
+      globalThis.sendInput = () => {
+        webRConsole.stdin(input.value);
+        document.getElementById('out').append(input.value + '\n');
+        input.value = "";
+      }
+      
+      /* Send input on Enter key */
+      input.addEventListener(
+        "keydown",
+        (evt) => {if(evt.keyCode === 13) globalThis.sendInput()}
+      );
+    </script>
+  </body>
+</html>
+```
+
+::: callout-note
+See [Serving Pages with WebR](serving.qmd) for further details about web server requirements for web pages that load webR.
+:::
+
+
+After loading, the resulting web page should present an interactive R console similar to the following,
+
+```{=html}
+<div style="border: solid #333 1px; padding: 5px;">
+  <pre id="loading"><code>Loading webR, please wait...</code></pre>
+  <pre id="container" style="max-height: 400px"><code id="out"></code></pre>
+  <div class="input-group mb-3">
+    <span class="input-group-text" id="prompt">></span>
+    <input spellcheck="false" autocomplete="off" id="input" type="text">
+    <button type="button" class="btn btn-secondary" onclick="globalThis.sendInput()" id="run">Run</button>
+  </div>
+</div>
+<script type="module">
+  import { Console } from 'https://webr.r-wasm.org/{{< env WEBR_VERSION_TAG >}}/webr.mjs';
+  const webRConsole = new Console({
+    stdout: line => document.getElementById('out').append(line + '\n'),
+    stderr: line => document.getElementById('out').append(line + '\n'),
+    prompt: p => {
+      const pre = document.getElementById('container');
+      pre.scrollTop = pre.scrollHeight; 
+      document.getElementById('prompt').innerText = p;
+    }
+  });
+  webRConsole.run();
+  webRConsole.webR.init().then(() => document.getElementById('loading').remove());
+  
+  let input = document.getElementById('input');
+  globalThis.sendInput = () => {
+    webRConsole.stdin(input.value);
+    document.getElementById('out').append(
+      document.getElementById('prompt').innerText + ' ' + input.value + '\n'
+    );
+    input.value = "";
+  }
+  input.addEventListener(
+    "keydown",
+    (evt) => {if(evt.keyCode === 13) globalThis.sendInput()}
+  );
+</script>
+```
+
+### Interactive charts with `ggplot2` and `plotly`
+
+Using the [`plotly`](https://plotly.com/r/getting-started/) R package, `ggplot2` output can be converted into interactive figures powered by [plotly.js](https://plotly.com/javascript/).
+``` html
+<html>
+  <head>
+    <title>Plotly Example</title>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.26.2/plotly.min.js"
+      charset="utf-8"
+    ></script>
+  </head>
+  <body>
+    <div>
+      <pre><code id="out">Loading webR, please wait...</code></pre>
+    </div>
+    
+    <script type="module">
+      import { WebR } from 'https://webr.r-wasm.org/{{< env WEBR_VERSION_TAG >}}/webr.mjs';
+      const webR = new WebR({ interactive: false });
+      await webR.init();
+      const outElem = document.getElementById('out');
+      outElem.innerText = 'Loading plotly, please wait...';
+      await webR.installPackages(['jsonlite', 'ggplot2', 'plotly'], true);
+      outElem.innerText = 'Generating plot, please wait...';
+      const plotlyData = await webR.evalRString(`
+library(plotly)
+library(ggplot2)
+
+p <- ggplot(mpg, aes(displ, hwy, colour = class)) +
+  geom_point()
+
+plotly_json(p, pretty = FALSE)
+`);
+      outElem.replaceChildren();
+      Plotly.newPlot('out', JSON.parse(plotlyData), {});
+    </script>
+  </body>
+</html>
+```
+
+### Integrating webR with Observable
+
+Below are two examples of using webR with Observable using two different CDNs (content delivery networks):
+
+* <https://observablehq.com/d/6936259b898a25ce> (Install from r-wasm.org)
+* <https://observablehq.com/d/6175b2e6f3d899a7> (Skypack)
+
+### Integrating webR with other frameworks
+
+See the example repositories below for examples of integrating webR into other JavaScript/TypeScript systems and frameworks.
+
+* <https://github.com/georgestagg/webr-node-example>
+* <https://github.com/georgestagg/webr-react-example>
+* <https://github.com/georgestagg/webr-vue-example>
+* <https://github.com/georgestagg/webr-nextjs-example>
+* <https://github.com/georgestagg/webr-webpack-example>
+
+
+

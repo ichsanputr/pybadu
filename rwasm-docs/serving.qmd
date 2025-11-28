@@ -1,0 +1,55 @@
+---
+title: "Serving Pages with WebR"
+format: html
+toc: true
+---
+
+For performance and [security](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer#security_requirements%3E) reasons, web pages that load webR should be served with certain HTTP headers so that the page is [cross-origin isolated](https://developer.mozilla.org/en-US/docs/Web/API/crossOriginIsolated). This allows the `SharedArrayBuffer` based [communication channel](communication.qmd#webr-channels) to be used.
+
+To ensure a web page is cross-origin isolated, serve the page with both the [COOP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cross-Origin-Opener-Policy) and [COEP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cross-Origin-Embedder-Policy) HTTP headers set,
+
+    Cross-Origin-Opener-Policy: same-origin
+    Cross-Origin-Embedder-Policy: require-corp
+
+If successful, the value of the global JavaScript property `crossOriginIsolated` should return `true`.
+
+### Example script to serve webR pages locally
+
+The following simple R script will serve files locally from the current working directory with the required HTTP headers set. Ensure that your R installation has the [httpuv](https://cran.r-project.org/web/packages/httpuv/index.html) package installed and then save the following R code in a new script named `serve.R`.
+
+```{r eval=FALSE}
+library(httpuv)
+runServer(
+  host = "127.0.0.1", port = 8080,
+  app = list(
+    staticPaths = list(
+      "/" = staticPath(
+        ".",
+        headers = list(
+          "Cross-Origin-Opener-Policy" = "same-origin",
+          "Cross-Origin-Embedder-Policy" = "require-corp"
+        )
+      )
+    )
+  )
+)
+```
+
+Run the script on your own machine, for example by executing `Rscript serve.R` in a terminal. Once running, you can access the contents of the current working directory at the URL <http://127.0.0.1:8080>.
+
+## Using the `PostMessage` channel {#postmessage}
+
+If it is not possible to set the HTTP headers for cross-origin isolation, e.g. you are using an external service such as GitHub Pages to host your web content, webR will automatically fall back to using an alternative `PostMessage` communication channel.
+
+::: callout-warning
+Interruption of running R code and R features relying on taking user input (`readline()`, `menu()`, `browser()`, etc.) are unsupported when using the `PostMessage` communication channel.
+:::
+
+The `PostMessage` communication channel may also be explicitly selected by setting [`WebROptions.channelType`](api/js/interfaces/WebR.WebROptions.md#channeltype) during webR initialisation:
+
+``` js
+import { WebR, ChannelType } from 'https://webr.r-wasm.org/{{< env WEBR_VERSION_TAG >}}/webr.mjs';
+const webR = new WebR({
+  channelType: ChannelType.PostMessage,
+});
+```

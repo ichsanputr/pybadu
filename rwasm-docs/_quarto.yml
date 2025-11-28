@@ -1,0 +1,59 @@
+project:
+  type: website
+  output-dir: _site
+  resources:
+    - /webr-worker.js
+
+website:
+  title: WebR - R in the Browser
+  site-url: https://docs.r-wasm.org/
+  repo-url: https://github.com/r-wasm/webr/
+  repo-branch: main
+  repo-subdir: src/docs
+  repo-actions: [edit, issue]
+  favicon: ../assets/webR.png
+  page-navigation: true
+  sidebar:
+    title: "WebR {{< env WEBR_VERSION >}} Documentation"
+    logo: ../assets/webR.png
+    contents:
+      - index.qmd
+      - section: Getting Started
+        contents:
+          - downloading.qmd
+          - serving.qmd
+          - examples.qmd
+      - communication.qmd
+      - evaluating.qmd
+      - plotting.qmd
+      - networking.qmd
+      - section: Working with R Objects
+        contents:
+          - objects.qmd
+          - convert-r-to-js.qmd
+          - convert-js-to-r.qmd
+      - section: R Packages and Data
+        contents:
+          - packages.qmd
+          - building.qmd
+          - mounting.qmd
+      - section: WebR API
+        contents:
+          - api/r.qmd
+          - section: JavaScript API
+            contents:
+              - auto: "api/js/modules"
+              - auto: "api/js/classes"
+              - auto: "api/js/interfaces"
+    tools:
+      - icon: github
+        href: https://github.com/r-wasm/webr/
+
+format:
+  html:
+    theme: 
+      light: cosmo
+      dark: darkly
+    link-external-newwindow: true
+    link-external-filter: '^(?:http:|https:)\/\/docs\.r-wasm\.org'
+    toc: true

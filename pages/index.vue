@@ -2,72 +2,46 @@
   <div class="relative light">
     <!-- Hero Section with Aurora Background -->
     <AuroraBackground>
-      <Motion
-        as="div"
-        :initial="{ opacity: 0, y: 40, filter: 'blur(10px)' }"
-        :while-in-view="{
-          opacity: 1,
-          y: 0,
-          filter: 'blur(0px)',
-        }"
-        :transition="{
+      <Motion as="div" :initial="{ opacity: 0, y: 40, filter: 'blur(10px)' }" :while-in-view="{
+        opacity: 1,
+        y: 0,
+        filter: 'blur(0px)',
+      }" :transition="{
           delay: 0.2,
           duration: 0.8,
           ease: 'easeInOut',
-        }"
-        class="relative z-10 flex flex-col items-center justify-center gap-6 px-4 py-32"
-      >
+        }" class="relative z-10 flex flex-col items-center justify-center gap-6 px-4 py-32">
         <!-- Animated Title with Sparkles -->
-        <SparklesText
-          text="Pybadu"
-          :colors="{ first: '#3776ab', second: '#ffd43b' }"
-          :sparkles-count="15"
-          class="text-5xl md:text-7xl lg:text-8xl font-extrabold"
-        />
-        
-        <Motion
-          as="h2"
-          :initial="{ opacity: 0, y: 20 }"
-          :while-in-view="{ opacity: 1, y: 0 }"
+        <SparklesText text="Pybadu" :colors="{ first: '#3776ab', second: '#ffd43b' }" :sparkles-count="15"
+          class="text-5xl md:text-7xl lg:text-8xl font-extrabold" />
+
+        <Motion as="h2" :initial="{ opacity: 0, y: 20 }" :while-in-view="{ opacity: 1, y: 0 }"
           :transition="{ delay: 0.4, duration: 0.6 }"
-          class="text-xl md:text-2xl lg:text-3xl font-bold text-center text-gray-800 dark:text-gray-200"
-        >
+          class="text-xl md:text-2xl lg:text-3xl font-bold text-center text-gray-800 dark:text-gray-200">
           Dedicated Python Library Compilers
         </Motion>
 
-        <Motion
-          as="p"
-          :initial="{ opacity: 0, y: 20 }"
-          :while-in-view="{ opacity: 1, y: 0 }"
+        <Motion as="p" :initial="{ opacity: 0, y: 20 }" :while-in-view="{ opacity: 1, y: 0 }"
           :transition="{ delay: 0.6, duration: 0.6 }"
-          class="text-base md:text-lg lg:text-xl text-center max-w-3xl text-gray-600 dark:text-gray-400 px-4"
-        >
-          Explore Python libraries directly in your browser using fast, isolated execution environments that give you a smooth, installation-free coding experience.
+          class="text-base md:text-lg lg:text-xl text-center max-w-3xl text-gray-600 dark:text-gray-400 px-4">
+          Explore Python libraries directly in your browser using fast, isolated execution environments that give you a
+          smooth, installation-free coding experience.
         </Motion>
 
-        <Motion
-          as="div"
-          :initial="{ opacity: 0, scale: 0.8 }"
-          :while-in-view="{ opacity: 1, scale: 1 }"
-          :transition="{ delay: 0.8, duration: 0.5 }"
-          class="flex flex-col sm:flex-row gap-4 mt-4"
-        >
-          <NuxtLink
-            to="/matplotlib"
-            class="group relative px-4 py-2.5 sm:px-8 sm:py-4 bg-python-blue-600 hover:bg-python-blue-700 text-white text-sm sm:text-base font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 overflow-hidden"
-          >
+        <Motion as="div" :initial="{ opacity: 0, scale: 0.8 }" :while-in-view="{ opacity: 1, scale: 1 }"
+          :transition="{ delay: 0.8, duration: 0.5 }" class="flex flex-col sm:flex-row gap-4 mt-4">
+          <NuxtLink to="/matplotlib"
+            class="group relative px-4 py-2.5 sm:px-8 sm:py-4 bg-python-blue-600 hover:bg-python-blue-700 text-white text-sm sm:text-base font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 overflow-hidden">
             <span class="relative z-10 flex items-center gap-2">
               <Icon icon="ph:play-circle" class="w-4 h-4 sm:w-5 sm:h-5" />
               Start Coding Now
             </span>
-            <div class="absolute inset-0 bg-gradient-to-r from-python-blue-500 to-python-yellow-500 opacity-0 group-hover:opacity-20 transition-opacity" />
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-python-blue-500 to-python-yellow-500 opacity-0 group-hover:opacity-20 transition-opacity" />
           </NuxtLink>
-          
-          <a
-            href="https://budibadu.com"
-            target="_blank"
-            class="px-4 py-2.5 sm:px-8 sm:py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm sm:text-base font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 border border-gray-200 dark:border-gray-700 flex items-center gap-2"
-          >
+
+          <a href="https://budibadu.com" target="_blank"
+            class="px-4 py-2.5 sm:px-8 sm:py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm sm:text-base font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 border border-gray-200 dark:border-gray-700 flex items-center gap-2">
             Explore BudiBadu
             <Icon icon="ph:arrow-square-out" class="w-4 h-4 sm:w-5 sm:h-5" />
           </a>
@@ -81,15 +55,11 @@
     <!-- Library Showcase - Moved Up -->
     <section class="py-24 bg-white relative">
       <Container>
-        <Motion
-          as="div"
-          :initial="{ opacity: 0, y: 20 }"
-          :while-in-view="{ opacity: 1, y: 0 }"
-          :transition="{ duration: 0.6 }"
-          class="text-center mb-16"
-        >
+        <Motion as="div" :initial="{ opacity: 0, y: 20 }" :while-in-view="{ opacity: 1, y: 0 }"
+          :transition="{ duration: 0.6 }" class="text-center mb-16">
           <h2 class="text-4xl md:text-5xl font-bold mb-4">
-            <span class="bg-gradient-to-r from-python-blue-600 via-python-blue-500 to-python-yellow-500 bg-clip-text text-transparent">
+            <span
+              class="bg-gradient-to-r from-python-blue-600 via-python-blue-500 to-python-yellow-500 bg-clip-text text-transparent">
               Specialized Compilers
             </span>
           </h2>
@@ -100,21 +70,13 @@
         </Motion>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-12">
-          <Motion
-            v-for="(library, index) in libraries"
-            :key="library.name"
-            as="div"
-            :initial="{ opacity: 0, y: 30 }"
-            :while-in-view="{ opacity: 1, y: 0 }"
-            :transition="{ delay: index * 0.05, duration: 0.5 }"
-          >
+          <Motion v-for="(library, index) in libraries" :key="library.name" as="div" :initial="{ opacity: 0, y: 30 }"
+            :while-in-view="{ opacity: 1, y: 0 }" :transition="{ delay: index * 0.05, duration: 0.5 }">
             <FlipCard class="h-64">
               <!-- Front -->
-              <div class="flex h-full w-full flex-col items-center justify-center rounded-xl bg-white border border-gray-200 p-6">
-                <div 
-                  class="w-16 h-16 rounded-xl flex items-center justify-center mb-4"
-                  :class="library.bgClass"
-                >
+              <div
+                class="flex h-full w-full flex-col items-center justify-center rounded-xl bg-white border border-gray-200 p-6">
+                <div class="w-16 h-16 rounded-xl flex items-center justify-center mb-4" :class="library.bgClass">
                   <Icon :icon="library.icon" class="w-8 h-8 text-white" />
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-2 text-center">
@@ -127,16 +89,15 @@
 
               <!-- Back -->
               <template #back>
-                <NuxtLink
-                  :to="library.href"
+                <NuxtLink :to="library.href"
                   class="flex h-full w-full flex-col items-center justify-center rounded-xl border border-python-blue-500 p-6 text-center"
-                  :class="library.bgClass"
-                >
+                  :class="library.bgClass">
                   <Icon :icon="library.icon" class="w-12 h-12 text-white mb-4" />
                   <p class="text-base md:text-lg font-bold text-white mb-3">
                     Ready to explore?
                   </p>
-                  <div class="inline-flex items-center gap-2 px-6 py-3 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-white/30 transition-all">
+                  <div
+                    class="inline-flex items-center gap-2 px-6 py-3 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-white/30 transition-all">
                     <span>Try {{ library.name }}</span>
                     <Icon icon="ph:arrow-right" class="w-4 h-4" />
                   </div>
@@ -147,16 +108,12 @@
         </div>
 
         <!-- Additional Compilers Count -->
-        <Motion
-          as="div"
-          :initial="{ opacity: 0, y: 20 }"
-          :while-in-view="{ opacity: 1, y: 0 }"
-          :transition="{ delay: 0.5, duration: 0.5 }"
-          class="mt-8 text-center"
-        >
-        <!-- change to see all libraries -->
+        <Motion as="div" :initial="{ opacity: 0, y: 20 }" :while-in-view="{ opacity: 1, y: 0 }"
+          :transition="{ delay: 0.5, duration: 0.5 }" class="mt-8 text-center">
+          <!-- change to see all libraries -->
           <p class="text-gray-600 text-sm">
-            + {{ totalPyodidePackages - libraries.length }} browse all compilers on <NuxtLink to="/list" class="text-python-blue-600 font-semibold underline hover:text-python-blue-700">List Page</NuxtLink>
+            + {{ totalPyodidePackages - libraries.length }} browse all compilers on <NuxtLink to="/list"
+              class="text-python-blue-600 font-semibold underline hover:text-python-blue-700">List Page</NuxtLink>
           </p>
         </Motion>
       </Container>
@@ -165,87 +122,50 @@
     <!-- Why Choose Section -->
     <section class="py-24 bg-gray-50 relative overflow-hidden">
       <Container>
-        <Motion
-          as="div"
-          :initial="{ opacity: 0, y: 20 }"
-          :while-in-view="{ opacity: 1, y: 0 }"
-          :transition="{ duration: 0.6 }"
-          class="text-center mb-16"
-        >
+        <Motion as="div" :initial="{ opacity: 0, y: 20 }" :while-in-view="{ opacity: 1, y: 0 }"
+          :transition="{ duration: 0.6 }" class="text-center mb-16">
           <h2 class="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-            Why Choose Pybadu?
+            Why Use Pybadu?
           </h2>
           <p class="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
             Specialized environments, zero setup, instant execution. Everything you need for Python library development.
           </p>
         </Motion>
 
-        <Motion
-          as="div"
-          :initial="{ opacity: 0, y: 30 }"
-          :while-in-view="{ opacity: 1, y: 0 }"
-          :transition="{ delay: 0.2, duration: 0.6 }"
-        >
+        <Motion as="div" :initial="{ opacity: 0, y: 30 }" :while-in-view="{ opacity: 1, y: 0 }"
+          :transition="{ delay: 0.2, duration: 0.6 }">
           <BentoGrid class="mx-auto max-w-7xl">
-            <BentoCard
-              name="Dedicated Compilers"
-              class="col-span-3 lg:col-span-2"
-              icon="simple-icons:python"
+            <BentoCard name="Dedicated Compilers" class="col-span-3 lg:col-span-2" icon="simple-icons:python"
               icon-bg="from-python-blue-500 to-python-blue-600"
               description="Each library has its own optimized environment. Pre-configured with all dependencies and best practices for seamless development."
-              href="/matplotlib"
-            />
-            
-            <BentoCard
-              name="Zero Setup Required"
-              class="col-span-3 lg:col-span-1"
-              icon="ph:lightning"
+              href="/matplotlib" />
+
+            <BentoCard name="Zero Setup Required" class="col-span-3 lg:col-span-1" icon="ph:lightning"
               icon-bg="from-python-blue-500 to-python-blue-600"
               description="Start coding instantly. No installation, no configuration, just pure Python in your browser."
-              href="/numpy"
-            />
+              href="/numpy" />
 
-            <BentoCard
-              name="Real-Time Execution"
-              class="col-span-3 lg:col-span-1"
-              icon="ph:rocket-launch"
+            <BentoCard name="Real-Time Execution" class="col-span-3 lg:col-span-1" icon="ph:rocket-launch"
               icon-bg="from-python-blue-500 to-python-blue-600"
               description="See your results immediately with our WebAssembly-powered execution engine."
-              href="/pandas"
-            />
+              href="/pandas" />
 
-            <BentoCard
-              name="Multi-File Projects"
-              class="col-span-3 lg:col-span-2"
-              icon="ph:files"
+            <BentoCard name="Multi-File Projects" class="col-span-3 lg:col-span-2" icon="ph:files"
               icon-bg="from-python-blue-500 to-python-blue-600"
               description="Create complex projects with up to 5 files. Full IDE-like experience with file management and auto-save to localStorage."
-              href="/scikit-learn"
-            />
+              href="/scikit-learn" />
 
-            <BentoCard
-              name="Open Source Libraries"
-              class="col-span-3 lg:col-span-1"
-              icon="ph:git-branch"
+            <BentoCard name="Open Source Libraries" class="col-span-3 lg:col-span-1" icon="ph:git-branch"
               icon-bg="from-python-blue-500 to-python-blue-600"
-              description="Built on industry-standard libraries powered by Pyodide WebAssembly."
-            />
+              description="Built on industry-standard libraries powered by Pyodide WebAssembly." />
 
-            <BentoCard
-              name="Powered by Pyodide"
-              class="col-span-3 lg:col-span-1"
-              icon="ph:cpu"
+            <BentoCard name="Powered by Pyodide" class="col-span-3 lg:col-span-1" icon="ph:cpu"
               icon-bg="from-python-blue-500 to-python-blue-600"
-              description="WebAssembly technology brings Python's full power to your browser securely."
-            />
+              description="WebAssembly technology brings Python's full power to your browser securely." />
 
-            <BentoCard
-              name="Browser-Based Learning"
-              class="col-span-3 lg:col-span-1"
-              icon="ph:graduation-cap"
+            <BentoCard name="Browser-Based Learning" class="col-span-3 lg:col-span-1" icon="ph:graduation-cap"
               icon-bg="from-python-blue-500 to-python-blue-600"
-              description="Perfect for students and educators. Share code examples instantly without environment setup."
-            />
+              description="Perfect for students and educators. Share code examples instantly without environment setup." />
           </BentoGrid>
         </Motion>
       </Container>
@@ -254,13 +174,8 @@
     <!-- Testimonials Section -->
     <section class="py-24 bg-white relative">
       <Container>
-        <Motion
-          as="div"
-          :initial="{ opacity: 0, y: 20 }"
-          :while-in-view="{ opacity: 1, y: 0 }"
-          :transition="{ duration: 0.6 }"
-          class="text-center mb-16"
-        >
+        <Motion as="div" :initial="{ opacity: 0, y: 20 }" :while-in-view="{ opacity: 1, y: 0 }"
+          :transition="{ duration: 0.6 }" class="text-center mb-16">
           <h2 class="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
             What Developers Say
           </h2>
@@ -269,33 +184,21 @@
           </p>
         </Motion>
 
-        <Motion
-          as="div"
-          :initial="{ opacity: 0, y: 30 }"
-          :while-in-view="{ opacity: 1, y: 0 }"
-          :transition="{ delay: 0.2, duration: 0.6 }"
-        >
-          <TestimonialSlider 
-            :testimonials="testimonials"
-            :auto-rotate="true"
-            :duration="6"
-          />
+        <Motion as="div" :initial="{ opacity: 0, y: 30 }" :while-in-view="{ opacity: 1, y: 0 }"
+          :transition="{ delay: 0.2, duration: 0.6 }">
+          <TestimonialSlider :testimonials="testimonials" :auto-rotate="true" :duration="6" />
         </Motion>
       </Container>
     </section>
 
     <!-- CTA Section -->
-    <section class="py-24 bg-gradient-to-br from-python-blue-600 via-python-blue-500 to-python-yellow-500 relative overflow-hidden">
+    <section
+      class="py-24 bg-gradient-to-br from-python-blue-600 via-python-blue-500 to-python-yellow-500 relative overflow-hidden">
       <Meteor :number="15" class-name="text-white" />
-      
+
       <Container>
-        <Motion
-          as="div"
-          :initial="{ opacity: 0, scale: 0.9 }"
-          :while-in-view="{ opacity: 1, scale: 1 }"
-          :transition="{ duration: 0.6 }"
-          class="text-center relative z-10"
-        >
+        <Motion as="div" :initial="{ opacity: 0, scale: 0.9 }" :while-in-view="{ opacity: 1, scale: 1 }"
+          :transition="{ duration: 0.6 }" class="text-center relative z-10">
           <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">
             Ready to Start Coding?
           </h2>
@@ -304,18 +207,13 @@
             No setup required, start coding in seconds.
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <NuxtLink
-              to="/list"
-              class="px-4 py-2.5 sm:px-8 sm:py-4 bg-white text-python-blue-600 text-sm sm:text-base font-semibold rounded-xl hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 inline-flex items-center gap-2 justify-center"
-            >
+            <NuxtLink to="/list"
+              class="px-4 py-2.5 sm:px-8 sm:py-4 bg-white text-python-blue-600 text-sm sm:text-base font-semibold rounded-xl hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 inline-flex items-center gap-2 justify-center">
               <Icon icon="pixel:eye-solid" class="w-6 h-6" />
               Browse Compilers
             </NuxtLink>
-            <a
-              href="https://github.com/ichsanputr/pybadu"
-              target="_blank"
-              class="px-4 py-2.5 sm:px-8 sm:py-4 bg-white/10 backdrop-blur-sm text-white text-sm sm:text-base font-semibold rounded-xl hover:bg-white/20 transition-all duration-200 border-2 border-white/50 inline-flex items-center gap-2 justify-center"
-            >
+            <a href="https://github.com/ichsanputr/pybadu" target="_blank"
+              class="px-4 py-2.5 sm:px-8 sm:py-4 bg-white/10 backdrop-blur-sm text-white text-sm sm:text-base font-semibold rounded-xl hover:bg-white/20 transition-all duration-200 border-2 border-white/50 inline-flex items-center gap-2 justify-center">
               <Icon icon="ph:github-logo" class="w-6 h-6" />
               View on GitHub
             </a>
@@ -453,7 +351,7 @@ useHead({
       content: 'Explore Python libraries directly in your browser using fast, isolated execution environments that give you a smooth, installation-free coding experience. Powered by Pyodide WebAssembly. Part of the BudiBadu ecosystem.'
     },
     {
-      name: 'keywords', 
+      name: 'keywords',
       content: 'python, pyodide, numpy, pandas, matplotlib, scipy, scikit-learn, online python, browser python, budibadu, pybadu'
     },
     {

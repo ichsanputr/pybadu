@@ -14,59 +14,79 @@
             </div>
           </div>
           <p class="text-gray-400 max-w-md mb-6 text-sm">
-            Dedicated Python library compilers powered by Pyodide WebAssembly. 
+            Dedicated Python library compilers powered by Pyodide WebAssembly.
             Part of the BudiBadu ecosystem for developers and learners.
           </p>
-          
+
           <!-- Ecosystem -->
           <h3 class="text-white font-semibold mb-4">Ecosystem</h3>
           <div class="space-y-2">
-            <a href="https://budibadu.com" target="_blank" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+            <a href="https://budibadu.com" target="_blank"
+              class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               BudiBadu ↗
             </a>
-            <a href="https://budibadu.com/quizibadu" target="_blank" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+            <a href="https://budibadu.com/quizibadu" target="_blank"
+              class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               Quizibadu ↗
             </a>
-            <a href="https://budibadu.com/toolbadu" target="_blank" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+            <a href="https://budibadu.com/toolbadu" target="_blank"
+              class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               Toolbadu ↗
             </a>
           </div>
         </div>
 
         <!-- Default Libraries -->
-        <div>
-          <h3 class="text-white font-semibold mb-4">Default Libraries</h3>
-          <div class="grid grid-cols-2 gap-x-4 gap-y-2">
-            <NuxtLink to="/matplotlib" @click="handleSmoothScroll" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
-              Matplotlib
-            </NuxtLink>
-            <NuxtLink to="/numpy" @click="handleSmoothScroll" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
-              NumPy
-            </NuxtLink>
-            <NuxtLink to="/pandas" @click="handleSmoothScroll" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
-              Pandas
-            </NuxtLink>
-            <NuxtLink to="/scikit-learn" @click="handleSmoothScroll" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
-              Scikit-learn
-            </NuxtLink>
-            <NuxtLink to="/zfpy" @click="handleSmoothScroll" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
-              zfpy
-            </NuxtLink>
-            <NuxtLink to="/pyyaml" @click="handleSmoothScroll" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
-              PyYAML
-            </NuxtLink>
-            <NuxtLink to="/mpmath" @click="handleSmoothScroll" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
-              mpmath
-            </NuxtLink>
-            <NuxtLink to="/msprime" @click="handleSmoothScroll" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
-              msprime
-            </NuxtLink>
-            <NuxtLink to="/markupsafe" @click="handleSmoothScroll" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
-              MarkupSafe
-            </NuxtLink>
-            <NuxtLink to="/orjson" @click="handleSmoothScroll" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
-              orjson
-            </NuxtLink>
+        <div class="flex flex-col gap-3">
+          <div>
+            <h3 class="text-white font-semibold mb-4">Default Libraries</h3>
+            <div class="grid grid-cols-2 gap-x-4 gap-y-2">
+              <NuxtLink to="/matplotlib" @click="handleSmoothScroll"
+                class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+                Matplotlib
+              </NuxtLink>
+              <NuxtLink to="/numpy" @click="handleSmoothScroll"
+                class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+                NumPy
+              </NuxtLink>
+              <NuxtLink to="/pandas" @click="handleSmoothScroll"
+                class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+                Pandas
+              </NuxtLink>
+              <NuxtLink to="/scikit-learn" @click="handleSmoothScroll"
+                class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+                Scikit-learn
+              </NuxtLink>
+              <NuxtLink to="/zfpy" @click="handleSmoothScroll"
+                class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+                zfpy
+              </NuxtLink>
+              <NuxtLink to="/pyyaml" @click="handleSmoothScroll"
+                class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+                PyYAML
+              </NuxtLink>
+            </div>
+          </div>
+          <div class="mt-4">
+            <h3 class="text-white font-semibold mb-4">Another Pages</h3>
+            <div class="grid grid-cols-2 gap-x-4 gap-y-2">
+              <NuxtLink to="/code-tester" @click="handleSmoothScroll"
+                class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+                Python Code Tester
+              </NuxtLink>
+              <NuxtLink to="/python-obfuscator" @click="handleSmoothScroll"
+                class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+                Python Obfuscator
+              </NuxtLink>
+              <NuxtLink to="/python-terminal" @click="handleSmoothScroll"
+                class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+                Python Terminal
+              </NuxtLink>
+              <NuxtLink to="/python-turtle" @click="handleSmoothScroll"
+                class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+                Turtle Online
+              </NuxtLink>
+            </div>
           </div>
         </div>
 
@@ -74,39 +94,50 @@
         <div>
           <h3 class="text-white font-semibold mb-4">Additional Libraries</h3>
           <div class="grid grid-cols-2 gap-x-4 gap-y-2">
-            <NuxtLink to="/snowball" @click="handleSmoothScroll" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+            <NuxtLink to="/snowball" @click="handleSmoothScroll"
+              class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               Snowball Stemmer
             </NuxtLink>
-            <NuxtLink to="/beautifulsoup4" @click="handleSmoothScroll" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+            <NuxtLink to="/beautifulsoup4" @click="handleSmoothScroll"
+              class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               BeautifulSoup4
             </NuxtLink>
-            <NuxtLink to="/pyjokes" @click="handleSmoothScroll" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+            <NuxtLink to="/pyjokes" @click="handleSmoothScroll"
+              class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               Pyjokes
             </NuxtLink>
-            <NuxtLink to="/tabulate" @click="handleSmoothScroll" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+            <NuxtLink to="/tabulate" @click="handleSmoothScroll"
+              class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               Tabulate
             </NuxtLink>
-            <NuxtLink to="/shortuuid" @click="handleSmoothScroll" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+            <NuxtLink to="/shortuuid" @click="handleSmoothScroll"
+              class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               ShortUUID
             </NuxtLink>
-            <NuxtLink to="/yarl" @click="handleSmoothScroll" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+            <NuxtLink to="/yarl" @click="handleSmoothScroll"
+              class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               Yarl
             </NuxtLink>
-            <NuxtLink to="/faker" @click="handleSmoothScroll" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+            <NuxtLink to="/faker" @click="handleSmoothScroll"
+              class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               Faker
             </NuxtLink>
-            <NuxtLink to="/textwrap3" @click="handleSmoothScroll" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+            <NuxtLink to="/textwrap3" @click="handleSmoothScroll"
+              class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               Textwrap3
             </NuxtLink>
-            <NuxtLink to="/jmespath" @click="handleSmoothScroll" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+            <NuxtLink to="/jmespath" @click="handleSmoothScroll"
+              class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               JMESPath
             </NuxtLink>
-            <NuxtLink to="/dateparser" @click="handleSmoothScroll" class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+            <NuxtLink to="/dateparser" @click="handleSmoothScroll"
+              class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               Dateparser
             </NuxtLink>
           </div>
           <div class="mt-4">
-            <NuxtLink to="/list" @click="handleSmoothScroll" class="inline-flex items-center text-sm text-gray-200 hover:text-python-yellow-400 transition-colors">
+            <NuxtLink to="/list" @click="handleSmoothScroll"
+              class="inline-flex items-center text-sm text-gray-200 hover:text-python-yellow-400 transition-colors">
               See all compilers →
             </NuxtLink>
           </div>

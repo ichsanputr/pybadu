@@ -291,6 +291,41 @@ const {
 
 // Run code function
 async function runCodeWithValidation() {
+    if (!currentFileContent.value) return
+
+    // Check syntax first
+    if (window.pyodide) {
+        try {
+            window.pyodide.globals.set("check_code", currentFileContent.value)
+
+            const checkScript = `
+def check_syntax():
+    try:
+        compile(check_code, '<string>', 'exec')
+        return None
+    except SyntaxError as e:
+        return f"Syntax Error on line {e.lineno}: {e.msg}"
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+check_syntax()
+`
+            const error = await window.pyodide.runPythonAsync(checkScript)
+
+            if (error) {
+                clearOutput()
+                output.value.push({
+                    type: 'error',
+                    content: error
+                })
+                return
+            }
+        } catch (e) {
+            console.error('Syntax check error:', e)
+        }
+    }
+
+    // If syntax is valid, run the code
     await runCode()
 }
 

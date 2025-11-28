@@ -290,9 +290,11 @@ export function useLibraryPlayground(config = {}) {
     return true
   }
 
-  async function runCode() {
+  async function runCode(options = {}) {
     if (!pyodideReady.value || !currentFileContent.value.trim() || !globalPyodideWorker) return
     
+    const { shouldClearOutput = true } = options
+
     // Show loader immediately when button is clicked
     isLoading.value = true
     
@@ -303,7 +305,9 @@ export function useLibraryPlayground(config = {}) {
     const minDelay = 1000
     
     try {
-      output.value = []
+      if (shouldClearOutput) {
+        output.value = []
+      }
       
       // Run Python code in worker (use global singleton)
       const response = await requestResponse(globalPyodideWorker, {

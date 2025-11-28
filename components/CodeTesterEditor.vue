@@ -38,7 +38,7 @@
                     <Icon :icon="!pyodideReady || isLoading ? 'ph:spinner' : 'ph:play'"
                         :class="['w-4 h-4', !pyodideReady || isLoading ? 'animate-spin' : '']" />
                     <span class="hidden sm:inline">{{ !pyodideReady ? 'Loading' : isLoading ? 'Running' : 'Run'
-                        }}</span>
+                    }}</span>
                 </button>
 
                 <!-- Theme Toggle -->
@@ -120,7 +120,7 @@
                 ]">
                     <div class="flex items-center space-x-2">
                         <Icon icon="ph:terminal" class="w-4 h-4" />
-                        <span>Output</span>
+                        <span>Testing Result</span>
                         <div v-if="output.length > 0" :class="[
                             'px-1.5 py-0.5 rounded text-xs',
                             theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'
@@ -154,7 +154,7 @@
                         <div class="relative">
                             <pre class="whitespace-pre-wrap font-mono text-xs leading-relaxed">{{ item.content }}</pre>
                             <span class="absolute top-0 right-0 text-xs opacity-60 px-2 pb-1 rounded">{{ item.timestamp
-                                }}</span>
+                            }}</span>
                         </div>
                     </div>
 

@@ -97,7 +97,7 @@
 
                     <!-- Terminal Content -->
                     <div ref="terminalContainer" @click="focusInput" :class="[
-                        'flex-1 overflow-y-auto p-4 font-mono text-sm cursor-text',
+                        'flex-1 overflow-y-auto p-4 font-mono text-sm cursor-text custom-scrollbar',
                         theme === 'dark' ? 'bg-gray-900 text-gray-100' : 'bg-white text-gray-900'
                     ]">
                         <!-- Welcome Message -->
@@ -321,7 +321,9 @@ function toggleTheme() {
 }
 
 function focusInput() {
-    terminalInput.value?.focus()
+    nextTick(() => {
+        terminalInput.value?.focus()
+    })
 }
 
 function scrollToBottom() {
@@ -539,3 +541,40 @@ onBeforeUnmount(() => {
     }
 })
 </script>
+
+<style scoped>
+/* Custom Scrollbar Styling */
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.5);
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(156, 163, 175, 0.8);
+}
+
+/* Dark mode adjustments */
+:global(.dark) .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(75, 85, 99, 0.6);
+}
+
+:global(.dark) .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(107, 114, 128, 0.8);
+}
+</style>

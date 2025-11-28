@@ -113,7 +113,7 @@
 
                     <!-- Monaco Editor -->
                     <div class="flex-1 overflow-hidden">
-                        <MonacoEditor v-model="inputCode" :language="'python'" :theme="monacoTheme"
+                        <MonacoEditor :key="editorKey" v-model="inputCode" :language="'python'" :theme="monacoTheme"
                             :options="monacoOptions" height="100%" class="h-full w-full" />
                     </div>
                 </section>
@@ -1018,10 +1018,12 @@ for i, pwd in enumerate(generate_multiple_passwords(3, 14), 1):
 `
 }
 
+const editorKey = ref(0)
+
 function loadExample() {
     if (selectedExample.value && examples[selectedExample.value]) {
         inputCode.value = examples[selectedExample.value]
-        // Don't reset - keep the selected value visible
+        editorKey.value++
     }
 }
 

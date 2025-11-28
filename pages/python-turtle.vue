@@ -29,17 +29,17 @@
                 <!-- Right: Actions -->
                 <div class="flex items-center space-x-2">
                     <!-- Run Button -->
-                    <button @click="runTurtleCode" :disabled="isRunning || !pyodideReady" :class="[
+                    <button @click="runTurtleCode" :disabled="isRunning || !skulptReady" :class="[
                         'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
-                        isRunning || !pyodideReady
+                        isRunning || !skulptReady
                             ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
                             : theme === 'dark'
                                 ? 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
                                 : 'bg-python-blue-600 hover:bg-python-blue-700 text-white'
                     ]">
-                        <Icon :icon="!pyodideReady || isRunning ? 'ph:spinner' : 'ph:play'"
-                            :class="['w-4 h-4', !pyodideReady || isRunning ? 'animate-spin' : '']" />
-                        <span class="hidden sm:inline">{{ !pyodideReady ? 'Loading' : isRunning ? 'Running' : 'Run'
+                        <Icon :icon="!skulptReady || isRunning ? 'ph:spinner' : 'ph:play'"
+                            :class="['w-4 h-4', !skulptReady || isRunning ? 'animate-spin' : '']" />
+                        <span class="hidden sm:inline">{{ !skulptReady ? 'Loading Libs' : isRunning ? 'Running' : 'Run'
                             }}</span>
                     </button>
 
@@ -94,11 +94,11 @@
                                     : 'bg-white border-gray-300 text-gray-700'
                             ]">
                                 <option value="">Load Example...</option>
-                                <option value="square">Draw Square</option>
-                                <option value="circle">Draw Circle</option>
-                                <option value="spiral">Spiral Pattern</option>
-                                <option value="star">Star Shape</option>
-                                <option value="flower">Flower Pattern</option>
+                                <option value="fractal_tree">Fractal Tree</option>
+                                <option value="mandala">Colorful Mandala</option>
+                                <option value="koch_snowflake">Koch Snowflake</option>
+                                <option value="spirograph">Spirograph</option>
+                                <option value="dragon_curve">Dragon Curve</option>
                             </select>
 
                             <button @click="clearCode" :class="[
@@ -114,8 +114,8 @@
 
                     <!-- Monaco Editor -->
                     <div class="flex-1 overflow-hidden">
-                        <MonacoEditor v-model="code" :language="'python'" :theme="monacoTheme" :options="monacoOptions"
-                            height="100%" class="h-full w-full" />
+                        <MonacoEditor :key="editorKey" v-model="code" :language="'python'" :theme="monacoTheme"
+                            :options="monacoOptions" height="100%" class="h-full w-full" />
                     </div>
                 </section>
 
@@ -131,31 +131,39 @@
                             ? 'bg-gray-800/50 border-gray-700 text-gray-400'
                             : 'bg-gray-50 border-gray-200 text-gray-600'
                     ]">
-                        <div class="flex items-center space-x-2">
+                        <div class="flex items-center space-x-2 pt-1 pb-0.5">
                             <Icon icon="ph:paint-brush" class="w-4 h-4" />
                             <span>Canvas Output</span>
                         </div>
 
-                        <div class="text-xs opacity-60">
-                            {{ canvasSize.width }}x{{ canvasSize.height }}
-                        </div>
+                        <button @click="downloadCanvas" :disabled="!skulptReady" :class="[
+                            'p-1.5 rounded-md transition-colors',
+                            theme === 'dark'
+                                ? 'hover:bg-gray-700 text-gray-400 hover:text-white'
+                                : 'hover:bg-gray-200 text-gray-600 hover:text-gray-900'
+                        ]" title="Download Image">
+                            <Icon icon="ph:download-simple" class="w-4 h-4" />
+                        </button>
                     </div>
 
                     <!-- Canvas Container -->
-                    <div class="flex-1 overflow-auto p-4 flex items-center justify-center">
+                    <div class="flex-1 overflow-auto p-4 flex items-center justify-center bg-gray-100 dark:bg-gray-800">
                         <div class="relative">
-                            <canvas ref="turtleCanvas" :width="canvasSize.width" :height="canvasSize.height" :class="[
-                                'border rounded-lg shadow-lg',
+                            <!-- Skulpt Target Div -->
+                            <div id="skulpt-canvas" :class="[
+                                'border rounded-lg shadow-lg overflow-hidden bg-white',
                                 theme === 'dark' ? 'border-gray-700' : 'border-gray-300'
-                            ]" style="background: white;"></canvas>
+                            ]"></div>
 
                             <!-- Loading Overlay -->
-                            <div v-if="!pyodideReady"
-                                class="absolute inset-0 flex items-center justify-center bg-white/90 rounded-lg">
-                                <div class="text-center">
-                                    <Icon icon="ph:spinner"
-                                        class="w-8 h-8 animate-spin text-python-blue-500 mx-auto mb-2" />
-                                    <p class="text-sm text-gray-600">Loading Python...</p>
+                            <div v-if="!skulptReady"
+                                class="absolute inset-0 flex items-center justify-center bg-white/90 rounded-lg z-10">
+                                <div class="text-center w-[100px]">
+                                    <div>
+                                        <Icon icon="ph:spinner"
+                                            class="w-8 h-8 animate-spin text-python-blue-500 mx-auto mb-2" />
+                                    </div>
+                                    <div class="w-full text-sm text-gray-600">Loading..</div>
                                 </div>
                             </div>
                         </div>
@@ -207,11 +215,11 @@
 
                 <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
                     <p class="text-base md:text-lg leading-relaxed">
-                        Welcome to <strong>Python Turtle Graphics Online</strong> – an interactive environment for
-                        creating
-                        beautiful drawings and animations using Python's turtle graphics module. Perfect for learning
-                        programming,
-                        creating art, and exploring computational geometry, all directly in your browser.
+                        Welcome to <strong>Python Turtle Graphics Online</strong> – the best place to run <strong>turtle
+                            python online</strong>. An interactive environment for
+                        creating beautiful drawings and animations using Python's <strong>turtle graphics</strong>
+                        module. Perfect for learning
+                        programming, creating art, and exploring computational geometry, all directly in your browser.
                     </p>
 
                     <p class="text-base md:text-lg leading-relaxed">
@@ -223,11 +231,11 @@
                     </p>
 
                     <p class="text-base md:text-lg leading-relaxed">
-                        This online turtle graphics editor is powered by <strong>Pyodide WebAssembly</strong> and
-                        renders
-                        drawings on an HTML5 canvas. No installation required – just write Python turtle code and see
-                        the
-                        results instantly.
+                        This online turtle graphics editor is powered by <strong>Skulpt</strong>, a Javascript
+                        implementation of Python
+                        that runs entirely in your browser. It provides excellent support for the Turtle module,
+                        allowing for
+                        smooth animations and interactive drawings.
                     </p>
 
                     <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Common Turtle
@@ -301,7 +309,7 @@ turtle.done()</pre>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useHead } from '#app'
 import { Icon } from '@iconify/vue'
 import MonacoEditor from '~/components/MonacoEditor.vue'
@@ -321,7 +329,7 @@ useHead({
     title: 'Python Turtle Graphics Online - Interactive Drawing',
     meta: [
         { name: 'description', content: 'Create beautiful drawings with Python turtle graphics online. Interactive turtle programming environment with HTML5 canvas. Perfect for learning Python. No installation required.' },
-        { name: 'keywords', content: 'python turtle, turtle graphics, python drawing, learn python, turtle online, python canvas, pyodide turtle' },
+        { name: 'keywords', content: 'python turtle, turtle graphics, python drawing, learn python, turtle online, python canvas, skulpt turtle' },
         { name: 'author', content: 'Pybadu' },
         { property: 'og:title', content: 'Python Turtle Graphics Online' },
         { property: 'og:description', content: 'Create drawings with Python turtle graphics in your browser' },
@@ -331,6 +339,16 @@ useHead({
         { name: 'twitter:title', content: 'Python Turtle Graphics Online' },
         { name: 'twitter:description', content: 'Interactive Python turtle graphics' },
         { name: 'twitter:image', content: '/pybadu.png' }
+    ],
+    script: [
+        {
+            src: 'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js',
+            onload: () => checkSkulptLoaded()
+        },
+        {
+            src: 'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js',
+            onload: () => checkSkulptLoaded()
+        }
     ]
 })
 
@@ -351,15 +369,17 @@ turtle.done()
 
 const selectedExample = ref('')
 const isRunning = ref(false)
-const pyodideReady = ref(false)
+const skulptReady = ref(false)
 const output = ref([])
-const turtleCanvas = ref(null)
-const canvasSize = ref({ width: 600, height: 500 })
+let loadedScripts = 0
 
-let pyodideWorker = null
-let messageId = 0
-const pendingMessages = new Map()
-let ctx = null
+function checkSkulptLoaded() {
+    loadedScripts++
+    if (loadedScripts >= 2) {
+        skulptReady.value = true
+        console.log('Skulpt loaded successfully')
+    }
+}
 
 const monacoTheme = computed(() => theme.value === 'dark' ? 'vs-dark' : 'vs-light')
 
@@ -376,64 +396,112 @@ const monacoOptions = computed(() => ({
 }))
 
 const examples = {
-    square: `import turtle
+    fractal_tree: `import turtle
 
 t = turtle.Turtle()
-t.speed(3)
+t.screen.bgcolor('black')
+t.color('green')
+t.left(90)
+t.speed(0)
+t.pensize(2)
 
-# Draw a square
-for i in range(4):
-    t.forward(100)
-    t.right(90)
+def draw_tree(branch_len):
+    if branch_len < 5:
+        return
+    
+    # Draw branch
+    t.forward(branch_len)
+    
+    # Right branch
+    t.left(30)
+    draw_tree(branch_len * 0.7)
+    
+    # Left branch
+    t.right(60)
+    draw_tree(branch_len * 0.7)
+    
+    # Return to base
+    t.left(30)
+    t.backward(branch_len)
+
+t.up()
+t.backward(100)
+t.down()
+draw_tree(100)
+turtle.done()`,
+
+    mandala: `import turtle
+
+t = turtle.Turtle()
+t.speed(0)
+t.screen.bgcolor("black")
+colors = ["red", "purple", "blue", "green", "orange", "yellow"]
+
+for x in range(360):
+    t.pencolor(colors[x % 6])
+    t.width(x // 100 + 1)
+    t.forward(x)
+    t.left(59)
 
 turtle.done()`,
 
-    circle: `import turtle
+    koch_snowflake: `import turtle
 
 t = turtle.Turtle()
-t.speed(3)
+t.speed(0)
+t.penup()
+t.goto(-150, 90)
+t.pendown()
 
-# Draw a circle
-t.circle(80)
+def koch_curve(t, order, size):
+    if order == 0:
+        t.forward(size)
+    else:
+        for angle in [60, -120, 60, 0]:
+            koch_curve(t, order - 1, size / 3)
+            t.left(angle)
+
+for _ in range(3):
+    koch_curve(t, 3, 300)
+    t.right(120)
 
 turtle.done()`,
 
-    spiral: `import turtle
+    spirograph: `import turtle
 
 t = turtle.Turtle()
-t.speed(10)
+t.speed(0)
+t.screen.bgcolor("black")
+t.pensize(2)
 
-# Draw a spiral
-for i in range(100):
-    t.forward(i * 2)
-    t.right(45)
-
-turtle.done()`,
-
-    star: `import turtle
-
-t = turtle.Turtle()
-t.speed(5)
-t.pencolor("gold")
-
-# Draw a star
-for i in range(5):
-    t.forward(150)
-    t.right(144)
-
-turtle.done()`,
-
-    flower: `import turtle
-
-t = turtle.Turtle()
-t.speed(10)
-
-# Draw a flower
 for i in range(36):
-    t.pencolor("red" if i % 2 == 0 else "yellow")
-    t.circle(50)
-    t.right(10)
+    for color in ["red", "magenta", "blue", "cyan", "green", "yellow"]:
+        t.color(color)
+        t.circle(100)
+        t.left(10)
 
+turtle.done()`,
+
+    dragon_curve: `import turtle
+
+def dragon(level, size, direction, t):
+    if level:
+        t.right(direction * 45)
+        dragon(level - 1, size / (2 ** 0.5), 1, t)
+        t.left(direction * 90)
+        dragon(level - 1, size / (2 ** 0.5), -1, t)
+        t.right(direction * 45)
+    else:
+        t.forward(size)
+
+t = turtle.Turtle()
+t.speed(0)
+t.hideturtle()
+t.penup()
+t.goto(-100, 0)
+t.pendown()
+
+dragon(12, 300, 1, t)
 turtle.done()`
 }
 
@@ -452,57 +520,183 @@ function clearCode() {
     code.value = ''
 }
 
+const editorKey = ref(0)
+
 function loadExample() {
     if (selectedExample.value && examples[selectedExample.value]) {
         code.value = examples[selectedExample.value]
+        editorKey.value++
     }
 }
 
 function clearCanvas() {
-    if (ctx) {
-        ctx.fillStyle = 'white'
-        ctx.fillRect(0, 0, canvasSize.value.width, canvasSize.value.height)
+    const canvasDiv = document.getElementById('skulpt-canvas')
+    if (canvasDiv) {
+        canvasDiv.innerHTML = ''
     }
     output.value = []
 }
 
-function initCanvas() {
-    if (turtleCanvas.value) {
-        ctx = turtleCanvas.value.getContext('2d')
-        clearCanvas()
+function downloadCanvas() {
+    const canvasDiv = document.getElementById('skulpt-canvas')
+    const canvas = canvasDiv?.querySelector('canvas')
+    if (canvas) {
+        const link = document.createElement('a')
+        link.download = 'turtle-art.png'
+        link.href = canvas.toDataURL('image/png')
+        link.click()
     }
 }
 
+const colorsysSource = `
+# Source: https://github.com/python/cpython/blob/3.6/Lib/colorsys.py
+"""Conversion functions between RGB and other color systems."""
+
+__all__ = ["rgb_to_yiq","yiq_to_rgb","rgb_to_hls","hls_to_rgb",
+           "rgb_to_hsv","hsv_to_rgb"]
+
+ONE_THIRD = 1.0/3.0
+ONE_SIXTH = 1.0/6.0
+TWO_THIRD = 2.0/3.0
+
+def rgb_to_yiq(r, g, b):
+    y = 0.30*r + 0.59*g + 0.11*b
+    i = 0.60*r - 0.28*g - 0.32*b
+    q = 0.21*r - 0.52*g + 0.31*b
+    return (y, i, q)
+
+def yiq_to_rgb(y, i, q):
+    r = y + 0.948262*i + 0.624013*q
+    g = y - 0.276066*i - 0.639810*q
+    b = y - 1.105450*i + 1.729860*q
+    if r < 0.0: r = 0.0
+    if g < 0.0: g = 0.0
+    if b < 0.0: b = 0.0
+    if r > 1.0: r = 1.0
+    if g > 1.0: g = 1.0
+    if b > 1.0: b = 1.0
+    return (r, g, b)
+
+def rgb_to_hls(r, g, b):
+    maxc = max(r, g, b)
+    minc = min(r, g, b)
+    l = (minc+maxc)/2.0
+    if minc == maxc:
+        return 0.0, l, 0.0
+    s = (maxc-minc) / (2.0-maxc-minc if l < 0.5 else maxc+minc-2.0)
+    rc = (maxc-r) / (maxc-minc)
+    gc = (maxc-g) / (maxc-minc)
+    bc = (maxc-b) / (maxc-minc)
+    if r == maxc:
+        h = bc-gc
+    elif g == maxc:
+        h = 2.0+rc-bc
+    else:
+        h = 4.0+gc-rc
+    h = (h/6.0) % 1.0
+    return h, l, s
+
+def hls_to_rgb(h, l, s):
+    if s == 0.0:
+        return l, l, l
+    if l <= 0.5:
+        m2 = l * (1.0+s)
+    else:
+        m2 = l+s-(l*s)
+    m1 = 2.0*l - m2
+    return (_v(m1, m2, h+ONE_THIRD), _v(m1, m2, h), _v(m1, m2, h-ONE_THIRD))
+
+def _v(m1, m2, hue):
+    hue = hue % 1.0
+    if hue < ONE_SIXTH:
+        return m1 + (m2-m1)*hue*6.0
+    if hue < 0.5:
+        return m2
+    if hue < TWO_THIRD:
+        return m1 + (m2-m1)*(TWO_THIRD-hue)*6.0
+    return m1
+
+def rgb_to_hsv(r, g, b):
+    maxc = max(r, g, b)
+    minc = min(r, g, b)
+    v = maxc
+    if minc == maxc:
+        return 0.0, 0.0, v
+    s = (maxc-minc) / maxc
+    rc = (maxc-r) / (maxc-minc)
+    gc = (maxc-g) / (maxc-minc)
+    bc = (maxc-b) / (maxc-minc)
+    if r == maxc:
+        h = bc-gc
+    elif g == maxc:
+        h = 2.0+rc-bc
+    else:
+        h = 4.0+gc-rc
+    h = (h/6.0) % 1.0
+    return h, s, v
+
+def hsv_to_rgb(h, s, v):
+    if s == 0.0:
+        return v, v, v
+    i = int(h*6.0)
+    f = (h*6.0) - i
+    p = v*(1.0 - s)
+    q = v*(1.0 - s*f)
+    t = v*(1.0 - s*(1.0-f))
+    i = i%6
+    if i == 0: return v, t, p
+    if i == 1: return q, v, p
+    if i == 2: return p, v, t
+    if i == 3: return p, q, v
+    if i == 4: return t, p, v
+    if i == 5: return v, p, q
+`
+
+// Skulpt output function
+function outf(text) {
+    if (text && text !== '\n') {
+        output.value.push({
+            type: 'output',
+            content: text
+        })
+    }
+}
+
+// Skulpt builtin read function
+function builtinRead(x) {
+    if (x === 'src/lib/colorsys.py' || x === 'colorsys.py') {
+        return colorsysSource
+    }
+
+    if (window.Sk.builtinFiles === undefined || window.Sk.builtinFiles["files"][x] === undefined)
+        throw "File not found: '" + x + "'";
+    return window.Sk.builtinFiles["files"][x];
+}
+
 async function runTurtleCode() {
-    if (!code.value.trim() || isRunning.value || !pyodideReady.value) return
+    if (!code.value.trim() || isRunning.value || !skulptReady.value) return
 
     isRunning.value = true
     output.value = []
     clearCanvas()
 
     try {
-        // Note: Turtle graphics in Pyodide is limited
-        // This is a simplified implementation
-        output.value.push({
-            type: 'info',
-            content: 'Note: Turtle graphics support in browser is limited. Basic drawing commands work.'
+        // Configure Skulpt
+        window.Sk.pre = "output"
+        window.Sk.configure({
+            output: outf,
+            read: builtinRead
         })
 
-        const response = await requestResponse(pyodideWorker, {
-            type: 'RUN_PYTHON',
-            data: {
-                code: code.value,
-                packageName: '',
-                additionalPackages: []
-            }
+            // Set Turtle target
+            ; (window.Sk.TurtleGraphics || (window.Sk.TurtleGraphics = {})).target = 'skulpt-canvas'
+
+        // Run the code
+        const promise = window.Sk.misceval.asyncToPromise(function () {
+            return window.Sk.importMainWithBody("<stdin>", false, code.value, true)
         })
 
-        if (response.result?.stdout) {
-            output.value.push({
-                type: 'output',
-                content: response.result.stdout
-            })
-        }
+        await promise
 
         output.value.push({
             type: 'success',
@@ -510,104 +704,27 @@ async function runTurtleCode() {
         })
 
     } catch (error) {
+        console.error('Skulpt error:', error)
         output.value.push({
             type: 'error',
-            content: `Error: ${error.message}`
+            content: error.toString()
         })
     } finally {
         isRunning.value = false
     }
 }
 
-// Worker communication
-function requestResponse(worker, msg) {
-    return new Promise((resolve, reject) => {
-        const id = ++messageId
-
-        const listener = (event) => {
-            if (!event.data?.id || event.data.id !== id) return
-            if (event.data.type === 'PACKAGE_PROGRESS') return
-
-            worker.removeEventListener('message', listener)
-            pendingMessages.delete(id)
-
-            const { id: _, ...rest } = event.data
-
-            if (rest.error) {
-                reject(new Error(rest.error))
-            } else {
-                resolve(rest)
-            }
-        }
-
-        worker.addEventListener('message', listener)
-        pendingMessages.set(id, { resolve, reject, listener })
-
-        worker.postMessage({ id, ...msg })
-    })
-}
-
-async function initializePyodide() {
-    if (typeof Worker === 'undefined') {
-        console.error('Web Workers not supported')
-        return
-    }
-
-    try {
-        let baseURL = ''
-        if (process.client) {
-            const pathParts = window.location.pathname.split('/').filter(p => p)
-            if (pathParts.length > 0 && pathParts[0] === 'pybadu') {
-                baseURL = '/pybadu'
-            }
-        }
-
-        const workerPath = `${baseURL}/workers/pyodide-worker.js`
-        pyodideWorker = new Worker(workerPath, { type: 'module' })
-
-        pyodideWorker.addEventListener('message', (e) => {
-            const { type, id } = e.data
-
-            if (!id) {
-                if (type === 'WORKER_READY' || type === 'PYODIDE_READY') {
-                    console.log('Worker ready:', e.data.message)
-                }
-                return
-            }
-
-            const pending = pendingMessages.get(id)
-            if (pending) {
-                pending.listener(e)
-            }
-        })
-
-        await requestResponse(pyodideWorker, {
-            type: 'INIT_PYODIDE'
-        })
-
-        pyodideReady.value = true
-
-    } catch (error) {
-        console.error('Failed to initialize Pyodide:', error)
-        output.value.push({
-            type: 'error',
-            content: `Failed to initialize: ${error.message}`
-        })
-    }
-}
-
-onMounted(async () => {
+onMounted(() => {
     if (process.client) {
         document.documentElement.classList.add('dark')
     }
-
-    initCanvas()
-    await initializePyodide()
-})
-
-onBeforeUnmount(() => {
-    if (pyodideWorker) {
-        pyodideWorker.terminate()
-    }
 })
 </script>
+
+<style>
+/* Skulpt Canvas Styling */
+#skulpt-canvas canvas {
+    display: block;
+    margin: 0 auto;
+}
+</style>

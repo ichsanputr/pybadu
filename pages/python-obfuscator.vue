@@ -69,10 +69,10 @@
             </header>
 
             <!-- Main Layout -->
-            <div class="flex-1 flex overflow-hidden">
+            <div class="flex-1 flex flex-col lg:flex-row overflow-hidden">
                 <!-- Input Editor -->
-                <section class="w-full lg:w-[40%] h-[calc(100vh-52px)] flex flex-col" :class="[
-                    'border-r',
+                <section class="w-full lg:w-[40%] h-[50vh] lg:h-[calc(100vh-52px)] flex flex-col" :class="[
+                    'border-b lg:border-b-0 lg:border-r',
                     theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
                 ]">
                     <!-- Editor Header -->
@@ -120,7 +120,7 @@
 
                 <!-- Output Editor -->
                 <section :class="[
-                    'w-full lg:w-[35%] h-[calc(100vh-52px)] flex flex-col border-r',
+                    'w-full lg:w-[35%] h-[50vh] lg:h-[calc(100vh-52px)] flex flex-col border-b lg:border-b-0 lg:border-r',
                     theme === 'dark' ? 'bg-gray-900 border-gray-700' : 'bg-gray-50 border-gray-200'
                 ]">
                     <!-- Output Header -->

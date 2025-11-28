@@ -3,14 +3,15 @@ import { ref, computed, onMounted, watch } from 'vue'
 export function useLibraryPlayground(config = {}) {
   const {
     packageName = '',
+    storageKeyPrefix = '', // Optional custom prefix for localStorage key
     defaultCode = '',
     examples = [],
     additionalPackages = [],
     setupCode = ''
   } = config
 
-  // LocalStorage key based on package name
-  const storageKey = `pybadu_${packageName}_files`
+  // LocalStorage key based on storageKeyPrefix (or packageName if not provided)
+  const storageKey = `pybadu_${storageKeyPrefix || packageName}_files`
   
   // Load files from localStorage or use default
   function loadFilesFromStorage() {

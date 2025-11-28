@@ -430,7 +430,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useHead } from '#app'
 import { Icon } from '@iconify/vue'
 import MonacoEditor from '~/components/MonacoEditor.vue'
@@ -833,7 +833,7 @@ result
             const result = await window.pyodide.runPythonAsync(obfuscatorScript)
 
             // Add header
-            const header = `# Obfuscated by Pybadu Python Obfuscator\n# https://pybadu.com/python-obfuscator\n# Advanced AST-based obfuscation\n\n`
+            const header = `# Obfuscated by Pybadu Python Obfuscator\n# https://budibadu.com/pybadu/python-obfuscator\n# Advanced AST-based obfuscation\n\n`
 
             obfuscatedCode.value = header + result
 
@@ -1060,7 +1060,9 @@ async function loadPyodide() {
 }
 
 // Apply dark theme on mount
-if (process.client) {
-    document.documentElement.classList.add('dark')
-}
+onMounted(() => {
+    if (process.client) {
+        document.documentElement.classList.add('dark')
+    }
+})
 </script>

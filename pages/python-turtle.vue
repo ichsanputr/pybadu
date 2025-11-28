@@ -40,7 +40,7 @@
                         <Icon :icon="!skulptReady || isRunning ? 'ph:spinner' : 'ph:play'"
                             :class="['w-4 h-4', !skulptReady || isRunning ? 'animate-spin' : '']" />
                         <span class="hidden sm:inline">{{ !skulptReady ? 'Loading Libs' : isRunning ? 'Running' : 'Run'
-                            }}</span>
+                        }}</span>
                     </button>
 
                     <!-- Clear Canvas -->
@@ -215,27 +215,30 @@
 
                 <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
                     <p class="text-base md:text-lg leading-relaxed">
-                        Welcome to <strong>Python Turtle Graphics Online</strong> – the best place to run <strong>turtle
-                            python online</strong>. An interactive environment for
-                        creating beautiful drawings and animations using Python's <strong>turtle graphics</strong>
-                        module. Perfect for learning
-                        programming, creating art, and exploring computational geometry, all directly in your browser.
+                        Welcome to <strong>Python Turtle Graphics Online</strong> – your premier
+                        <strong>sandbox</strong> for running <strong>python turtle</strong> code.
+                        This interactive <strong>online</strong> tool lets you create stunning <strong>graphics</strong>
+                        and animations without installing any software.
+                        Perfect for learning programming, creating art, and exploring computational geometry, all
+                        directly in your browser.
                     </p>
 
                     <p class="text-base md:text-lg leading-relaxed">
-                        Turtle graphics is a popular way to introduce programming to beginners. It provides a visual,
-                        interactive
-                        way to learn programming concepts like loops, functions, and conditionals. Watch as your Python
-                        code
-                        comes to life on the HTML5 canvas, creating shapes, patterns, and artistic designs.
+                        Turtle graphics is a popular way to introduce programming to beginners. Simply type <code
+                            class="bg-gray-200 dark:bg-gray-700 px-1 rounded">import turtle</code> to get started.
+                        It provides a visual, interactive way to learn programming concepts like loops, functions, and
+                        conditionals.
+                        Watch as your Python code comes to life on the HTML5 canvas, creating shapes, patterns, and
+                        artistic designs.
                     </p>
 
                     <p class="text-base md:text-lg leading-relaxed">
-                        This online turtle graphics editor is powered by <strong>Skulpt</strong>, a Javascript
-                        implementation of Python
-                        that runs entirely in your browser. It provides excellent support for the Turtle module,
-                        allowing for
-                        smooth animations and interactive drawings.
+                        This <strong>online</strong> turtle graphics editor is powered by <strong>Skulpt</strong>, a
+                        Javascript
+                        implementation of Python that runs entirely in your browser. It provides excellent support for
+                        the Turtle module,
+                        allowing for smooth animations and interactive drawings in a safe <strong>sandbox</strong>
+                        environment.
                     </p>
 
                     <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Common Turtle
@@ -326,7 +329,7 @@ definePageMeta({
 })
 
 useHead({
-    title: 'Python Turtle Graphics Online - Interactive Drawing',
+    title: 'Python Turtle Graphics Online',
     meta: [
         { name: 'description', content: 'Create beautiful drawings with Python turtle graphics online. Interactive turtle programming environment with HTML5 canvas. Perfect for learning Python. No installation required.' },
         { name: 'keywords', content: 'python turtle, turtle graphics, python drawing, learn python, turtle online, python canvas, skulpt turtle' },
@@ -339,16 +342,6 @@ useHead({
         { name: 'twitter:title', content: 'Python Turtle Graphics Online' },
         { name: 'twitter:description', content: 'Interactive Python turtle graphics' },
         { name: 'twitter:image', content: '/pybadu.png' }
-    ],
-    script: [
-        {
-            src: 'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js',
-            onload: () => checkSkulptLoaded()
-        },
-        {
-            src: 'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js',
-            onload: () => checkSkulptLoaded()
-        }
     ]
 })
 
@@ -371,14 +364,29 @@ const selectedExample = ref('')
 const isRunning = ref(false)
 const skulptReady = ref(false)
 const output = ref([])
-let loadedScripts = 0
 
-function checkSkulptLoaded() {
-    loadedScripts++
-    if (loadedScripts >= 2) {
+function loadSkulpt() {
+    if (window.Sk && window.Sk.builtinFiles) {
         skulptReady.value = true
-        console.log('Skulpt loaded successfully')
+        console.log('Skulpt already loaded')
+        return
     }
+
+    // Load Skulpt Core
+    const scriptCore = document.createElement('script')
+    scriptCore.src = 'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js'
+    scriptCore.onload = () => {
+        console.log('Skulpt Core loaded')
+        // Load Skulpt Stdlib
+        const scriptStd = document.createElement('script')
+        scriptStd.src = 'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js'
+        scriptStd.onload = () => {
+            console.log('Skulpt Stdlib loaded')
+            skulptReady.value = true
+        }
+        document.head.appendChild(scriptStd)
+    }
+    document.head.appendChild(scriptCore)
 }
 
 const monacoTheme = computed(() => theme.value === 'dark' ? 'vs-dark' : 'vs-light')
@@ -717,6 +725,7 @@ async function runTurtleCode() {
 onMounted(() => {
     if (process.client) {
         document.documentElement.classList.add('dark')
+        loadSkulpt()
     }
 })
 </script>

@@ -86,6 +86,10 @@
                 class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
                 QR Code Generator
               </NuxtLink>
+              <NuxtLink to="/python-barcode" @click="handleSmoothScroll"
+                class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+                Barcode Generator
+              </NuxtLink>
             </div>
           </div>
         </div>

@@ -211,8 +211,13 @@ const defaultLibraries = [
   },
   {
     name: 'QR Code Generator',
-    description: 'Generate QR codes online with Python using Segno library. Create QR codes for URLs, vCards, WiFi, emails, and more. Pure Python implementation perfect for browser-based generation.',
+    description: 'Generate QR codes online with Python using Segno library. Create QR codes for URLs, vCards, WiFi, emails, and more. Pure Python implementation for browser-based generation.',
     path: '/qr-code'
+  },
+  {
+    name: 'Barcode Generator',
+    description: 'Python generate barcode online with python-barcode library. Create EAN-13, Code128, Code39, UPC-A, ISBN barcodes for retail, inventory, and logistics. Pure Python barcode generator.',
+    path: '/python-barcode'
   }
 ]
 

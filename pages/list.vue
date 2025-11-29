@@ -208,6 +208,11 @@ const defaultLibraries = [
     name: 'orjson',
     description: 'Fast, correct JSON library for Python. High-performance JSON serialization and deserialization with native support for dataclasses, datetime, and numpy arrays.',
     path: '/orjson'
+  },
+  {
+    name: 'QR Code Generator',
+    description: 'Generate QR codes online with Python using Segno library. Create QR codes for URLs, vCards, WiFi, emails, and more. Pure Python implementation perfect for browser-based generation.',
+    path: '/qr-code'
   }
 ]
 

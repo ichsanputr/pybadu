@@ -82,6 +82,10 @@
                 class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
                 Turtle Online
               </NuxtLink>
+              <NuxtLink to="/qr-code" @click="handleSmoothScroll"
+                class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+                QR Code Generator
+              </NuxtLink>
             </div>
           </div>
         </div>

@@ -489,7 +489,11 @@ export function useLibraryPlayground(config = {}) {
   }
 
   async function downloadAsset(fileName) {
-    if (!globalPyodideWorker) return
+    console.log('downloadAsset called with:', fileName)
+    if (!globalPyodideWorker) {
+      console.error('No worker available')
+      return
+    }
     
     try {
       // Request file content from worker

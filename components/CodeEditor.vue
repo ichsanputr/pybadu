@@ -1177,6 +1177,7 @@ const emit = defineEmits([
   'saveToStorage',
   'uploadAssets',
   'deleteAsset',
+  'downloadAsset',
   'refreshAssets',
   'createAssetFolder'
 ])
@@ -1387,6 +1388,7 @@ function selectAssetFile(name) {
 }
 
 function downloadAssetFile(name) {
+  console.log('Download clicked for:', name)
   emit('downloadAsset', name)
 }
 

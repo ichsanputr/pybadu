@@ -8,7 +8,7 @@
                 @update:code="updateCurrentFile" @toggleTheme="toggleTheme" @runCode="runCode" @clearCode="clearCode"
                 @clearOutput="clearOutput" @loadExample="loadExample" @newFile="createNewFile" @selectFile="selectFile"
                 @deleteFile="deleteFile" @renameFile="renameFile" @saveToStorage="saveToStorage"
-                @uploadAssets="uploadAssets" @deleteAsset="deleteAsset" @refreshAssets="refreshAssets"
+                @uploadAssets="uploadAssets" @deleteAsset="deleteAsset" @downloadAsset="downloadAsset" @refreshAssets="refreshAssets"
                 @createAssetFolder="createAssetFolder" />
 
         </div>

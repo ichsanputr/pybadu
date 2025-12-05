@@ -26,7 +26,7 @@
         @renameFile="renameFile"
         @saveToStorage="saveToStorage"
         @uploadAssets="uploadAssets"
-        @deleteAsset="deleteAsset"
+        @deleteAsset="deleteAsset" @downloadAsset="downloadAsset"
         @refreshAssets="refreshAssets"
         @createAssetFolder="createAssetFolder"
       />

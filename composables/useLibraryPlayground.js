@@ -497,19 +497,25 @@ export function useLibraryPlayground(config = {}) {
     
     try {
       // Request file content from worker
+      console.log('Requesting file from worker:', fileName)
       const response = await requestResponse(globalPyodideWorker, {
         type: 'DOWNLOAD_ASSET',
         data: {
           fileName
         }
       })
+      
+      console.log('Worker response:', response)
 
       if (!response.fileData) {
         throw new Error('No file data received')
       }
+      
+      console.log('File data length:', response.fileData.length)
 
       // Convert Uint8Array back to Blob
       const blob = new Blob([new Uint8Array(response.fileData)], { type: 'application/octet-stream' })
+      console.log('Blob created, size:', blob.size)
       
       // Create download link
       const url = URL.createObjectURL(blob)
@@ -518,6 +524,7 @@ export function useLibraryPlayground(config = {}) {
       a.download = fileName.split('/').pop() // Get just the filename without path
       document.body.appendChild(a)
       a.click()
+      console.log('Download triggered for:', a.download)
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
     } catch (error) {

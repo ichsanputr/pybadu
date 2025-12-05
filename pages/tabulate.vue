@@ -236,6 +236,8 @@ const {
   refreshAssets,
   uploadAssets,
   deleteAsset,
+  
+  downloadAsset,
   createAssetFolder
 } = useLibraryPlayground({
   packageName: 'tabulate',

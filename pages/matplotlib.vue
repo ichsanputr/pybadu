@@ -2,33 +2,13 @@
   <div>
     <!-- Editor Area -->
     <div class="sm:min-h-screen">
-      <CodeEditor 
-        libraryName="Matplotlib"
-        :theme="theme" 
-        :files="files"
-        :activeFileId="activeFileId"
-        :code="currentFileContent"
-        :output="output" 
-        :isLoading="isLoading" 
-        :pyodideReady="pyodideReady"
-        :monacoTheme="monacoTheme"
-        :examples="examples"
-        :assets="assets"
-        :assetsUploading="assetsUploading"
-        @update:code="updateCurrentFile"
-        @toggleTheme="toggleTheme"
-        @runCode="runCode" 
-        @clearCode="clearCode"
-        @clearOutput="clearOutput"
-        @loadExample="loadExample"
-        @newFile="createNewFile"
-        @selectFile="selectFile"
-        @deleteFile="deleteFile"
-        @renameFile="renameFile"
-        @saveToStorage="saveToStorage"
-        @uploadAssets="uploadAssets"
-        @deleteAsset="deleteAsset" @downloadAsset="downloadAsset"
-        @refreshAssets="refreshAssets"
+      <CodeEditor libraryName="Matplotlib" :theme="theme" :files="files" :activeFileId="activeFileId"
+        :code="currentFileContent" :output="output" :isLoading="isLoading" :pyodideReady="pyodideReady"
+        :monacoTheme="monacoTheme" :examples="examples" :assets="assets" :assetsUploading="assetsUploading"
+        @update:code="updateCurrentFile" @toggleTheme="toggleTheme" @runCode="runCode" @clearCode="clearCode"
+        @clearOutput="clearOutput" @loadExample="loadExample" @newFile="createNewFile" @selectFile="selectFile"
+        @deleteFile="deleteFile" @renameFile="renameFile" @saveToStorage="saveToStorage" @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset" @downloadAsset="downloadAsset" @refreshAssets="refreshAssets"
         @createAssetFolder="createAssetFolder" />
 
     </div>
@@ -40,32 +20,41 @@
         <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
           Online Matplotlib Compiler
         </h1>
-        
+
         <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
           <p class="text-base md:text-lg leading-relaxed">
-            Matplotlib is Python's most comprehensive library for creating static, animated, and interactive visualizations. 
-            As the foundation of Python's data visualization ecosystem, Matplotlib has been the go-to choice for scientists, 
-            engineers, and data analysts worldwide for over two decades. Our dedicated online Matplotlib compiler provides a 
-            complete browser-based environment where you can experiment with data visualization techniques without any 
+            Matplotlib is Python's most comprehensive library for creating static, animated, and interactive
+            visualizations.
+            As the foundation of Python's data visualization ecosystem, Matplotlib has been the go-to choice for
+            scientists,
+            engineers, and data analysts worldwide for over two decades. Our dedicated online Matplotlib compiler
+            provides a
+            complete browser-based environment where you can experiment with data visualization techniques without any
             installation or setup required.
           </p>
-          
+
           <p class="text-base md:text-lg leading-relaxed">
-            This compiler comes pre-configured with <strong>Matplotlib 3.x</strong> and <strong>NumPy</strong>, powered by 
-            Pyodide WebAssembly technology that brings the full power of Python directly to your browser. You can create 
-            publication-quality figures, complex multi-subplot layouts, and 3D visualizations instantly. The online compiler 
-            supports all major Matplotlib features including line plots, scatter plots, bar charts, histograms, pie charts, 
-            3D surface plots, contour plots, heatmaps, and statistical visualizations. You have full control over every 
-            aspect of your plots—from colors and labels to custom styling and annotations. Additionally, you can upload 
-            and use files or folders directly in your code for data processing and visualization workflows. This compiler 
+            This compiler comes pre-configured with <strong>Matplotlib 3.x</strong> and <strong>NumPy</strong>, powered
+            by
+            Pyodide WebAssembly technology that brings the full power of Python directly to your browser. You can create
+            publication-quality figures, complex multi-subplot layouts, and 3D visualizations instantly. The online
+            compiler
+            supports all major Matplotlib features including line plots, scatter plots, bar charts, histograms, pie
+            charts,
+            3D surface plots, contour plots, heatmaps, and statistical visualizations. You have full control over every
+            aspect of your plots—from colors and labels to custom styling and annotations. Additionally, you can upload
+            and use files or folders directly in your code for data processing and visualization workflows. This
+            compiler
             is online and completely free to use.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
-            The multi-file project support allows you to organize complex visualizations across multiple Python files, making 
-            it perfect for both simple examples and sophisticated data analysis projects. Whether you're learning data 
-            visualization, prototyping charts for presentations, or teaching Python data science, our platform offers a 
-            seamless coding experience with instant feedback and real-time preview capabilities. With our example gallery 
+            The multi-file project support allows you to organize complex visualizations across multiple Python files,
+            making
+            it perfect for both simple examples and sophisticated data analysis projects. Whether you're learning data
+            visualization, prototyping charts for presentations, or teaching Python data science, our platform offers a
+            seamless coding experience with instant feedback and real-time preview capabilities. With our example
+            gallery
             featuring 6+ pre-built examples, you can quickly learn different plot types and visualization techniques.
           </p>
 
@@ -339,6 +328,7 @@ const {
   refreshAssets,
   uploadAssets,
   deleteAsset,
+  downloadAsset,
   createAssetFolder
 } = useLibraryPlayground({
   packageName: 'matplotlib',

@@ -190,6 +190,8 @@ const {
   refreshAssets,
   uploadAssets,
   deleteAsset,
+  
+  downloadAsset,
   createAssetFolder,
   initializePyodide,
   cleanupWorker

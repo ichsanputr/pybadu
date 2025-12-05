@@ -409,15 +409,20 @@ for fig in figs:
       case 'DOWNLOAD_ASSET':
         await initPyodide()
         const { fileName: downloadFileName } = data
+        console.log('[Worker] Download request for:', downloadFileName)
         try {
           const filePath = `/assets/${downloadFileName}`
+          console.log('[Worker] Reading file from:', filePath)
           const fileData = pyodide.FS.readFile(filePath)
+          console.log('[Worker] File data length:', fileData.length)
           self.postMessage({
             type: 'ASSET_DOWNLOADED',
             id,
             fileData: Array.from(fileData) // Convert Uint8Array to regular array for postMessage
           })
+          console.log('[Worker] File data sent to main thread')
         } catch (error) {
+          console.error('[Worker] Error reading file:', error)
           self.postMessage({
             type: 'ERROR',
             id,

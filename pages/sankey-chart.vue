@@ -425,6 +425,8 @@ const {
     refreshAssets,
     uploadAssets,
     deleteAsset,
+    
+    downloadAsset,
     createAssetFolder
 } = useLibraryPlayground({
     packageName: 'matplotlib', // Use matplotlib package (sankey is part of it)

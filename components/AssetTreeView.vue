@@ -2,19 +2,9 @@
   <div class="asset-tree-view">
     <div class="space-y-1">
       <!-- Root items directly -->
-      <AssetTreeItem
-        v-for="item in rootItems"
-        :key="item.name"
-        :item="item"
-        :path="item.name"
-        :level="0"
-        :theme="theme"
-        :selected-asset="selectedAsset"
-        :expanded-paths="expandedPaths"
-        :assets="assets"
-        @toggle="toggleExpanded"
-        @delete="$emit('delete', $event)"
-        @select="$emit('select', $event)" />
+      <AssetTreeItem v-for="item in rootItems" :key="item.name" :item="item" :path="item.name" :level="0" :theme="theme"
+        :selected-asset="selectedAsset" :expanded-paths="expandedPaths" :assets="assets" @toggle="toggleExpanded"
+        @delete="$emit('delete', $event)" @download="$emit('download', $event)" @select="$emit('select', $event)" />
     </div>
 
     <!-- Empty state -->
@@ -22,16 +12,20 @@
     <div v-if="!assets.length" class="lg:hidden text-center p-4 my-5 rounded-lg">
       <div class="flex flex-col items-center justify-center space-y-2">
         <Icon icon="ph:folder" :class="['w-8 h-8', theme === 'dark' ? 'text-gray-500' : 'text-gray-400']" />
-        <div :class="['text-sm font-medium', theme === 'dark' ? 'text-gray-400' : 'text-gray-600']">No assets uploaded yet</div>
-        <div :class="['text-xs', theme === 'dark' ? 'text-gray-500' : 'text-gray-500']">Upload files to get started</div>
+        <div :class="['text-sm font-medium', theme === 'dark' ? 'text-gray-400' : 'text-gray-600']">No assets uploaded
+          yet</div>
+        <div :class="['text-xs', theme === 'dark' ? 'text-gray-500' : 'text-gray-500']">Upload files to get started
+        </div>
       </div>
     </div>
 
     <!-- Desktop version (dotted border) -->
     <div v-if="!assets.length" class="hidden lg:block text-center p-3 my-5 rounded-lg border-2 border-dashed"
       :class="theme === 'dark' ? 'border-gray-600 bg-gray-800/20' : 'border-gray-300 bg-gray-50/50'">
-      <div :class="['text-xs font-medium', theme === 'dark' ? 'text-gray-400' : 'text-gray-600']">No assets uploaded yet</div>
-      <div :class="['text-xs mt-1', theme === 'dark' ? 'text-gray-500' : 'text-gray-500']">Upload files to get started</div>
+      <div :class="['text-xs font-medium', theme === 'dark' ? 'text-gray-400' : 'text-gray-600']">No assets uploaded yet
+      </div>
+      <div :class="['text-xs mt-1', theme === 'dark' ? 'text-gray-500' : 'text-gray-500']">Upload files to get started
+      </div>
     </div>
   </div>
 </template>
@@ -56,7 +50,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['delete', 'select'])
+const emit = defineEmits(['delete', 'select', 'download'])
 
 const expandedPaths = ref(new Set()) // Start with no paths expanded
 
@@ -72,20 +66,20 @@ function toggleExpanded(path) {
 const groupedItems = computed(() => {
   const groups = {}
   if (!props.assets || !Array.isArray(props.assets)) return groups
-  
+
   // Initialize root group
   groups[''] = []
-  
+
   props.assets.forEach(item => {
     // For each asset, add it to its parent group
     const parts = item.name.split('/')
     const parentPath = parts.length > 1 ? parts.slice(0, -1).join('/') : ''
     const itemName = parts[parts.length - 1]
-    
+
     if (!groups[parentPath]) {
       groups[parentPath] = []
     }
-    
+
     // Only add if not already present
     const existing = groups[parentPath].find(x => x.name === itemName)
     if (!existing) {
@@ -97,7 +91,7 @@ const groupedItems = computed(() => {
       })
     }
   })
-  
+
   return groups
 })
 

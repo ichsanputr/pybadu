@@ -362,7 +362,7 @@
 
               <!-- Asset Items Tree View -->
               <AssetTreeView :assets="props.assets" :theme="theme" :selected-asset="selectedAsset"
-                @delete="deleteAssetFile" @select="selectAssetFile" />
+                @delete="deleteAssetFile" @download="downloadAssetFile" @select="selectAssetFile" />
             </div>
 
             <!-- Examples Section -->
@@ -540,7 +540,7 @@
                   <!-- Regular text output -->
                   <pre v-else class="whitespace-pre-wrap font-mono text-xs leading-relaxed">{{ item.content }}</pre>
                   <span class="absolute top-[0px] right-1 text-xs opacity-60 px-2 pb-1 rounded">{{ item.timestamp
-                  }}</span>
+                    }}</span>
                 </div>
               </div>
             </TransitionGroup>
@@ -618,7 +618,7 @@
           </div>
 
           <!-- Assets Content -->
-          <div class="overflow-y-auto p-2 flex flex-col justify-center" style="max-height: 300px; min-height: 300px;">
+          <div class="overflow-y-auto p-2 flex flex-col" style="max-height: 300px; min-height: 300px;">
             <!-- Upload status -->
             <div v-if="assetsUploading" :class="[
               'flex items-center space-x-2 p-3 rounded-lg mb-3 text-sm',
@@ -630,11 +630,54 @@
 
             <!-- Asset Tree -->
             <AssetTreeView :assets="assetItems" :theme="theme" :selected-asset="selectedAsset" @select="selectAssetFile"
-              @delete="deleteAssetFile" @toggle="emit('refreshAssets')" />
+              @delete="deleteAssetFile" @download="downloadAssetFile" @toggle="emit('refreshAssets')" />
           </div>
 
           <!-- Hidden file input -->
           <input ref="assetFileInput" type="file" multiple class="hidden" @change="handleAssetUpload" />
+        </section>
+
+        <!-- Mobile Examples Panel (below assets on mobile only) -->
+        <section :class="[
+          'lg:hidden border-t',
+          'w-full',
+          theme === 'dark' ? 'border-gray-700' : 'border-gray-200 bg-gray-50'
+        ]">
+          <!-- Examples Header -->
+          <div :class="[
+            'flex items-center justify-between px-4 py-2 border-b text-sm flex-shrink-0',
+            theme === 'dark'
+              ? 'bg-gray-800/50 border-gray-700 text-gray-400'
+              : 'bg-gray-50 border-gray-200 text-gray-600'
+          ]">
+            <div class="flex items-center space-x-2">
+              <Icon icon="ph:code-simple" class="w-4 h-4" />
+              <span>Examples</span>
+              <div v-if="examples.length > 0" :class="[
+                'px-1.5 py-0.5 rounded text-xs',
+                theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'
+              ]">
+                {{ examples.length }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Examples Content -->
+          <div class="overflow-y-auto p-2" style="max-height: 300px; min-height: 200px;">
+            <div class="space-y-1">
+              <button v-for="(example, index) in examples" :key="index" @click="$emit('loadExample', example)" :class="[
+                'w-full text-left p-3 rounded-md text-sm transition-colors',
+                theme === 'dark'
+                  ? 'text-gray-300 hover:bg-gray-700 bg-gray-800'
+                  : 'text-gray-700 hover:bg-gray-100 bg-white'
+              ]">
+                <div class="flex items-center space-x-2">
+                  <Icon icon="ph:code-simple" class="w-4 h-4 flex-shrink-0" />
+                  <span class="truncate">{{ example.title }}</span>
+                </div>
+              </button>
+            </div>
+          </div>
         </section>
 
         <!-- Ads Panel -->
@@ -647,7 +690,7 @@
           <div class="flex-1 overflow-y-auto p-2 lg:p-4 space-y-4">
             <ClientOnly>
               <!-- Responsive Ad 2 -->
-              <div class="flex justify-center w-full">
+              <div class="flex justify-center w-full h-full">
                 <Adsense key="right-ad-1" client="ca-pub-1356911639243870" ad-slot="3430238458" style="display:block"
                   format="auto" responsive="true" />
               </div>
@@ -1341,6 +1384,10 @@ function selectAssetFile(name) {
   } else {
     selectedAsset.value = name
   }
+}
+
+function downloadAssetFile(name) {
+  emit('downloadAsset', name)
 }
 
 function createAssetFolderPrompt() {

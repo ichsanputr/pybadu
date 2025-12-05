@@ -3,21 +3,20 @@
     <div :class="[
       'flex items-center space-x-2 py-1 px-2 rounded cursor-pointer group',
       'hover:bg-gray-100 dark:hover:bg-gray-700',
-      isSelected 
+      isSelected
         ? (theme === 'dark' ? 'bg-blue-900/30 border border-blue-600' : 'bg-blue-100 border border-blue-500')
         : ''
     ]" :style="{ paddingLeft: `${level * 16 + 8}px` }">
       <!-- File/Folder icon -->
-      <Icon :icon="getItemIcon(item)"
-            :class="['w-4 h-4 flex-shrink-0', 
-              item.isDir 
-                ? (theme === 'dark' ? 'text-yellow-400' : 'text-yellow-600')
-                : (theme === 'dark' ? 'text-gray-300' : 'text-gray-700')
-            ]" />
+      <Icon :icon="getItemIcon(item)" :class="['w-4 h-4 flex-shrink-0',
+        item.isDir
+          ? (theme === 'dark' ? 'text-yellow-400' : 'text-yellow-600')
+          : (theme === 'dark' ? 'text-gray-300' : 'text-gray-700')
+      ]" />
 
       <!-- Name -->
       <span :class="['text-sm flex-1 truncate', theme === 'dark' ? 'text-gray-200' : 'text-gray-800']"
-            @click="selectItem">
+        @click="selectItem">
         {{ item.name }}
       </span>
 
@@ -26,38 +25,34 @@
         {{ formatBytes(item.size) }}
       </span>
 
+      <!-- Download button (only for files, not folders) -->
+      <button v-if="!item.isDir" @click.stop="$emit('download', item.fullPath)" class="p-1 rounded transition-all
+                     hover:bg-blue-100 dark:hover:bg-blue-500/20
+                     text-blue-600 dark:text-blue-300" :title="'Download ' + item.name">
+        <Icon icon="ph:download" class="w-3 h-3" />
+      </button>
+
       <!-- Delete button (always visible, beside size) -->
-      <button @click.stop="$emit('delete', item.fullPath)"
-              class="p-1 rounded transition-all
+      <button @click.stop="$emit('delete', item.fullPath)" class="p-1 rounded transition-all
                      hover:bg-red-100 dark:hover:bg-red-500/20
-                     text-red-600 dark:text-red-300"
-              :title="'Delete ' + item.name">
+                     text-red-600 dark:text-red-300" :title="'Delete ' + item.name">
         <Icon icon="ph:trash" class="w-3 h-3" />
       </button>
 
       <!-- Expand/collapse icon for directories (moved to the right) -->
       <button v-if="item.isDir" @click.stop="toggleExpanded(fullPath)"
-              class="flex-shrink-0 w-4 h-4 flex items-center justify-center ml-1">
+        class="flex-shrink-0 w-4 h-4 flex items-center justify-center ml-1">
         <Icon :icon="isExpanded ? 'ph:caret-down' : 'ph:caret-right'"
-              :class="['w-3 h-3', theme === 'dark' ? 'text-gray-400' : 'text-gray-600']" />
+          :class="['w-3 h-3', theme === 'dark' ? 'text-gray-400' : 'text-gray-600']" />
       </button>
     </div>
 
     <!-- Children for directories -->
     <div v-if="item.isDir && isExpanded" class="space-y-1">
-      <AssetTreeItem
-        v-for="child in children"
-        :key="child.name"
-        :item="child"
-        :path="fullPath + '/' + child.name"
-        :level="level + 1"
-        :theme="theme"
-        :selected-asset="selectedAsset"
-        :expanded-paths="expandedPaths"
-        :assets="assets"
-        @toggle="$emit('toggle', $event)"
-        @delete="$emit('delete', $event)"
-        @select="$emit('select', $event)" />
+      <AssetTreeItem v-for="child in children" :key="child.name" :item="child" :path="fullPath + '/' + child.name"
+        :level="level + 1" :theme="theme" :selected-asset="selectedAsset" :expanded-paths="expandedPaths"
+        :assets="assets" @toggle="$emit('toggle', $event)" @delete="$emit('delete', $event)"
+        @download="$emit('download', $event)" @select="$emit('select', $event)" />
     </div>
   </div>
 </template>
@@ -97,7 +92,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['toggle', 'delete', 'select'])
+const emit = defineEmits(['toggle', 'delete', 'select', 'download'])
 
 const fullPath = computed(() => props.path)
 
@@ -112,7 +107,7 @@ function toggleExpanded(path) {
 function selectItem() {
   // Emit select event
   emit('select', props.item.fullPath)
-  
+
   // If it's a directory, also expand it
   if (props.item.isDir) {
     emit('toggle', fullPath.value)
@@ -124,24 +119,24 @@ const children = computed(() => {
   if (!props.item.isDir || !props.assets || !Array.isArray(props.assets)) return []
 
   const parentPath = props.item.fullPath
-  
+
   // Find all assets that are direct children of this directory
   return props.assets
     .filter(asset => {
       // Asset should start with parent path + '/'
       const expectedPrefix = parentPath ? `${parentPath}/` : ''
       if (!asset.name.startsWith(expectedPrefix)) return false
-      
+
       // Remove the prefix to get relative path
       const relativePath = asset.name.substring(expectedPrefix.length)
-      
+
       // Should not contain further slashes (direct children only)
       return !relativePath.includes('/')
     })
     .map(asset => {
       const expectedPrefix = parentPath ? `${parentPath}/` : ''
       const relativePath = asset.name.substring(expectedPrefix.length)
-      
+
       return {
         name: relativePath,
         isDir: asset.isDir,

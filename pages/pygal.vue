@@ -8,8 +8,8 @@
                 @update:code="updateCurrentFile" @toggleTheme="toggleTheme" @runCode="runCode" @clearCode="clearCode"
                 @clearOutput="clearOutput" @loadExample="loadExample" @newFile="createNewFile" @selectFile="selectFile"
                 @deleteFile="deleteFile" @renameFile="renameFile" @saveToStorage="saveToStorage"
-                @uploadAssets="uploadAssets" @deleteAsset="deleteAsset" @refreshAssets="refreshAssets"
-                @createAssetFolder="createAssetFolder" />
+                @uploadAssets="uploadAssets" @deleteAsset="deleteAsset" @downloadAsset="downloadAsset"
+                @refreshAssets="refreshAssets" @createAssetFolder="createAssetFolder" />
 
         </div>
 
@@ -246,6 +246,7 @@ const {
     refreshAssets,
     uploadAssets,
     deleteAsset,
+    downloadAsset,
     createAssetFolder
 } = useLibraryPlayground({
     packageName: 'pygal',

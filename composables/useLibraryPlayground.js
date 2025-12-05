@@ -364,6 +364,9 @@ export function useLibraryPlayground(config = {}) {
       // Now display all collected output items
       output.value.push(...outputItems)
       
+      // Refresh assets to detect any files created/modified by Python code
+      await refreshAssets()
+      
     } catch (error) {
       console.error('Error running Python code:', error)
       
@@ -485,6 +488,45 @@ export function useLibraryPlayground(config = {}) {
     }
   }
 
+  async function downloadAsset(fileName) {
+    if (!globalPyodideWorker) return
+    
+    try {
+      // Request file content from worker
+      const response = await requestResponse(globalPyodideWorker, {
+        type: 'DOWNLOAD_ASSET',
+        data: {
+          fileName
+        }
+      })
+
+      if (!response.fileData) {
+        throw new Error('No file data received')
+      }
+
+      // Convert Uint8Array back to Blob
+      const blob = new Blob([new Uint8Array(response.fileData)], { type: 'application/octet-stream' })
+      
+      // Create download link
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = fileName.split('/').pop() // Get just the filename without path
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error('Error downloading asset:', error)
+      // Show error to user
+      output.value.push({
+        type: 'error',
+        content: `Failed to download ${fileName}: ${error.message}`,
+        timestamp: new Date().toLocaleTimeString()
+      })
+    }
+  }
+
   async function initializePyodide() {
     if (process.client) {
       try {
@@ -593,6 +635,7 @@ export function useLibraryPlayground(config = {}) {
     refreshAssets,
     uploadAssets,
     deleteAsset,
+    downloadAsset,
     createAssetFolder
   }
 }

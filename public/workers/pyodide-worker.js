@@ -406,6 +406,26 @@ for fig in figs:
         })
         break
 
+      case 'DOWNLOAD_ASSET':
+        await initPyodide()
+        const { fileName: downloadFileName } = data
+        try {
+          const filePath = `/assets/${downloadFileName}`
+          const fileData = pyodide.FS.readFile(filePath)
+          self.postMessage({
+            type: 'ASSET_DOWNLOADED',
+            id,
+            fileData: Array.from(fileData) // Convert Uint8Array to regular array for postMessage
+          })
+        } catch (error) {
+          self.postMessage({
+            type: 'ERROR',
+            id,
+            error: `Failed to read file: ${error.message}`
+          })
+        }
+        break
+
       default:
         self.postMessage({
           type: 'ERROR',

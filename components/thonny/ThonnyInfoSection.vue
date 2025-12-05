@@ -1,5 +1,5 @@
 <template>
-    <section class="py-16 px-4 bg-white bg-[#FFFDF6]" style="border-top: 10px solid #FAF1E6;">
+    <section class="py-16 px-4" style="border-top: 10px solid #FAF1E6; background-color: #FFFDF6;">
         <div class="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
             <!-- Left Side Ad -->
             <div class="hidden lg:block lg:col-span-2">

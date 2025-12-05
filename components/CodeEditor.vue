@@ -648,7 +648,7 @@
             <ClientOnly>
               <!-- Responsive Ad 2 -->
               <div class="flex justify-center w-full">
-                <Adsense key="right-ad-2" client="ca-pub-1356911639243870" ad-slot="4242301831" style="display:block"
+                <Adsense key="right-ad-1" client="ca-pub-1356911639243870" ad-slot="3430238458" style="display:block"
                   format="auto" responsive="true" />
               </div>
             </ClientOnly>

@@ -1,25 +1,11 @@
 <template>
   <!-- Square format - no format, layout, or responsive attributes -->
-  <ins
-    v-if="isBudibadu && kind === 'square'"
-    ref="adRef"
-    class="adsbygoogle"
-    :style="computedStyle"
-    :data-ad-client="client"
-    :data-ad-slot="adSlot"
-  ></ins>
+  <ins v-if="isBudibadu && kind === 'square'" ref="adRef" class="adsbygoogle" :style="computedStyle"
+    :data-ad-client="client" :data-ad-slot="adSlot"></ins>
   <!-- Auto/Default format - with all attributes -->
-  <ins
-    v-else-if="isBudibadu"
-    ref="adRef"
-    class="adsbygoogle"
-    :style="style"
-    :data-ad-client="client"
-    :data-ad-slot="adSlot"
-    :data-ad-format="format"
-    :data-ad-layout="adLayout"
-    :data-full-width-responsive="responsive"
-  ></ins>
+  <ins v-else-if="isBudibadu" ref="adRef" class="adsbygoogle" :style="style" :data-ad-client="client"
+    :data-ad-slot="adSlot" :data-ad-format="format" :data-ad-layout="adLayout"
+    :data-full-width-responsive="responsive"></ins>
 </template>
 
 <script setup>
@@ -34,7 +20,8 @@ const props = defineProps({
   adLayout: { type: String, default: null },
   responsive: { type: String, default: 'true' },
   style: { type: [String, Object], default: null },
-  kind: { type: String, default: 'auto' } // 'auto' or 'square'
+  kind: { type: String, default: 'auto' }, // 'auto' or 'square'
+  label: { type: String, default: 'unknown' }
 })
 
 const adRef = ref(null)
@@ -84,23 +71,21 @@ onMounted(async () => {
   if (!el) return
 
   const width = await waitForWidth(el)
-  console.log('📏 Final AdSense width before push:', width)
+  console.log(`📏 [${props.label}] Final AdSense width before push:`, width)
 
   if (width === 0) {
-    console.warn('⚠️ Skipping AdSense push — element width is still 0')
+    console.warn(`⚠️ [${props.label}] Skipping AdSense push — element width is still 0`)
     return
   }
 
   try {
     (window.adsbygoogle = window.adsbygoogle || []).push({})
     pushed = true
-    console.log('✅ AdSense ad rendered successfully')
+    console.log(`✅ [${props.label}] AdSense ad rendered successfully`)
   } catch (err) {
-    console.warn('AdSense push error:', err)
+    console.warn(`[${props.label}] AdSense push error:`, err)
   }
 })
 </script>
 
-<style scoped>
-</style>
-
+<style scoped></style>

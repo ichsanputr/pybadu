@@ -691,8 +691,8 @@
             <ClientOnly>
               <!-- Responsive Ad 2 -->
               <div class="flex justify-center w-full h-full">
-                <Adsense key="right-ad-1" client="ca-pub-1356911639243870" ad-slot="3430238458" style="display:block"
-                  format="auto" responsive="true" />
+                <Adsense key="right-ad-1" label="right-ad" client="ca-pub-1356911639243870" ad-slot="3430238458"
+                  style="display:block" format="auto" responsive="true" />
               </div>
             </ClientOnly>
           </div>
@@ -704,8 +704,8 @@
     <!-- Bottom Ad (Above Compiler Title) -->
     <div class="w-full max-w-7xl mx-auto px-4 py-6">
       <ClientOnly>
-        <Adsense key="bottom-ad" client="ca-pub-1356911639243870" ad-slot="3430238458" style="display:block"
-          format="auto" responsive="true" />
+        <Adsense key="bottom-ad" label="bottom-ad" client="ca-pub-1356911639243870" ad-slot="3430238458"
+          style="display:block" format="auto" responsive="true" />
       </ClientOnly>
     </div>
 

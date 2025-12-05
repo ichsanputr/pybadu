@@ -106,10 +106,33 @@ definePageMeta({
 })
 
 useHead({
-    title: 'Online Thonny IDE - Try on Browser',
+    title: 'Online Thonny IDE - Python Editor for Beginners',
+    htmlAttrs: {
+        lang: 'en'
+    },
     meta: [
-        { name: 'description', content: 'Try Thonny IDE online in your browser! A beginner-friendly Python IDE with variable inspector, interactive shell, and step-by-step execution. No installation required.' },
-        { name: 'keywords', content: 'thonny online, python ide online, learn python, python for beginners, online python editor, thonny browser' }
+        { name: 'description', content: 'Experience Thonny IDE online directly in your browser. A perfect Python editor for beginners with built-in variable inspector, shell, and zero installation.' },
+        { name: 'keywords', content: 'thonny online, python ide online, python compiler online, learn python, python for beginners, educational python ide, pyodide python, web python' },
+        { name: 'robots', content: 'index, follow' },
+        { name: 'author', content: 'Budibadu' },
+
+        // Open Graph / Facebook
+        { property: 'og:type', content: 'website' },
+        { property: 'og:site_name', content: 'Budibadu' },
+        { property: 'og:url', content: 'https://budibadu.com/thonny-ide-online' },
+        { property: 'og:title', content: 'Online Thonny IDE - Python Editor for Beginners' },
+        { property: 'og:description', content: 'Start coding Python instantly with Thonny Online. Features include variable inspection, AST visualization, and package management - all in your browser.' },
+        { property: 'og:image', content: 'https://budibadu.com/images/og/thonny-online.png' },
+
+        // Twitter
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:url', content: 'https://budibadu.com/thonny-ide-online' },
+        { name: 'twitter:title', content: 'Online Thonny IDE - Run Python in Browser' },
+        { name: 'twitter:description', content: 'No installation needed. Run Python code, inspect variables, and visualize execution with Thonny Online.' },
+        { name: 'twitter:image', content: 'https://budibadu.com/images/og/thonny-online.png' },
+    ],
+    link: [
+        { rel: 'canonical', href: 'https://budibadu.com/thonny-ide-online' }
     ]
 })
 

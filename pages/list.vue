@@ -239,6 +239,11 @@ const additionalLibraries = [
     path: '/beautifulsoup4'
   },
   {
+    name: 'Xarray',
+    description: 'Work with labeled multi-dimensional arrays. Simple, efficient, and fun manipulation of N-dimensional arrays with dimensions, coordinates, and attributes.',
+    path: '/xarray'
+  },
+  {
     name: 'lxml',
     description: 'Process XML and HTML with high performance. Parse documents, use XPath queries, XSLT transformations, and ElementTree API for comprehensive markup processing.',
     path: '/lxml'

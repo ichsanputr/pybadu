@@ -540,7 +540,7 @@
                   <!-- Regular text output -->
                   <pre v-else class="whitespace-pre-wrap font-mono text-xs leading-relaxed">{{ item.content }}</pre>
                   <span class="absolute top-[0px] right-1 text-xs opacity-60 px-2 pb-1 rounded">{{ item.timestamp
-                    }}</span>
+                  }}</span>
                 </div>
               </div>
             </TransitionGroup>
@@ -646,12 +646,6 @@
           <!-- Ads Content -->
           <div class="flex-1 overflow-y-auto p-2 lg:p-4 space-y-4">
             <ClientOnly>
-              <!-- Square Ad 1 -->
-              <div class="flex justify-center">
-                <Adsense key="right-ad-1" client="ca-pub-1356911639243870" ad-slot="1250318747" kind="square"
-                  :style="{ display: 'inline-block', width: '300px', height: '300px' }" />
-              </div>
-
               <!-- Responsive Ad 2 -->
               <div class="flex justify-center w-full">
                 <Adsense key="right-ad-2" client="ca-pub-1356911639243870" ad-slot="4242301831" style="display:block"

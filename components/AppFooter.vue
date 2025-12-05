@@ -110,6 +110,10 @@
               class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               BeautifulSoup4
             </NuxtLink>
+            <NuxtLink to="/xarray" @click="handleSmoothScroll"
+              class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              Xarray
+            </NuxtLink>
             <NuxtLink to="/pyjokes" @click="handleSmoothScroll"
               class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               Pyjokes

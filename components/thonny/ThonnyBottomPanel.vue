@@ -52,17 +52,6 @@
                 </button>
             </div>
 
-            <!-- Actions -->
-            <div class="flex items-center space-x-2 px-2">
-                <button v-if="activeTab === 'shell'" @click="$emit('clear-output')"
-                    :class="['text-xs px-2 py-0.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700', theme === 'light' ? 'text-gray-600' : 'text-gray-400']">
-                    Clear
-                </button>
-                <button @click="$emit('close')"
-                    :class="['text-xs p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700', theme === 'light' ? 'text-gray-600' : 'text-gray-400']">
-                    <Icon icon="ph:x" class="w-4 h-4" />
-                </button>
-            </div>
         </div>
 
         <!-- Content Area -->

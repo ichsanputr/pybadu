@@ -30,7 +30,7 @@
 
             <!-- Main Content: 2-row layout with CSS Grid -->
             <div class="flex-1 grid" :style="{
-                gridTemplateRows: `${editorHeight}% 6px ${100 - editorHeight}%`
+                gridTemplateRows: isBottomPanelVisible ? `${editorHeight}% 6px ${100 - editorHeight}%` : '100% 0px 0px'
             }">
                 <!-- Top Row: Editor + Variables -->
                 <div class="flex overflow-hidden border-b"
@@ -44,14 +44,15 @@
                 </div>
 
                 <!-- Resize Handle -->
-                <div :class="['cursor-row-resize flex items-center justify-center group', theme === 'light' ? 'bg-gray-300 hover:bg-blue-400' : 'bg-gray-700 hover:bg-blue-500']"
+                <div v-show="isBottomPanelVisible"
+                    :class="['cursor-row-resize flex items-center justify-center group', theme === 'light' ? 'bg-gray-300 hover:bg-blue-400' : 'bg-gray-700 hover:bg-blue-500']"
                     @mousedown="startResize">
                     <div class="w-12 h-0.5 rounded-full bg-gray-500 group-hover:bg-white transition-colors"></div>
                 </div>
 
                 <!-- Bottom Row: Bottom Panel (Shell & Exception & Program Tree) -->
                 <div class="overflow-hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700"
-                    v-show="showShell || showException || showProgramTree || showTodo">
+                    v-show="isBottomPanelVisible">
                     <ThonnyBottomPanel ref="thonnyBottomPanel" :theme="theme" :output="output" :isExecuting="isLoading"
                         :show-shell="showShell" :show-exception="showException" :show-program-tree="showProgramTree"
                         :show-todo="showTodo" :todo-items="todoItems" :ast-data="astData" @clear-output="clearOutput"
@@ -270,7 +271,10 @@ print(f"{temp_c}°C is equal to {temp_f}°F")
     }
 ])
 
+
 // Computed
+const isBottomPanelVisible = computed(() => showShell.value || showException.value || showProgramTree.value || showTodo.value)
+
 const currentFile = computed(() => files.value.find(f => f.id === activeFileId.value))
 const currentFileContent = computed({
     get: () => currentFile.value?.content || '',
@@ -295,6 +299,9 @@ function startResize(e) {
         if (!container) return
 
         const containerRect = container.getBoundingClientRect()
+        // If bottom panel is hidden, we shouldn't be resizing, but just in case
+        if (!isBottomPanelVisible.value) return
+
         const newHeight = ((moveEvent.clientY - containerRect.top) / containerRect.height) * 100
         editorHeight.value = Math.min(Math.max(newHeight, 20), 80)
     }

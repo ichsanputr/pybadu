@@ -1,68 +1,254 @@
 <template>
-    <section class="py-16 px-4 bg-gray-50">
-        <div class="max-w-6xl mx-auto">
-            <!-- Title -->
-            <div class="text-center mb-12">
-                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-                    {{ title }}
-                </h1>
+    <section class="py-16 px-4 bg-white bg-[#FFFDF6]" style="border-top: 10px solid #FAF1E6;">
+        <div class="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Left Side Ad -->
+            <div class="hidden lg:block lg:col-span-2">
+                <div class="sticky top-8 flex justify-center">
+                    <ClientOnly>
+                        <Adsense client="ca-pub-1356911639243870" ad-slot="3430238458" format="vertical"
+                            style="display:block; width: 100%;" />
+                    </ClientOnly>
+                </div>
             </div>
 
-            <!-- Description paragraphs -->
-            <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700">
-                <p v-for="(paragraph, index) in paragraphs" :key="index" class="text-base md:text-lg leading-relaxed"
-                    v-html="paragraph">
-                </p>
+            <!-- Main Content -->
+            <div class="lg:col-span-8">
+                <article class="max-w-3xl mx-auto prose prose-lg prose-blue text-gray-700">
+                    <!-- Header -->
+                    <div class="text-left mb-12 not-prose border-b pb-8">
+                        <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 tracking-tight">
+                            {{ title }}
+                        </h1>
+                        <p class="text-xl text-gray-500 leading-relaxed">
+                            Experience the simplicity of Python programming directly in your browser.
+                            Thonny Online brings the beloved educational IDE to the web, powered by WebAssembly.
+                        </p>
+                    </div>
 
-                <!-- Features section -->
-                <div v-if="featuresTitle && features.length > 0">
-                    <h3 class="text-xl md:text-2xl font-bold text-gray-900 mt-8 mb-4">{{ featuresTitle }}</h3>
-                    <ul class="list-disc list-inside space-y-2 text-base md:text-lg ml-4">
-                        <li v-for="(feature, index) in features" :key="index">{{ feature }}</li>
-                    </ul>
+                    <!-- Intro -->
+                    <h2>What is Thonny Online?</h2>
+                    <p>
+                        <strong>Thonny Online</strong> is a web-based adaptation of the popular Thonny IDE, designed
+                        specifically for beginners and educators. Unlike traditional cloud-based IDEs that run code
+                        on remote servers, Thonny Online uses <strong>Pyodide</strong> technology to run a full
+                        Python interpreter directly inside your web browser.
+                    </p>
+                    <p>
+                        This approach means you get a responsive, private coding environment with zero setup. It's
+                        perfect for quickly testing snippets, learning Python syntax, or teaching a class without
+                        worrying about installation permissions or internet latency.
+                    </p>
+
+                    <!-- Features List -->
+                    <h2>Key Features</h2>
+                    <div class="not-prose grid grid-cols-1 sm:grid-cols-2 gap-6 my-8">
+                        <div v-for="(card, index) in featureCards" :key="index" class="flex flex-col">
+                            <div class="flex items-center mb-2 text-gray-900 font-bold">
+                                <Icon :icon="card.icon" class="w-5 h-5 text-blue-600 mr-2" />
+                                {{ card.title }}
+                            </div>
+                            <p class="text-sm text-gray-600 leading-relaxed">{{ card.description }}</p>
+                        </div>
+                    </div>
+
+                    <!-- How to Use -->
+                    <h2>How to Use Thonny Online</h2>
+                    <p>Getting started is immediate. Here are the core workflows:</p>
+
+                    <div class="not-prose space-y-6 my-8 border-l-2 border-blue-100 pl-6">
+                        <div>
+                            <h4 class="font-bold text-gray-900 flex items-center mb-1">
+                                <Icon icon="ph:play-circle" class="w-5 h-5 text-blue-600 mr-2" />
+                                Running Code
+                            </h4>
+                            <p class="text-gray-600 text-base">
+                                Type your Python code in the main editor. Press <kbd
+                                    class="bg-gray-100 border rounded px-1 text-xs">F5</kbd> or click the
+                                <strong>Run</strong>
+                                button to execute.
+                            </p>
+                        </div>
+
+                        <div>
+                            <h4 class="font-bold text-gray-900 flex items-center mb-1">
+                                <Icon icon="ph:files" class="w-5 h-5 text-blue-600 mr-2" />
+                                Managing Files
+                            </h4>
+                            <p class="text-gray-600 text-base">
+                                Use the tabs above the editor to switch between files. Files are auto-saved to your
+                                browser.
+                            </p>
+                        </div>
+
+                        <div>
+                            <h4 class="font-bold text-gray-900 flex items-center mb-1">
+                                <Icon icon="ph:terminal" class="w-5 h-5 text-blue-600 mr-2" />
+                                Using the Shell
+                            </h4>
+                            <p class="text-gray-600 text-base">
+                                The bottom panel contains an interactive Python shell (REPL) for instant command
+                                execution.
+                            </p>
+                        </div>
+
+                        <div>
+                            <h4 class="font-bold text-gray-900 flex items-center mb-1">
+                                <Icon icon="ph:sidebar" class="w-5 h-5 text-blue-600 mr-2" />
+                                Panels
+                            </h4>
+                            <p class="text-gray-600 text-base">
+                                Toggle <strong>Variables</strong>, <strong>Program Tree</strong>, and
+                                <strong>TODO</strong>
+                                panels via the View menu.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Comparison -->
+                    <h2>Online vs. Desktop</h2>
+                    <p>
+                        While Thonny Online strives to replicate the desktop experience, running in a browser
+                        environment comes
+                        with specific architectural differences.
+                    </p>
+
+                    <div class="not-prose overflow-hidden rounded-lg border border-gray-200 my-8">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Feature</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Desktop Thonny</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">
+                                        Thonny Online</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr v-for="(row, idx) in comparisonRows" :key="idx">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{
+                                        row.feature }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ row.desktop }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 font-medium">{{
+                                        row.online }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </article>
+            </div>
+
+            <!-- Right Side Ad -->
+            <div class="hidden lg:block lg:col-span-2">
+                <div class="sticky top-8 flex justify-center">
+                    <ClientOnly>
+                        <Adsense client="ca-pub-1356911639243870" ad-slot="3430238458" format="vertical"
+                            style="display:block; width: 100%;" />
+                    </ClientOnly>
                 </div>
-
-                <!-- Custom slot for additional content -->
-                <slot></slot>
             </div>
         </div>
     </section>
 </template>
 
 <script setup>
+import { Icon } from '@iconify/vue'
+import Adsense from '~/components/Adsense.vue'
+
 defineProps({
     title: {
         type: String,
         default: 'Online Thonny IDE - Try on Browser'
-    },
-    paragraphs: {
-        type: Array,
-        default: () => [
-            'Thonny is a beginner-friendly Python IDE designed specifically for learning programming. Our online version brings the simplicity and power of Thonny directly to your browser, requiring no installation or setup. With its clean interface and helpful features like variable inspection and step-by-step execution visualization, Thonny Online makes learning Python easier and more intuitive than ever before.',
-            'This online IDE comes with <strong>Python 3.11</strong> powered by Pyodide WebAssembly technology, providing a complete Python environment that runs entirely in your browser. The interface features a two-panel layout with the code editor on top and an interactive shell below, just like the desktop Thonny application. You can write, run, and debug Python code while watching variables update in real-time in the Variables panel.',
-            'Whether you\'re taking your first steps in programming or teaching Python to others, Thonny Online provides a distraction-free environment focused on learning fundamentals. The variable inspector helps you understand how your code affects data, while the interactive shell lets you experiment with Python commands instantly.'
-        ]
-    },
-    featuresTitle: {
-        type: String,
-        default: 'Perfect For'
-    },
-    features: {
-        type: Array,
-        default: () => [
-            'Students learning Python programming for the first time',
-            'Teachers conducting interactive Python coding lessons',
-            'Beginners practicing basic programming concepts and syntax',
-            'Anyone wanting a simple, distraction-free Python environment',
-            'Quick Python experiments and code testing without installation'
-        ]
     }
 })
+
+const featureCards = [
+    {
+        title: 'Zero Installation',
+        description: 'Start coding instantly. No Python installation, environment setup, or configuration required. Just open the URL and code.',
+        icon: 'ph:rocket-launch'
+    },
+    {
+        title: 'Interactive Shell',
+        description: 'Experiment with code snippets and inspect values in real-time using the built-in Python REPL shell.',
+        icon: 'ph:terminal-window'
+    },
+    {
+        title: 'Variable Inspector',
+        description: 'Visualize your program\'s state. See variable names and values update automatically as your code executes.',
+        icon: 'ph:list-magnifying-glass'
+    },
+    {
+        title: 'Browser-Based Privacy',
+        description: 'Your code runs locally in your browser using WebAssembly. No code is sent to a remote server, ensuring privacy.',
+        icon: 'ph:shield-check'
+    },
+    {
+        title: 'Program Tree (AST)',
+        description: 'View the abstract syntax tree of your code to better understand how the Python interpreter parses your syntax.',
+        icon: 'ph:tree-structure'
+    },
+    {
+        title: 'Package Management',
+        description: 'Install and use pure Python packages from PyPI using Micropip, extending the capabilities of the editor.',
+        icon: 'ph:package'
+    }
+]
+
+const comparisonRows = [
+    {
+        feature: 'Execution Engine',
+        desktop: 'Native OS Process',
+        online: 'Browser (WebAssembly)'
+    },
+    {
+        feature: 'File System',
+        desktop: 'Full Disk Access',
+        online: 'Virtual / LocalStorage'
+    },
+    {
+        feature: 'Network Access',
+        desktop: 'Unrestricted',
+        online: 'Restricted (CORS)'
+    },
+    {
+        feature: 'Step Debugger',
+        desktop: 'Full Stepping',
+        online: 'Limited / AST View'
+    },
+    {
+        feature: 'External C Modules',
+        desktop: 'Supported',
+        online: 'Pre-compiled only'
+    }
+]
 </script>
 
 <style scoped>
 /* Light theme specific styles for info section */
 section {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h2 {
+    @apply text-2xl md:text-3xl font-bold text-gray-900 mt-12 mb-6;
+}
+
+h3 {
+    @apply text-xl md:text-2xl font-bold text-gray-900 mt-8 mb-4;
+}
+
+h4 {
+    @apply text-lg font-semibold text-gray-800 mb-2;
+}
+
+p {
+    @apply text-base md:text-lg leading-relaxed text-gray-600 mb-6;
 }
 </style>

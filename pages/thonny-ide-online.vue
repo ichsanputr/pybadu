@@ -64,6 +64,10 @@
 
         <!-- Toast Notifications -->
         <Toast :toasts="toasts" @remove="removeToast" />
+
+        <!-- Save As Dialog -->
+        <InputDialog :is-open="saveDialog.isOpen" title="Save As" message="Enter a filename for your script:"
+            placeholder="script.py" default-value="script.py" @submit="handleSaveSubmit" @cancel="handleSaveCancel" />
     </div>
 </template>
 
@@ -77,6 +81,8 @@ import ThonnyEditor from '~/components/thonny/ThonnyEditor.vue'
 import ThonnyShell from '~/components/thonny/ThonnyShell.vue'
 import ThonnyVariables from '~/components/thonny/ThonnyVariables.vue'
 import Toast from '~/components/ui/Toast.vue'
+// Import InputDialog specifically for Save As
+import InputDialog from '~/components/ui/InputDialog.vue'
 import ThonnyInfoSection from '~/components/thonny/ThonnyInfoSection.vue'
 import AppFooter from '~/components/AppFooter.vue'
 import { useThonnyPyodide } from '~/composables/useThonnyPyodide'
@@ -120,6 +126,12 @@ const activeMenu = ref(null)
 const showVariables = ref(true)
 const editorHeight = ref(65)
 let toastId = 0
+
+// Dialog State
+const saveDialog = ref({
+    isOpen: false,
+    resolve: null
+})
 
 // Menu items
 const menuItems = computed(() => [
@@ -363,15 +375,58 @@ function deleteFile(fileId) {
     }
 }
 
-function saveFile() {
+async function saveFile() {
+    if (!currentFile.value) return
+
+    // If file is untitled, ask for a name
+    if (currentFile.value.name.startsWith('<untitled')) {
+        try {
+            const newName = await new Promise((resolve) => {
+                saveDialog.value = {
+                    isOpen: true,
+                    resolve
+                }
+            })
+
+            if (newName) {
+                // Check if user added extension
+                currentFile.value.name = newName.endsWith('.py') ? newName : `${newName}.py`
+            } else {
+                return // User cancelled
+            }
+        } finally {
+            saveDialog.value.isOpen = false
+            saveDialog.value.resolve = null
+        }
+    }
+
     localStorage.setItem('thonny-files', JSON.stringify(files.value))
     showToast('File saved', 'success')
 }
 
-function runCurrentFile() {
+function handleSaveSubmit(value) {
+    if (saveDialog.value.resolve) {
+        saveDialog.value.resolve(value)
+    }
+}
+
+function handleSaveCancel() {
+    if (saveDialog.value.resolve) {
+        saveDialog.value.resolve(null)
+    }
+}
+
+async function runCurrentFile() {
     if (!currentFile.value) return
+    if (isLoading.value) return
+
+    // Artificial delay for UI feedback
+    isLoading.value = true
+    await new Promise(resolve => setTimeout(resolve, 500))
+    isLoading.value = false
+
     addOutput(`%Run ${currentFile.value.name}`, 'system')
-    runScript(currentFileContent.value)
+    await runScript(currentFileContent.value)
 }
 
 function handleShellCommand(command) {

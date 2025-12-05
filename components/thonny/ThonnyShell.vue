@@ -16,10 +16,11 @@
         <!-- Shell Content -->
         <div
             :class="['flex-1 overflow-y-auto p-3 font-mono text-sm', theme === 'light' ? 'bg-white text-gray-800' : 'bg-gray-900 text-gray-200']">
-            <div v-if="output.length === 0"
-                :class="['text-center py-8', theme === 'light' ? 'text-gray-400' : 'text-gray-600']">
-                <p class="text-sm">Python 3.11.3</p>
-                <p class="text-xs mt-1">&gt;&gt;&gt; </p>
+            <div v-if="output.length === 0" class="h-full flex items-center justify-center">
+                <div :class="['text-center', theme === 'light' ? 'text-gray-400' : 'text-gray-600']">
+                    <p class="text-sm">Python 3.11.3</p>
+                    <p class="text-xs mt-1">&gt;&gt;&gt; </p>
+                </div>
             </div>
             <div v-for="(item, index) in output" :key="index"
                 :class="['mb-1 whitespace-pre-wrap', item.type === 'error' ? 'text-red-600 dark:text-red-400' : theme === 'light' ? 'text-gray-800' : 'text-gray-200']">

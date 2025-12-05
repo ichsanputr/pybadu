@@ -1,7 +1,8 @@
 <template>
     <div class="flex-1 flex flex-col min-h-0">
-        <MonacoEditor :modelValue="code" @update:modelValue="$emit('update:code', $event)" language="python"
-            :theme="theme === 'light' ? 'vs' : 'vs-dark'" :options="editorOptions" class="h-full w-full" />
+        <MonacoEditor height="100%" :modelValue="code" @update:modelValue="$emit('update:code', $event)"
+            language="python" :theme="theme === 'light' ? 'vs' : 'vs-dark'" :options="editorOptions"
+            class="h-full w-full" />
     </div>
 </template>
 

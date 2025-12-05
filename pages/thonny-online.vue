@@ -1,56 +1,56 @@
 <template>
     <div>
         <!-- Thonny IDE Area (Full Screen Height) -->
-        <div class="h-screen overflow-hidden">
-            <div :class="['h-full flex flex-col', theme === 'light' ? 'bg-gray-100' : 'bg-gray-900']"
-                style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+        <div :class="['min-h-screen flex flex-col', theme === 'light' ? 'bg-gray-100' : 'bg-gray-900']"
+            style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
 
-                <!-- Menu Bar -->
-                <ThonnyMenuBar :theme="theme" :activeMenu="activeMenu" :menuItems="menuItems" @toggle-menu="toggleMenu"
-                    @menu-action="handleMenuItem" />
+            <!-- Menu Bar -->
+            <ThonnyMenuBar :theme="theme" :activeMenu="activeMenu" :menuItems="menuItems" @toggle-menu="toggleMenu"
+                @menu-action="handleMenuItem" />
 
-                <!-- Toolbar -->
-                <ThonnyToolbar :theme="theme" :pyodideReady="pyodideReady" :isLoading="isLoading"
-                    @new-file="createNewFile" @save-file="saveFile" @run-code="runCurrentFile"
-                    @stop-execution="stopExecution" @toggle-variables="showVariables = !showVariables" />
+            <!-- Toolbar -->
+            <ThonnyToolbar :theme="theme" :pyodideReady="pyodideReady" :isLoading="isLoading" @new-file="createNewFile"
+                @save-file="saveFile" @run-code="runCurrentFile" @stop-execution="stopExecution"
+                @toggle-variables="showVariables = !showVariables" />
 
-                <!-- File tabs -->
-                <div
-                    :class="['flex items-center px-2 border-b flex-shrink-0', theme === 'light' ? 'bg-white border-gray-300' : 'bg-gray-800 border-gray-700']">
-                    <div v-for="file in files" :key="file.id" :class="['flex items-center space-x-2 px-3 py-1.5 border-r cursor-pointer text-sm',
-                        activeFileId === file.id
-                            ? theme === 'light' ? 'bg-gray-50 border-gray-300' : 'bg-gray-700 border-gray-600'
-                            : theme === 'light' ? 'bg-gray-100 border-gray-200 hover:bg-gray-50' : 'bg-gray-800 border-gray-700 hover:bg-gray-700',
-                        theme === 'light' ? 'text-gray-800' : 'text-gray-200']" @click="selectFile(file.id)">
-                        <span>{{ file.name }}</span>
-                        <button v-if="files.length > 1" @click.stop="deleteFile(file.id)" class="hover:text-red-600">
-                            <Icon icon="ph:x" class="w-3 h-3" />
-                        </button>
-                    </div>
+            <!-- File tabs -->
+            <div
+                :class="['flex items-center px-2 border-b flex-shrink-0', theme === 'light' ? 'bg-white border-gray-300' : 'bg-gray-800 border-gray-700']">
+                <div v-for="file in files" :key="file.id" :class="['flex items-center space-x-2 px-3 py-1.5 border-r cursor-pointer text-sm',
+                    activeFileId === file.id
+                        ? theme === 'light' ? 'bg-gray-50 border-gray-300' : 'bg-gray-700 border-gray-600'
+                        : theme === 'light' ? 'bg-gray-100 border-gray-200 hover:bg-gray-50' : 'bg-gray-800 border-gray-700 hover:bg-gray-700',
+                    theme === 'light' ? 'text-gray-800' : 'text-gray-200']" @click="selectFile(file.id)">
+                    <span>{{ file.name }}</span>
+                    <button v-if="files.length > 1" @click.stop="deleteFile(file.id)" class="hover:text-red-600">
+                        <Icon icon="ph:x" class="w-3 h-3" />
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Content: 2-row layout with CSS Grid -->
+            <div class="flex-1 grid" :style="{
+                gridTemplateRows: `${editorHeight}% 6px ${100 - editorHeight}%`
+            }">
+                <!-- Top Row: Editor + Variables -->
+                <div class="flex overflow-hidden border-b"
+                    :class="theme === 'light' ? 'border-gray-300' : 'border-gray-700'">
+                    <!-- Code Editor -->
+                    <ThonnyEditor v-model:code="currentFileContent" :theme="theme" />
+
+                    <!-- Variables Panel -->
+                    <ThonnyVariables v-if="showVariables" :theme="theme" :variables="variables" />
                 </div>
 
-                <!-- Main Content: 2-row layout -->
-                <div class="flex-1 flex flex-col overflow-hidden min-h-0">
-                    <!-- Top Row: Editor + Variables -->
-                    <div :style="{ height: `${editorHeight}%` }" class="flex border-b min-h-0"
-                        :class="theme === 'light' ? 'border-gray-300' : 'border-gray-700'">
-                        <!-- Code Editor -->
-                        <ThonnyEditor v-model:code="currentFileContent" :theme="theme" />
+                <!-- Resize Handle -->
+                <div :class="['cursor-row-resize flex items-center justify-center group', theme === 'light' ? 'bg-gray-300 hover:bg-blue-400' : 'bg-gray-700 hover:bg-blue-500']"
+                    @mousedown="startResize">
+                    <div class="w-12 h-0.5 rounded-full bg-gray-500 group-hover:bg-white transition-colors"></div>
+                </div>
 
-                        <!-- Variables Panel -->
-                        <ThonnyVariables v-if="showVariables" :theme="theme" :variables="variables" />
-                    </div>
-
-                    <!-- Resize Handle -->
-                    <div :class="['h-1.5 cursor-row-resize flex items-center justify-center group flex-shrink-0', theme === 'light' ? 'bg-gray-300 hover:bg-blue-400' : 'bg-gray-700 hover:bg-blue-500']"
-                        @mousedown="startResize">
-                        <div class="w-12 h-0.5 rounded-full bg-gray-500 group-hover:bg-white transition-colors"></div>
-                    </div>
-
-                    <!-- Bottom Row: Shell -->
-                    <div :style="{ height: `${100 - editorHeight}%` }" class="min-h-0">
-                        <ThonnyShell :theme="theme" :output="output" @clear-output="clearOutput" />
-                    </div>
+                <!-- Bottom Row: Shell -->
+                <div class="overflow-hidden">
+                    <ThonnyShell :theme="theme" :output="output" @clear-output="clearOutput" />
                 </div>
             </div>
         </div>
@@ -59,7 +59,7 @@
         <LibraryInfoSection>
             <div class="text-center mb-12">
                 <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-                    Thonny Online - Python IDE for Beginners
+                    Online Thonny IDE - Try on Browser
                 </h1>
 
                 <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
@@ -129,10 +129,10 @@ definePageMeta({
 })
 
 useHead({
-    title: 'Thonny Online - Python IDE for Beginners',
+    title: 'Online Thonny IDE - Try on Browser',
     meta: [
-        { name: 'description', content: 'Learn Python with Thonny Online - a beginner-friendly Python IDE that runs in your browser.' },
-        { name: 'keywords', content: 'thonny, python ide, learn python, python for beginners, online python editor' }
+        { name: 'description', content: 'Try Thonny IDE online in your browser! A beginner-friendly Python IDE with variable inspector, interactive shell, and step-by-step execution. No installation required.' },
+        { name: 'keywords', content: 'thonny online, python ide online, learn python, python for beginners, online python editor, thonny browser' }
     ]
 })
 
@@ -215,6 +215,8 @@ const menuItems = computed(() => [
     {
         name: 'Tools',
         items: [
+            { name: 'Manage packages...', action: 'managePackages' },
+            { name: '---' },
             { name: 'Clear shell', action: 'clearOutput' }
         ]
     },
@@ -268,7 +270,7 @@ function startResize(e) {
     const handleMouseMove = (moveEvent) => {
         if (!isResizing) return
 
-        const container = document.querySelector('.flex-1.flex.flex-col.overflow-hidden.min-h-0')
+        const container = document.querySelector('.flex-1.grid')
         if (!container) return
 
         const containerRect = container.getBoundingClientRect()
@@ -374,8 +376,11 @@ function handleMenuItem(action) {
         case 'clearOutput':
             clearOutput()
             break
+        case 'managePackages':
+            showToast('Package Manager - Coming soon! Will allow installing Python packages via pip.', 'info')
+            break
         case 'about':
-            showToast('Thonny Online - Python IDE for Beginners', 'info')
+            showToast('Online Thonny IDE - Try on Browser', 'info')
             break
     }
 }

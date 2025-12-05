@@ -49,10 +49,12 @@
                     <div class="w-12 h-0.5 rounded-full bg-gray-500 group-hover:bg-white transition-colors"></div>
                 </div>
 
-                <!-- Bottom Row: Shell -->
-                <div class="overflow-hidden">
-                    <ThonnyShell ref="thonnyShell" :theme="theme" :output="output" :isExecuting="isLoading"
-                        @clear-output="clearOutput" @execute-command="handleShellCommand" />
+                <!-- Bottom Row: Bottom Panel (Shell & Exception) -->
+                <div class="overflow-hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700"
+                    v-show="showShell || showException">
+                    <ThonnyBottomPanel ref="thonnyBottomPanel" :theme="theme" :output="output" :isExecuting="isLoading"
+                        :show-shell="showShell" :show-exception="showException" @clear-output="clearOutput"
+                        @execute-command="handleShellCommand" @close="closeBottomPanel" @close-tab="handleCloseTab" />
                 </div>
             </div>
         </div>
@@ -84,7 +86,7 @@ import { Icon } from '@iconify/vue'
 import ThonnyMenuBar from '~/components/thonny/ThonnyMenuBar.vue'
 import ThonnyToolbar from '~/components/thonny/ThonnyToolbar.vue'
 import ThonnyEditor from '~/components/thonny/ThonnyEditor.vue'
-import ThonnyShell from '~/components/thonny/ThonnyShell.vue'
+import ThonnyBottomPanel from '~/components/thonny/ThonnyBottomPanel.vue'
 import ThonnyVariables from '~/components/thonny/ThonnyVariables.vue'
 import Toast from '~/components/ui/Toast.vue'
 import InputDialog from '~/components/ui/InputDialog.vue'
@@ -143,10 +145,12 @@ const saveDialog = ref({
     resolve: null
 })
 const showPackageManager = ref(false)
+const showShell = ref(true)
+const showException = ref(false)
 
 // DOM Refs
 const thonnyEditor = ref(null)
-const thonnyShell = ref(null)
+const thonnyBottomPanel = ref(null)
 
 // Menu items
 const menuItems = computed(() => [
@@ -172,13 +176,13 @@ const menuItems = computed(() => [
         name: 'View',
         items: [
             { name: 'Assistant', action: 'toggleAssistant', checked: false },
-            { name: 'Exception', action: 'toggleException', checked: false },
+            { name: 'Exception', action: 'toggleException', checked: showException.value },
             { name: 'Files', action: 'toggleFiles', checked: false },
             { name: 'Notes', action: 'toggleNotes', checked: false },
             { name: 'Object inspector', action: 'toggleObjectInspector', checked: false },
             { name: 'Outline', action: 'toggleOutline', checked: false },
             { name: 'Program tree', action: 'toggleProgramTree', checked: false },
-            { name: 'Shell', action: 'toggleShell', checked: true },
+            { name: 'Shell', action: 'toggleShell', checked: showShell.value },
             { name: 'TODO', action: 'toggleTodo', checked: false },
             { name: 'Variables', action: 'toggleVariables', checked: showVariables.value },
             { name: '---' },
@@ -275,6 +279,11 @@ function startResize(e) {
     document.addEventListener('mouseup', handleMouseUp)
 }
 
+function handleCloseTab(tabName) {
+    if (tabName === 'shell') showShell.value = false
+    if (tabName === 'exception') showException.value = false
+}
+
 // Menu functions
 function toggleMenu(menuName) {
     activeMenu.value = activeMenu.value === menuName ? null : menuName
@@ -303,7 +312,11 @@ function handleMenuItem(action) {
             showToast('Assistant panel - Coming soon! Will provide helpful hints for errors.', 'info')
             break
         case 'toggleException':
-            showToast('Exception panel - Coming soon! Will show detailed exception information.', 'info')
+            showException.value = !showException.value
+            if (showException.value) {
+                // Ensure tab is switched (nextTick because watcher in child needs prop update)
+                setTimeout(() => thonnyBottomPanel.value?.openTab('exception'), 0)
+            }
             break
         case 'toggleFiles':
             showToast('Files panel - Coming soon! Will show file browser.', 'info')
@@ -321,7 +334,10 @@ function handleMenuItem(action) {
             showToast('Program tree - Coming soon! Will show program execution tree.', 'info')
             break
         case 'toggleShell':
-            showToast('Shell is always visible in Thonny Online', 'info')
+            showShell.value = !showShell.value
+            if (showShell.value) {
+                setTimeout(() => thonnyBottomPanel.value?.openTab('shell'), 0)
+            }
             break
         case 'toggleTodo':
             showToast('TODO panel - Coming soon! Will track TODO comments.', 'info')
@@ -342,7 +358,10 @@ function handleMenuItem(action) {
             thonnyEditor.value?.focus()
             break
         case 'focusShell':
-            thonnyShell.value?.focusInput()
+            showShell.value = true
+            // If exception was also open, we might need to switch tab explicitly.
+            // But ThonnyBottomPanel's focusInput handles tab switching.
+            setTimeout(() => thonnyBottomPanel.value?.focusInput(), 0)
             break
         // Run menu
         case 'runCode':
@@ -512,6 +531,11 @@ function removeToast(id) {
     if (index > -1) {
         toasts.value.splice(index, 1)
     }
+}
+
+function closeBottomPanel() {
+    showShell.value = false
+    showException.value = false
 }
 
 // Lifecycle

@@ -1,6 +1,6 @@
 <template>
     <div
-        :class="['w-80 border-l flex flex-col h-full', theme === 'light' ? 'bg-white border-gray-300' : 'bg-gray-800 border-gray-700']">
+        :class="['w-80 border-l flex flex-col h-full flex-shrink-0', theme === 'light' ? 'bg-white border-gray-300' : 'bg-gray-800 border-gray-700']">
         <div
             :class="['px-3 py-1.5 border-b text-sm font-medium flex-shrink-0', theme === 'light' ? 'bg-gray-50 border-gray-300 text-gray-700' : 'bg-gray-800 border-gray-700 text-gray-300']">
             Variables

@@ -1,5 +1,5 @@
 <template>
-    <div class="flex-1 flex flex-col min-h-0">
+    <div class="flex-1 flex flex-col min-h-0 min-w-0">
         <MonacoEditor ref="monacoEditorRef" height="100%" :modelValue="code"
             @update:modelValue="$emit('update:code', $event)" language="python"
             :theme="theme === 'light' ? 'vs' : 'vs-dark'" :options="editorOptions" class="h-full w-full" />

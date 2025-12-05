@@ -36,7 +36,7 @@
                 <div class="flex overflow-hidden border-b"
                     :class="theme === 'light' ? 'border-gray-300' : 'border-gray-700'">
                     <!-- Code Editor -->
-                    <ThonnyEditor v-model:code="currentFileContent" :theme="theme" />
+                    <ThonnyEditor v-model:code="currentFileContent" :theme="theme" :fontSize="editorFontSize" />
 
                     <!-- Variables Panel -->
                     <ThonnyVariables v-if="showVariables" :theme="theme" :variables="variables" />
@@ -131,6 +131,7 @@ const toasts = ref([])
 const activeMenu = ref(null)
 const showVariables = ref(true)
 const editorHeight = ref(65)
+const editorFontSize = ref(15)
 let toastId = 0
 
 // Dialog State
@@ -325,10 +326,12 @@ function handleMenuItem(action) {
             showToast('Plotter - Coming soon! Will plot data visualizations.', 'info')
             break
         case 'increaseFontSize':
-            showToast('Font size increased', 'success')
+            editorFontSize.value = Math.min(editorFontSize.value + 1, 72)
+            showToast(`Font size increased to ${editorFontSize.value}`, 'success')
             break
         case 'decreaseFontSize':
-            showToast('Font size decreased', 'success')
+            editorFontSize.value = Math.max(editorFontSize.value - 1, 8)
+            showToast(`Font size decreased to ${editorFontSize.value}`, 'success')
             break
         case 'focusEditor':
             showToast('Editor focused', 'success')

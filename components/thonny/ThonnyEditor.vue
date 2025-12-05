@@ -7,17 +7,19 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import MonacoEditor from '~/components/MonacoEditor.vue'
 
 const props = defineProps({
     code: { type: String, required: true },
-    theme: { type: String, required: true }
+    theme: { type: String, required: true },
+    fontSize: { type: Number, default: 15 }
 })
 
 defineEmits(['update:code'])
 
-const editorOptions = {
-    fontSize: 15,
+const editorOptions = computed(() => ({
+    fontSize: props.fontSize,
     minimap: { enabled: false },
     scrollBeyondLastLine: false,
     wordWrap: 'off',
@@ -29,6 +31,6 @@ const editorOptions = {
     renderWhitespace: 'none',
     fontFamily: '"Courier New", Courier, monospace',
     cursorStyle: 'line',
-    lineHeight: 20
-}
+    lineHeight: Math.floor(props.fontSize * 1.4)
+}))
 </script>

@@ -682,7 +682,7 @@
 
         <!-- Ads Panel -->
         <section :class="[
-          'hidden lg:flex flex-col border-l',
+          'flex-col border-l',
           'w-full lg:w-[30%] xl:w-[25%]',
           theme === 'dark' ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-gray-50'
         ]">

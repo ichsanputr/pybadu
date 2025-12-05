@@ -169,51 +169,32 @@ builtins.input = _mock_input
   async function installPackage(packageName) {
       if (!pyodideReady.value) return
       
-      const script = `
-import micropip
-import sys
-
-print(f"Installing {packageName}...")
-try:
-    await micropip.install('${packageName}')
-    print(f"Successfully installed {packageName}")
-except Exception as e:
-    print(f"Error installing {packageName}: {e}")
-    raise e
-`
-      return await runSystemPython(script)
+      return await requestResponse({
+          type: 'INSTALL_PACKAGE',
+          data: { packageName }
+      })
   }
 
   async function getInstalledPackages() {
       if (!pyodideReady.value) return []
       
-      // micropip.list() returns a PyProxy of packages
-      // We convert it to a string representation or dict
       const script = `
 import micropip
 # list return dict
 packages = micropip.list()
-# Convert to simple text for display
-output = []
+# Print to stdout so we can capture it
 for name, meta in packages.items():
-    output.append(f"{name}=={meta.version}")
-'\\n'.join(output)
+    print(f"{name}=={meta.version}")
 `
-      // The result of the last expression is returned in result.result (Python return value)
-      // But RUN_PYTHON in worker usually returns stdout?
-      // Wait, pyodide-worker implementation: 
-      // let result = await self.pyodide.runPythonAsync(code)
-      // return { results, stdout, ... }
-      // So result.result (js side) maps to the return value of execution.
       
       const response = await requestResponse({
           type: 'RUN_PYTHON',
           data: { code: script }
       })
       
-      // If the last line is an expression, it is returned
-      if (typeof response.result === 'string') {
-          return response.result.split('\n').filter(p => p)
+      // The result contains stdout from the worker
+      if (response.result?.stdout) {
+          return response.result.stdout.split('\n').filter(p => p.trim())
       }
       return []
   }

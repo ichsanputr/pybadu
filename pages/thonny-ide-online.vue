@@ -408,6 +408,9 @@ function handleUploadFile() {
                 content: content
             })
             activeFileId.value = newId
+
+            // Save to localStorage
+            localStorage.setItem('thonny-files', JSON.stringify(files.value))
             showToast(`File uploaded: ${file.name}`, 'success')
         }
         reader.readAsText(file)
@@ -425,6 +428,9 @@ function deleteFile(fileId) {
     if (activeFileId.value === fileId) {
         activeFileId.value = files.value[0].id
     }
+
+    // Update localStorage
+    localStorage.setItem('thonny-files', JSON.stringify(files.value))
 }
 
 async function saveFile() {

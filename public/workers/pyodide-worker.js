@@ -431,6 +431,31 @@ for fig in figs:
         }
         break
 
+      case 'INSTALL_PACKAGE':
+        const pyodideForInstall = await initPyodide()
+        const { packageName: pkgToInstall } = data
+        
+        try {
+            await pyodideForInstall.loadPackage('micropip')
+            const micropip = pyodideForInstall.pyimport('micropip')
+            console.log(`Installing ${pkgToInstall}...`)
+            await micropip.install(pkgToInstall)
+            console.log(`Successfully installed ${pkgToInstall}`)
+            self.postMessage({
+                type: 'INSTALL_COMPLETE',
+                id,
+                result: { success: true, package: pkgToInstall }
+            })
+        } catch (error) {
+            console.error(`Error installing ${pkgToInstall}:`, error)
+             self.postMessage({
+                type: 'ERROR',
+                id,
+                error: `Failed to install ${pkgToInstall}: ${error.message}`
+            })
+        }
+        break
+
       default:
         self.postMessage({
           type: 'ERROR',

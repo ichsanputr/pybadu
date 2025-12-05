@@ -681,8 +681,9 @@
         </section>
 
         <!-- Ads Panel -->
+        <!-- Ads Panel -->
         <section :class="[
-          'flex flex flex-col border-l',
+          'hidden lg:flex flex-col border-l',
           'w-full lg:w-[30%] xl:w-[25%]',
           theme === 'dark' ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-gray-50'
         ]">
@@ -690,7 +691,7 @@
           <div class="flex-1 overflow-y-auto p-2 lg:p-4 space-y-4">
             <ClientOnly>
               <!-- Responsive Ad 2 -->
-              <div class="flex justify-center w-full h-full">
+              <div class="flex justify-center w-full h-full min-h-[300px]">
                 <Adsense key="right-ad-1" label="right-ad" client="ca-pub-1356911639243870" ad-slot="3430238458"
                   style="display:block" format="auto" responsive="true" />
               </div>
@@ -702,7 +703,7 @@
     </div>
 
     <!-- Bottom Ad (Above Compiler Title) -->
-    <div class="w-full max-w-7xl mx-auto px-4 py-6">
+    <div class="w-full max-w-7xl mx-auto px-4 py-6 min-h-[120px]">
       <ClientOnly>
         <Adsense key="bottom-ad" label="bottom-ad" client="ca-pub-1356911639243870" ad-slot="3430238458"
           style="display:block" format="auto" responsive="true" />

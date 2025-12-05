@@ -490,9 +490,7 @@ const standardPackages = [
 ].sort((a, b) => a.name.localeCompare(b.name))
 
 const filteredStandardPackages = computed(() => {
-    if (!searchQuery.value) return standardPackages
-    const q = searchQuery.value.toLowerCase()
-    return standardPackages.filter(p => p.name.toLowerCase().includes(q))
+    return standardPackages
 })
 
 const installedVersion = computed(() => {
@@ -504,23 +502,45 @@ const installedVersion = computed(() => {
 function selectPackage(pkg) {
     selectedPackage.value = { ...pkg }
     statusMessage.value = ''
+    statusType.value = 'info'
 }
 
-function handleSearch() {
+async function handleSearch() {
     if (!searchQuery.value.trim()) return
 
-    // Check if it exists in standard list first to keep summary
-    const standardMatch = standardPackages.find(p => p.name.toLowerCase() === searchQuery.value.trim().toLowerCase())
+    const queryName = searchQuery.value.trim()
+    isProcessing.value = true
+    statusMessage.value = `Searching for ${queryName}...`
+    statusType.value = 'info'
+    selectedPackage.value = null
 
-    if (standardMatch) {
-        selectPackage(standardMatch)
-    } else {
-        // Create a temporary object for the custom search
-        selectedPackage.value = {
-            name: searchQuery.value.trim(),
-            summary: 'Package found via search. (Details not fetched)',
-            version: 'Unknown'
+    try {
+        // 1. Check Standard List first (Local)
+        const standardMatch = standardPackages.find(p => p.name.toLowerCase() === queryName.toLowerCase())
+        if (standardMatch) {
+            selectPackage(standardMatch)
+            return
         }
+
+        // 2. Fetch from PyPI
+        const response = await fetch(`https://pypi.org/pypi/${queryName}/json`)
+        if (!response.ok) {
+            throw new Error('Package not found')
+        }
+        const data = await response.json()
+
+        selectedPackage.value = {
+            name: data.info.name,
+            summary: data.info.summary || 'No description available',
+            version: data.info.version
+        }
+        statusMessage.value = ''
+    } catch (e) {
+        statusMessage.value = `Package '${queryName}' not found on PyPI.`
+        statusType.value = 'error'
+        selectedPackage.value = null
+    } finally {
+        isProcessing.value = false
     }
 }
 

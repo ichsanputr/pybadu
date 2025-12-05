@@ -175,6 +175,15 @@ builtins.input = _mock_input
       })
   }
 
+  async function removePackage(packageName) {
+      if (!pyodideReady.value) return
+      
+      return await requestResponse({
+          type: 'REMOVE_PACKAGE',
+          data: { packageName }
+      })
+  }
+
   async function getInstalledPackages() {
       if (!pyodideReady.value) return []
       
@@ -249,6 +258,7 @@ for name, meta in packages.items():
     terminate,
     addOutput,
     installPackage,
+    removePackage,
     getInstalledPackages
   }
 }

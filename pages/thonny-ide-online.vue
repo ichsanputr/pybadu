@@ -72,7 +72,8 @@
 
         <!-- Package Manager Dialog -->
         <PackageManagerDialog :is-open="showPackageManager" :install-package="installPackage"
-            :get-installed-packages="getInstalledPackages" @close="showPackageManager = false" />
+            :remove-package="removePackage" :get-installed-packages="getInstalledPackages"
+            @close="showPackageManager = false" />
     </div>
 </template>
 
@@ -122,6 +123,7 @@ const {
     terminate,
     addOutput,
     installPackage,
+    removePackage,
     getInstalledPackages
 } = useThonnyPyodide()
 

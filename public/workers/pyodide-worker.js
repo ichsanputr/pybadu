@@ -456,6 +456,36 @@ for fig in figs:
         }
         break
 
+        break
+
+      case 'REMOVE_PACKAGE':
+        const pyodideForRemove = await initPyodide()
+        const { packageName: pkgToRemove } = data
+        
+        try {
+            await pyodideForRemove.loadPackage('micropip')
+            const micropip = pyodideForRemove.pyimport('micropip')
+            console.log(`Removing ${pkgToRemove}...`)
+            // micropip.uninstall takes the package name or list of names
+            // Note: micropip.uninstall is only available in recent versions and might not fully remove everything in browser context, 
+            // but it's the standard API.
+            await micropip.uninstall(pkgToRemove)
+            console.log(`Successfully removed ${pkgToRemove}`)
+            self.postMessage({
+                type: 'REMOVE_COMPLETE',
+                id,
+                result: { success: true, package: pkgToRemove }
+            })
+        } catch (error) {
+            console.error(`Error removing ${pkgToRemove}:`, error)
+             self.postMessage({
+                type: 'ERROR',
+                id,
+                error: `Failed to remove ${pkgToRemove}: ${error.message}`
+            })
+        }
+        break
+
       default:
         self.postMessage({
           type: 'ERROR',

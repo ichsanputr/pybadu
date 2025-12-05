@@ -68,6 +68,10 @@
         <!-- Save As Dialog -->
         <InputDialog :is-open="saveDialog.isOpen" title="Save As" message="Enter a filename for your script:"
             placeholder="script.py" default-value="script.py" @submit="handleSaveSubmit" @cancel="handleSaveCancel" />
+
+        <!-- Package Manager Dialog -->
+        <PackageManagerDialog :is-open="showPackageManager" :install-package="installPackage"
+            :get-installed-packages="getInstalledPackages" @close="showPackageManager = false" />
     </div>
 </template>
 
@@ -81,8 +85,8 @@ import ThonnyEditor from '~/components/thonny/ThonnyEditor.vue'
 import ThonnyShell from '~/components/thonny/ThonnyShell.vue'
 import ThonnyVariables from '~/components/thonny/ThonnyVariables.vue'
 import Toast from '~/components/ui/Toast.vue'
-// Import InputDialog specifically for Save As
 import InputDialog from '~/components/ui/InputDialog.vue'
+import PackageManagerDialog from '~/components/thonny/PackageManagerDialog.vue'
 import ThonnyInfoSection from '~/components/thonny/ThonnyInfoSection.vue'
 import AppFooter from '~/components/AppFooter.vue'
 import { useThonnyPyodide } from '~/composables/useThonnyPyodide'
@@ -115,7 +119,9 @@ const {
     stopExecution,
     clearOutput,
     terminate,
-    addOutput
+    addOutput,
+    installPackage,
+    getInstalledPackages
 } = useThonnyPyodide()
 
 // State
@@ -132,6 +138,7 @@ const saveDialog = ref({
     isOpen: false,
     resolve: null
 })
+const showPackageManager = ref(false)
 
 // Menu items
 const menuItems = computed(() => [
@@ -340,7 +347,7 @@ function handleMenuItem(action) {
             clearOutput()
             break
         case 'managePackages':
-            showToast('Package Manager - Coming soon! Will allow installing Python packages via pip.', 'info')
+            showPackageManager.value = true
             break
         case 'about':
             showToast('Online Thonny IDE - Try on Browser', 'info')

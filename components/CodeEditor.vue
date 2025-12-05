@@ -540,7 +540,7 @@
                   <!-- Regular text output -->
                   <pre v-else class="whitespace-pre-wrap font-mono text-xs leading-relaxed">{{ item.content }}</pre>
                   <span class="absolute top-[0px] right-1 text-xs opacity-60 px-2 pb-1 rounded">{{ item.timestamp
-                    }}</span>
+                  }}</span>
                 </div>
               </div>
             </TransitionGroup>
@@ -682,7 +682,7 @@
 
         <!-- Ads Panel -->
         <section :class="[
-          'flex-col border-l',
+          'flex flex flex-col border-l',
           'w-full lg:w-[30%] xl:w-[25%]',
           theme === 'dark' ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-gray-50'
         ]">

@@ -39,6 +39,17 @@
                         <Icon icon="ph:x" class="w-3 h-3" />
                     </div>
                 </button>
+                <button v-if="showTodo" @click="activeTab = 'todo'" :class="['px-4 py-1.5 border-r font-medium text-xs uppercase tracking-wide transition-colors flex items-center group',
+                    activeTab === 'todo'
+                        ? (theme === 'light' ? 'bg-white text-blue-600 border-b-2 border-b-blue-600' : 'bg-gray-900 text-blue-400 border-b-2 border-b-blue-400')
+                        : (theme === 'light' ? 'bg-gray-50 text-gray-500 hover:bg-gray-100' : 'bg-gray-800 text-gray-400 hover:bg-gray-700')
+                ]" style="margin-bottom: -1px;">
+                    <span class="mr-2">TODO</span>
+                    <div @click.stop="$emit('close-tab', 'todo')"
+                        :class="['p-0.5 rounded-full opacity-60 group-hover:opacity-100', theme === 'light' ? 'hover:bg-gray-200 text-gray-600' : 'hover:bg-gray-700 text-gray-400']">
+                        <Icon icon="ph:x" class="w-3 h-3" />
+                    </div>
+                </button>
             </div>
 
             <!-- Actions -->
@@ -142,6 +153,38 @@
                 </div>
             </div>
 
+            <!-- TODO Tab Content -->
+            <div v-show="activeTab === 'todo'"
+                :class="['h-full overflow-y-auto font-mono text-sm', theme === 'light' ? 'bg-white text-gray-800' : 'bg-gray-900 text-gray-200']">
+                <div v-if="todoItems && todoItems.length > 0">
+                    <table class="w-full text-left border-collapse">
+                        <thead :class="['sticky top-0 z-10', theme === 'light' ? 'bg-gray-50' : 'bg-gray-800']">
+                            <tr :class="theme === 'light' ? 'border-b border-gray-200' : 'border-b border-gray-700'">
+                                <th class="py-2 px-4 font-semibold w-24">Line</th>
+                                <th class="py-2 px-4 font-semibold w-24">Type</th>
+                                <th class="py-2 px-4 font-semibold">Message</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(item, index) in todoItems" :key="index"
+                                :class="['border-b hover:bg-opacity-50', theme === 'light' ? 'border-gray-100 hover:bg-gray-50' : 'border-gray-800 hover:bg-gray-800', 'cursor-pointer']"
+                                @click="$emit('jump-to-line', item.line)">
+                                <td class="py-2 px-4 text-gray-500">{{ item.line }}</td>
+                                <td class="py-2 px-4 font-bold"
+                                    :class="item.type === 'FIXME' ? 'text-red-600 dark:text-red-400' : 'text-blue-600 dark:text-blue-400'">
+                                    {{ item.type }}
+                                </td>
+                                <td class="py-2 px-4">{{ item.message }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div v-else class="flex flex-col items-center justify-center h-full text-gray-400">
+                    <Icon icon="ph:check-circle" class="w-12 h-12 mb-2 opacity-50" />
+                    <p>No line marked with # TODO xx</p>
+                </div>
+            </div>
+
         </div>
     </div>
 </template>
@@ -158,27 +201,37 @@ const props = defineProps({
     showShell: { type: Boolean, default: true },
     showException: { type: Boolean, default: false },
     showProgramTree: { type: Boolean, default: false },
-    astData: { type: Object, default: null }
+    showTodo: { type: Boolean, default: false },
+    astData: { type: Object, default: null },
+    todoItems: { type: Array, default: () => [] }
 })
 
-const emit = defineEmits(['clear-output', 'execute-command', 'close', 'close-tab'])
+const emit = defineEmits(['clear-output', 'execute-command', 'close', 'close-tab', 'jump-to-line'])
 
 const activeTab = ref('shell')
 // Watch props to ensure active tab is visible
-watch(() => [props.showShell, props.showException, props.showProgramTree], ([newShell, newException, newTree]) => {
+watch(() => [props.showShell, props.showException, props.showProgramTree, props.showTodo], ([newShell, newException, newTree, newTodo]) => {
     if (activeTab.value === 'shell' && !newShell) {
         if (newException) activeTab.value = 'exception'
         else if (newTree) activeTab.value = 'program-tree'
+        else if (newTodo) activeTab.value = 'todo'
     } else if (activeTab.value === 'exception' && !newException) {
         if (newShell) activeTab.value = 'shell'
         else if (newTree) activeTab.value = 'program-tree'
+        else if (newTodo) activeTab.value = 'todo'
     } else if (activeTab.value === 'program-tree' && !newTree) {
         if (newShell) activeTab.value = 'shell'
         else if (newException) activeTab.value = 'exception'
+        else if (newTodo) activeTab.value = 'todo'
+    } else if (activeTab.value === 'todo' && !newTodo) {
+        if (newShell) activeTab.value = 'shell'
+        else if (newException) activeTab.value = 'exception'
+        else if (newTree) activeTab.value = 'program-tree'
     } else if (!activeTab.value) {
         if (newShell) activeTab.value = 'shell'
         else if (newException) activeTab.value = 'exception'
         else if (newTree) activeTab.value = 'program-tree'
+        else if (newTodo) activeTab.value = 'todo'
     }
 }, { immediate: true })
 
@@ -203,7 +256,7 @@ const lastException = computed(() => {
 
 // Expose openTab method for parent to control
 const openTab = (tabName) => {
-    if (['shell', 'exception', 'program-tree'].includes(tabName)) {
+    if (['shell', 'exception', 'program-tree', 'todo'].includes(tabName)) {
         activeTab.value = tabName
     }
 }

@@ -11,7 +11,7 @@
             <!-- Toolbar -->
             <ThonnyToolbar :theme="theme" :pyodideReady="pyodideReady" :isLoading="isLoading" @new-file="createNewFile"
                 @save-file="saveFile" @upload-file="handleUploadFile" @run-code="runCurrentFile"
-                @stop-execution="stopExecution" @toggle-variables="showVariables = !showVariables" />
+                @stop-execution="stopExecution" />
 
             <!-- File tabs -->
             <div
@@ -51,11 +51,12 @@
 
                 <!-- Bottom Row: Bottom Panel (Shell & Exception & Program Tree) -->
                 <div class="overflow-hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700"
-                    v-show="showShell || showException || showProgramTree">
+                    v-show="showShell || showException || showProgramTree || showTodo">
                     <ThonnyBottomPanel ref="thonnyBottomPanel" :theme="theme" :output="output" :isExecuting="isLoading"
                         :show-shell="showShell" :show-exception="showException" :show-program-tree="showProgramTree"
-                        :ast-data="astData" @clear-output="clearOutput" @execute-command="handleShellCommand"
-                        @close="closeBottomPanel" @close-tab="handleCloseTab" />
+                        :show-todo="showTodo" :todo-items="todoItems" :ast-data="astData" @clear-output="clearOutput"
+                        @execute-command="handleShellCommand" @close="closeBottomPanel" @close-tab="handleCloseTab"
+                        @jump-to-line="handleJumpToLine" />
                 </div>
             </div>
         </div>
@@ -150,6 +151,8 @@ const showPackageManager = ref(false)
 const showShell = ref(true)
 const showException = ref(false)
 const showProgramTree = ref(false)
+const showTodo = ref(false)
+const todoItems = ref([])
 const astData = ref(null)
 
 // DOM Refs
@@ -287,6 +290,7 @@ function handleCloseTab(tabName) {
     if (tabName === 'shell') showShell.value = false
     if (tabName === 'exception') showException.value = false
     if (tabName === 'program-tree') showProgramTree.value = false
+    if (tabName === 'todo') showTodo.value = false
 }
 
 async function updateAst() {
@@ -295,11 +299,30 @@ async function updateAst() {
     }
 }
 
-watch([showProgramTree, currentFileContent], () => {
-    // Debounce slightly if needed, but for now direct call
-    // Logic: if tree is shown, update it when code changes
+function updateTodos() {
+    if (showTodo.value && currentFileContent.value) {
+        const lines = currentFileContent.value.split('\n')
+        const items = []
+        lines.forEach((line, index) => {
+            const match = line.match(/#\s*(TODO|FIXME)\s*:?\s*(.*)/i)
+            if (match) {
+                items.push({
+                    line: index + 1,
+                    type: match[1].toUpperCase(), // TODO or FIXME
+                    message: match[2].trim()
+                })
+            }
+        })
+        todoItems.value = items
+    }
+}
+
+watch([showProgramTree, showTodo, currentFileContent], () => {
     if (showProgramTree.value) {
         updateAst()
+    }
+    if (showTodo.value) {
+        updateTodos()
     }
 })
 
@@ -363,7 +386,11 @@ function handleMenuItem(action) {
             }
             break
         case 'toggleTodo':
-            showToast('TODO panel - Coming soon! Will track TODO comments.', 'info')
+            showTodo.value = !showTodo.value
+            if (showTodo.value) {
+                updateTodos()
+                setTimeout(() => thonnyBottomPanel.value?.openTab('todo'), 0)
+            }
             break
         case 'toggleProgramArguments':
             showToast('Program arguments - Coming soon! Will allow setting command-line arguments.', 'info')
@@ -561,6 +588,11 @@ function closeBottomPanel() {
     showShell.value = false
     showException.value = false
     showProgramTree.value = false
+    showTodo.value = false
+}
+
+function handleJumpToLine(line) {
+    thonnyEditor.value?.revealLine(line)
 }
 
 // Lifecycle

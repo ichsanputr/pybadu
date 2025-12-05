@@ -27,11 +27,6 @@
 
         <div class="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1"></div>
 
-        <!-- View controls -->
-        <button :class="toolbarButtonClass" title="Toggle Variables" @click="$emit('toggle-variables')">
-            <Icon icon="ph:list-bullets" class="w-5 h-5" />
-        </button>
-
         <div class="flex-1"></div>
     </div>
 </template>
@@ -46,7 +41,7 @@ const props = defineProps({
     isLoading: { type: Boolean, required: true }
 })
 
-defineEmits(['new-file', 'save-file', 'upload-file', 'run-code', 'stop-execution', 'toggle-variables'])
+defineEmits(['new-file', 'save-file', 'upload-file', 'run-code', 'stop-execution'])
 
 const toolbarButtonClass = computed(() => [
     'p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed',

@@ -39,6 +39,16 @@ const editorOptions = computed(() => ({
 defineExpose({
     focus: () => {
         monacoEditorRef.value?.focus()
+    },
+    revealLine: (line) => {
+        // Accessing the underlying monaco instance via the wrapper component
+        // Assuming the wrapper exposes 'editor' property or instance
+        const editor = monacoEditorRef.value?.editor
+        if (editor) {
+            editor.revealLineInCenter(line)
+            editor.setPosition({ lineNumber: line, column: 1 })
+            editor.focus()
+        }
     }
 })
 </script>

@@ -17,6 +17,17 @@
                         <Icon icon="ph:x" class="w-3 h-3" />
                     </div>
                 </button>
+                <button v-if="showProgramTree" @click="activeTab = 'program-tree'" :class="['px-4 py-1.5 border-r font-medium text-xs uppercase tracking-wide transition-colors flex items-center group',
+                    activeTab === 'program-tree'
+                        ? (theme === 'light' ? 'bg-white text-blue-600 border-b-2 border-b-blue-600' : 'bg-gray-900 text-blue-400 border-b-2 border-b-blue-400')
+                        : (theme === 'light' ? 'bg-gray-50 text-gray-500 hover:bg-gray-100' : 'bg-gray-800 text-gray-400 hover:bg-gray-700')
+                ]" style="margin-bottom: -1px;">
+                    <span class="mr-2">Program Tree</span>
+                    <div @click.stop="$emit('close-tab', 'program-tree')"
+                        :class="['p-0.5 rounded-full opacity-60 group-hover:opacity-100', theme === 'light' ? 'hover:bg-gray-200 text-gray-600' : 'hover:bg-gray-700 text-gray-400']">
+                        <Icon icon="ph:x" class="w-3 h-3" />
+                    </div>
+                </button>
                 <button v-if="showException" @click="activeTab = 'exception'" :class="['px-4 py-1.5 border-r font-medium text-xs uppercase tracking-wide transition-colors flex items-center group',
                     activeTab === 'exception'
                         ? (theme === 'light' ? 'bg-white text-blue-600 border-b-2 border-b-blue-600' : 'bg-gray-900 text-blue-400 border-b-2 border-b-blue-400')
@@ -112,6 +123,22 @@
                 <div v-else class="flex flex-col items-center justify-center h-full text-gray-400">
                     <Icon icon="ph:check-circle" class="w-12 h-12 mb-2 opacity-50" />
                     <p>No exceptions captured yet.</p>
+
+                </div>
+            </div>
+
+            <!-- Program Tree Tab Content -->
+            <div v-show="activeTab === 'program-tree'"
+                :class="['h-full overflow-y-auto p-4 font-mono text-sm', theme === 'light' ? 'bg-white text-gray-800' : 'bg-gray-900 text-gray-200']">
+                <div v-if="astData && !astData.error">
+                    <AstTree :node="astData" :theme="theme" />
+                </div>
+                <div v-else-if="astData && astData.error" class="text-red-500 font-medium">
+                    Syntax Error: {{ astData.error }}
+                </div>
+                <div v-else class="flex flex-col items-center justify-center h-full text-gray-400">
+                    <Icon icon="ph:tree-structure" class="w-12 h-12 mb-2 opacity-50" />
+                    <p>Run code to generate Program Tree</p>
                 </div>
             </div>
 
@@ -122,28 +149,36 @@
 <script setup>
 import { ref, nextTick, watch, computed } from 'vue'
 import { Icon } from '@iconify/vue'
+import AstTree from './AstTree.vue'
 
 const props = defineProps({
     theme: { type: String, required: true },
     output: { type: Array, required: true },
     isExecuting: { type: Boolean, default: false },
     showShell: { type: Boolean, default: true },
-    showException: { type: Boolean, default: false }
+    showException: { type: Boolean, default: false },
+    showProgramTree: { type: Boolean, default: false },
+    astData: { type: Object, default: null }
 })
 
 const emit = defineEmits(['clear-output', 'execute-command', 'close', 'close-tab'])
 
 const activeTab = ref('shell')
 // Watch props to ensure active tab is visible
-watch(() => [props.showShell, props.showException], ([newShell, newException]) => {
+watch(() => [props.showShell, props.showException, props.showProgramTree], ([newShell, newException, newTree]) => {
     if (activeTab.value === 'shell' && !newShell) {
         if (newException) activeTab.value = 'exception'
+        else if (newTree) activeTab.value = 'program-tree'
     } else if (activeTab.value === 'exception' && !newException) {
         if (newShell) activeTab.value = 'shell'
-    } else if (!activeTab.value && newShell) {
-        activeTab.value = 'shell'
-    } else if (!activeTab.value && newException) {
-        activeTab.value = 'exception'
+        else if (newTree) activeTab.value = 'program-tree'
+    } else if (activeTab.value === 'program-tree' && !newTree) {
+        if (newShell) activeTab.value = 'shell'
+        else if (newException) activeTab.value = 'exception'
+    } else if (!activeTab.value) {
+        if (newShell) activeTab.value = 'shell'
+        else if (newException) activeTab.value = 'exception'
+        else if (newTree) activeTab.value = 'program-tree'
     }
 }, { immediate: true })
 
@@ -168,7 +203,7 @@ const lastException = computed(() => {
 
 // Expose openTab method for parent to control
 const openTab = (tabName) => {
-    if (['shell', 'exception'].includes(tabName)) {
+    if (['shell', 'exception', 'program-tree'].includes(tabName)) {
         activeTab.value = tabName
     }
 }

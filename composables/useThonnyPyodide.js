@@ -245,6 +245,51 @@ for name, meta in packages.items():
     }
   }
 
+  async function generateAST(userCode) {
+    if (!pyodideReady.value || !userCode.trim()) return null
+
+    const pyCode = `
+import ast, json
+
+def ast_to_dict(node):
+    result = {"_type": type(node).__name__}
+    for field in node._fields:
+        try:
+            value = getattr(node, field)
+        except AttributeError:
+            continue
+            
+        if isinstance(value, ast.AST):
+            result[field] = ast_to_dict(value)
+        elif isinstance(value, list):
+            result[field] = [ast_to_dict(x) if isinstance(x, ast.AST) else x for x in value]
+        else:
+            result[field] = value
+    return result
+
+try:
+    tree = ast.parse(${JSON.stringify(userCode)})
+    print(json.dumps(ast_to_dict(tree)))
+except Exception as e:
+    print(json.dumps({"error": str(e)}))
+`
+
+    try {
+        const response = await requestResponse({
+            type: 'RUN_PYTHON',
+            data: { code: pyCode }
+        })
+
+        if (response.result?.stdout) {
+            const lines = response.result.stdout.trim().split('\n')
+            return JSON.parse(lines[lines.length - 1])
+        }
+    } catch (e) {
+        console.error("AST Generation failed", e)
+    }
+    return null
+  }
+
   return {
     pyodideReady,
     isLoading,
@@ -259,6 +304,7 @@ for name, meta in packages.items():
     addOutput,
     installPackage,
     removePackage,
-    getInstalledPackages
+    getInstalledPackages,
+    generateAST
   }
 }

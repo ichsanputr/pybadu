@@ -49,12 +49,13 @@
                     <div class="w-12 h-0.5 rounded-full bg-gray-500 group-hover:bg-white transition-colors"></div>
                 </div>
 
-                <!-- Bottom Row: Bottom Panel (Shell & Exception) -->
+                <!-- Bottom Row: Bottom Panel (Shell & Exception & Program Tree) -->
                 <div class="overflow-hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700"
-                    v-show="showShell || showException">
+                    v-show="showShell || showException || showProgramTree">
                     <ThonnyBottomPanel ref="thonnyBottomPanel" :theme="theme" :output="output" :isExecuting="isLoading"
-                        :show-shell="showShell" :show-exception="showException" @clear-output="clearOutput"
-                        @execute-command="handleShellCommand" @close="closeBottomPanel" @close-tab="handleCloseTab" />
+                        :show-shell="showShell" :show-exception="showException" :show-program-tree="showProgramTree"
+                        :ast-data="astData" @clear-output="clearOutput" @execute-command="handleShellCommand"
+                        @close="closeBottomPanel" @close-tab="handleCloseTab" />
                 </div>
             </div>
         </div>
@@ -80,7 +81,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useHead } from '#app'
 import { Icon } from '@iconify/vue'
 import ThonnyMenuBar from '~/components/thonny/ThonnyMenuBar.vue'
@@ -126,7 +127,8 @@ const {
     addOutput,
     installPackage,
     removePackage,
-    getInstalledPackages
+    getInstalledPackages,
+    generateAST
 } = useThonnyPyodide()
 
 // State
@@ -147,6 +149,8 @@ const saveDialog = ref({
 const showPackageManager = ref(false)
 const showShell = ref(true)
 const showException = ref(false)
+const showProgramTree = ref(false)
+const astData = ref(null)
 
 // DOM Refs
 const thonnyEditor = ref(null)
@@ -181,7 +185,7 @@ const menuItems = computed(() => [
             { name: 'Notes', action: 'toggleNotes', checked: false },
             { name: 'Object inspector', action: 'toggleObjectInspector', checked: false },
             { name: 'Outline', action: 'toggleOutline', checked: false },
-            { name: 'Program tree', action: 'toggleProgramTree', checked: false },
+            { name: 'Program tree', action: 'toggleProgramTree', checked: showProgramTree.value },
             { name: 'Shell', action: 'toggleShell', checked: showShell.value },
             { name: 'TODO', action: 'toggleTodo', checked: false },
             { name: 'Variables', action: 'toggleVariables', checked: showVariables.value },
@@ -282,7 +286,22 @@ function startResize(e) {
 function handleCloseTab(tabName) {
     if (tabName === 'shell') showShell.value = false
     if (tabName === 'exception') showException.value = false
+    if (tabName === 'program-tree') showProgramTree.value = false
 }
+
+async function updateAst() {
+    if (showProgramTree.value && currentFileContent.value) {
+        astData.value = await generateAST(currentFileContent.value)
+    }
+}
+
+watch([showProgramTree, currentFileContent], () => {
+    // Debounce slightly if needed, but for now direct call
+    // Logic: if tree is shown, update it when code changes
+    if (showProgramTree.value) {
+        updateAst()
+    }
+})
 
 // Menu functions
 function toggleMenu(menuName) {
@@ -331,7 +350,11 @@ function handleMenuItem(action) {
             showToast('Outline panel - Coming soon! Will show code structure.', 'info')
             break
         case 'toggleProgramTree':
-            showToast('Program tree - Coming soon! Will show program execution tree.', 'info')
+            showProgramTree.value = !showProgramTree.value
+            if (showProgramTree.value) {
+                updateAst()
+                setTimeout(() => thonnyBottomPanel.value?.openTab('program-tree'), 0)
+            }
             break
         case 'toggleShell':
             showShell.value = !showShell.value
@@ -506,6 +529,7 @@ async function runCurrentFile() {
 
     addOutput(`%Run ${currentFile.value.name}`, 'system')
     await runScript(currentFileContent.value)
+    updateAst()
 }
 
 function handleShellCommand(command) {
@@ -536,6 +560,7 @@ function removeToast(id) {
 function closeBottomPanel() {
     showShell.value = false
     showException.value = false
+    showProgramTree.value = false
 }
 
 // Lifecycle

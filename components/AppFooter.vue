@@ -102,6 +102,10 @@
               class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               Snowball Stemmer
             </NuxtLink>
+            <NuxtLink to="/pygal" @click="handleSmoothScroll"
+              class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+              Pygal
+            </NuxtLink>
             <NuxtLink to="/beautifulsoup4" @click="handleSmoothScroll"
               class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               BeautifulSoup4

@@ -229,6 +229,11 @@ const additionalLibraries = [
     path: '/snowball'
   },
   {
+    name: 'Pygal',
+    description: 'Dynamic SVG graphing library. Create beautiful, interactive, and highly customizable vector charts including Bar, Line, Pie, and Gauge charts.',
+    path: '/pygal'
+  },
+  {
     name: 'BeautifulSoup4',
     description: 'Parse and extract data from HTML strings. Perfect for web scraping, data extraction, and HTML content processing.',
     path: '/beautifulsoup4'

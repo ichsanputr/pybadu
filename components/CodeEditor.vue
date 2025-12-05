@@ -355,19 +355,14 @@
                 </div>
               </div>
               <input ref="assetFileInput" type="file" multiple @change="handleAssetUpload" class="hidden" />
-              <p class="text-xs mb-2"
-                :class="theme === 'dark' ? 'text-gray-400' : 'text-gray-500'">
+              <p class="text-xs mb-2" :class="theme === 'dark' ? 'text-gray-400' : 'text-gray-500'">
                 Files uploaded here are available inside Python at
                 <code :class="theme === 'dark' ? 'text-gray-200' : 'text-gray-700'">/assets/&lt;filename&gt;</code>.
               </p>
-              
+
               <!-- Asset Items Tree View -->
-              <AssetTreeView
-                :assets="props.assets"
-                :theme="theme"
-                :selected-asset="selectedAsset"
-                @delete="deleteAssetFile"
-                @select="selectAssetFile" />
+              <AssetTreeView :assets="props.assets" :theme="theme" :selected-asset="selectedAsset"
+                @delete="deleteAssetFile" @select="selectAssetFile" />
             </div>
 
             <!-- Examples Section -->
@@ -503,43 +498,52 @@
 
           <!-- Output Content -->
           <div :class="[
-            'overflow-y-auto p-4 space-y-3',
+            'overflow-y-auto p-4',
             'h-[500px] lg:h-[calc(100vh-112px)]'
           ]">
-            <div v-for="(item, index) in output" :key="index" :class="[
-              'rounded-lg text-sm',
-              item.type === 'image' ? 'p-0' : 'p-3',
-              item.type === 'error'
-                ? theme === 'dark' ? 'bg-red-900/30 text-red-300' : 'bg-red-50 text-red-700'
-                : item.type === 'success'
-                  ? theme === 'dark' ? 'bg-green-900/30 text-green-300' : 'bg-green-50 text-green-700'
-                  : item.type === 'image'
-                    ? ''
-                    : theme === 'dark' ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'
-            ]">
-              <!-- Image output -->
-              <div v-if="item.type === 'image'" class="relative group">
-                <img :src="`data:image/png;base64,${item.content}`" alt="Plot output"
-                  class="w-full h-auto rounded-lg" />
-                <div class="absolute top-2 right-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
-                  <button @click="downloadImage(item.content, index)" :class="[
-                    'p-2 rounded-lg text-sm font-medium transition-colors',
-                    'text-white shadow-lg'
-                  ]" style="background-color: #214767;" title="Download image">
-                    <Icon icon="ph:download" class="w-4 h-4" />
-                  </button>
+            <TransitionGroup name="output" tag="div" class="space-y-3">
+              <div v-for="(item, index) in output" :key="index" :class="[
+                'rounded-lg text-sm',
+                item.type === 'image' ? 'p-0' : 'p-3',
+                item.type === 'error'
+                  ? theme === 'dark' ? 'bg-red-900/30 text-red-300' : 'bg-red-50 text-red-700'
+                  : item.type === 'success'
+                    ? theme === 'dark' ? 'bg-green-900/30 text-green-300' : 'bg-green-50 text-green-700'
+                    : item.type === 'image'
+                      ? ''
+                      : theme === 'dark' ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'
+              ]">
+                <!-- Image output -->
+                <div v-if="item.type === 'image'" class="relative group">
+                  <img :src="`data:image/png;base64,${item.content}`" alt="Plot output"
+                    class="w-full h-auto rounded-lg" />
+                  <div
+                    class="absolute top-2 right-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                    <button @click="downloadImage(item.content, index)" :class="[
+                      'p-2 rounded-lg text-sm font-medium transition-colors',
+                      'text-white shadow-lg'
+                    ]" style="background-color: #214767;" title="Download image">
+                      <Icon icon="ph:download" class="w-4 h-4" />
+                    </button>
+                  </div>
+                  <span class="absolute bottom-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
+                    {{ item.timestamp }}
+                  </span>
                 </div>
-                <span class="absolute bottom-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
-                  {{ item.timestamp }}
-                </span>
-              </div>
 
-              <!-- Text output -->
-              <div v-else class="relative">
-                <pre class="whitespace-pre-wrap font-mono text-xs leading-relaxed">{{ item.content }}</pre>
-                <span class="absolute top-[0px] right-1 text-xs opacity-60 px-2 pb-1 rounded">{{ item.timestamp }}</span>
+                <!-- Text output -->
+                <div v-else class="relative">
+                  <!-- Check for SVG content (e.g. from Pygal) -->
+                  <div v-if="item.content.trim().startsWith('<svg') || item.content.trim().startsWith('<?xml')"
+                    v-html="item.content" class="bg-white p-4 rounded-lg overflow-x-auto">
+                  </div>
+                  <!-- Regular text output -->
+                  <pre v-else class="whitespace-pre-wrap font-mono text-xs leading-relaxed">{{ item.content }}</pre>
+                  <span class="absolute top-[0px] right-1 text-xs opacity-60 px-2 pb-1 rounded">{{ item.timestamp
+                    }}</span>
+                </div>
               </div>
-            </div>
+            </TransitionGroup>
 
             <div class=" h-full flex items-center justify-center" v-if="output.length === 0" :class="[
               'text-center py-8 text-sm',
@@ -587,7 +591,8 @@
                     ? 'hover:bg-gray-700 text-gray-400'
                     : 'hover:bg-gray-200 text-gray-600'
               ]" title="Upload files">
-                <Icon :icon="assetsUploading ? 'ph:spinner' : 'ph:upload'" :class="assetsUploading ? 'animate-spin' : ''" class="w-3 h-3" />
+                <Icon :icon="assetsUploading ? 'ph:spinner' : 'ph:upload'"
+                  :class="assetsUploading ? 'animate-spin' : ''" class="w-3 h-3" />
               </button>
 
               <!-- Create folder button -->
@@ -624,24 +629,12 @@
             </div>
 
             <!-- Asset Tree -->
-            <AssetTreeView
-              :assets="assetItems"
-              :theme="theme"
-              :selected-asset="selectedAsset"
-              @select="selectAssetFile"
-              @delete="deleteAssetFile"
-              @toggle="emit('refreshAssets')"
-            />
+            <AssetTreeView :assets="assetItems" :theme="theme" :selected-asset="selectedAsset" @select="selectAssetFile"
+              @delete="deleteAssetFile" @toggle="emit('refreshAssets')" />
           </div>
 
           <!-- Hidden file input -->
-          <input
-            ref="assetFileInput"
-            type="file"
-            multiple
-            class="hidden"
-            @change="handleAssetUpload"
-          />
+          <input ref="assetFileInput" type="file" multiple class="hidden" @change="handleAssetUpload" />
         </section>
 
         <!-- Ads Panel -->
@@ -651,18 +644,32 @@
           theme === 'dark' ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-gray-50'
         ]">
           <!-- Ads Content -->
-          <div class="flex-1 overflow-y-auto p-2 lg:p-4">
+          <div class="flex-1 overflow-y-auto p-2 lg:p-4 space-y-4">
             <ClientOnly>
               <!-- Square Ad 1 -->
-              <div class="mb-4 flex justify-center">
-                <Adsense key="editor-ad-1" client="ca-pub-1356911639243870" ad-slot="3430238458" kind="square"
-                  :style="{ display: 'inline-block', width: '100%', maxWidth: '300px', height: '300px' }" />
+              <div class="flex justify-center">
+                <Adsense key="right-ad-1" client="ca-pub-1356911639243870" ad-slot="1250318747" kind="square"
+                  :style="{ display: 'inline-block', width: '300px', height: '300px' }" />
+              </div>
+
+              <!-- Responsive Ad 2 -->
+              <div class="flex justify-center w-full">
+                <Adsense key="right-ad-2" client="ca-pub-1356911639243870" ad-slot="4242301831" style="display:block"
+                  format="auto" responsive="true" />
               </div>
             </ClientOnly>
           </div>
         </section>
 
       </main>
+    </div>
+
+    <!-- Bottom Ad (Above Compiler Title) -->
+    <div class="w-full max-w-7xl mx-auto px-4 py-6">
+      <ClientOnly>
+        <Adsense key="bottom-ad" client="ca-pub-1356911639243870" ad-slot="3430238458" style="display:block"
+          format="auto" responsive="true" />
+      </ClientOnly>
     </div>
 
     <!-- Delete Confirmation Dialog -->
@@ -956,19 +963,12 @@
           <label :class="['block text-sm font-medium mb-2', theme === 'dark' ? 'text-gray-300' : 'text-gray-700']">
             Folder Name
           </label>
-          <input
-            v-model="createFolderDialog.folderName"
-            type="text"
-            placeholder="Enter folder name"
-            :class="[
-              'w-full px-3 py-2 rounded-lg border text-sm',
-              theme === 'dark'
-                ? 'bg-gray-800 border-gray-700 text-gray-300 placeholder-gray-500'
-                : 'bg-white border-gray-300 text-gray-700 placeholder-gray-400'
-            ]"
-            @keyup.enter="createAssetFolder"
-            maxlength="50"
-          />
+          <input v-model="createFolderDialog.folderName" type="text" placeholder="Enter folder name" :class="[
+            'w-full px-3 py-2 rounded-lg border text-sm',
+            theme === 'dark'
+              ? 'bg-gray-800 border-gray-700 text-gray-300 placeholder-gray-500'
+              : 'bg-white border-gray-300 text-gray-700 placeholder-gray-400'
+          ]" @keyup.enter="createAssetFolder" maxlength="50" />
           <p class="text-xs mt-1" :class="theme === 'dark' ? 'text-gray-400' : 'text-gray-500'">
             Use letters, numbers, hyphens (-), and underscores (_) only
           </p>
@@ -1311,7 +1311,7 @@ function triggerAssetUpload() {
 function handleAssetUpload(event) {
   const files = Array.from(event.target.files || [])
   if (!files.length) return
-  
+
   // Check if a folder is selected
   let targetFolder = ''
   if (selectedAsset.value) {
@@ -1320,7 +1320,7 @@ function handleAssetUpload(event) {
       targetFolder = selectedAsset.value
     }
   }
-  
+
   emit('uploadAssets', files, targetFolder)
   event.target.value = ''
 }
@@ -1590,7 +1590,7 @@ function formatBytes(bytes) {
 
 function getFileIcon(asset) {
   if (asset.isDir) return 'ph:folder'
-  
+
   const ext = asset.name.toLowerCase().split('.').pop()
   const iconMap = {
     'py': 'simple-icons:python',
@@ -1612,7 +1612,7 @@ function getFileIcon(asset) {
     'tar': 'ph:file-zip',
     'gz': 'ph:file-zip'
   }
-  
+
   return iconMap[ext] || 'ph:file'
 }
 </script>
@@ -1642,5 +1642,26 @@ function getFileIcon(asset) {
 
 .dark :deep(.overflow-y-auto::-webkit-scrollbar-thumb:hover) {
   background: #6b7280;
+}
+
+/* Output Transition Animation */
+.output-enter-active,
+.output-leave-active {
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.output-enter-from {
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+}
+
+.output-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+/* Ensure items move smoothly when others leave */
+.output-move {
+  transition: transform 0.4s ease;
 }
 </style>

@@ -26,87 +26,102 @@
                     </div>
 
                     <!-- Intro -->
-                    <h2>What is Thonny Online?</h2>
-                    <p>
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mt-12 mb-6">What is Thonny Online?</h2>
+                    <p class="text-base md:text-lg leading-relaxed text-gray-600 mb-6">
                         <strong>Thonny Online</strong> is a web-based adaptation of the popular Thonny IDE, designed
                         specifically for beginners and educators. Unlike traditional cloud-based IDEs that run code
                         on remote servers, Thonny Online uses <strong>Pyodide</strong> technology to run a full
                         Python interpreter directly inside your web browser.
                     </p>
-                    <p>
+                    <p class="text-base md:text-lg leading-relaxed text-gray-600 mb-6">
                         This approach means you get a responsive, private coding environment with zero setup. It's
                         perfect for quickly testing snippets, learning Python syntax, or teaching a class without
                         worrying about installation permissions or internet latency.
                     </p>
 
                     <!-- Features List -->
-                    <h2>Key Features</h2>
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mt-12 mb-6">Key Features</h2>
                     <div class="not-prose grid grid-cols-1 sm:grid-cols-2 gap-6 my-8">
                         <div v-for="(card, index) in featureCards" :key="index" class="flex flex-col">
                             <div class="flex items-center mb-2 text-gray-900 font-bold">
                                 <Icon :icon="card.icon" class="w-5 h-5 text-blue-600 mr-2" />
                                 {{ card.title }}
                             </div>
-                            <p class="text-sm text-gray-600 leading-relaxed">{{ card.description }}</p>
+                            <p class="text-base md:text-lg text-gray-600 leading-relaxed">{{ card.description }}</p>
                         </div>
                     </div>
 
                     <!-- How to Use -->
-                    <h2>How to Use Thonny Online</h2>
-                    <p>Getting started is immediate. Here are the core workflows:</p>
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mt-12 mb-6">How to Use Thonny Online</h2>
+                    <p class="text-base md:text-lg leading-relaxed text-gray-600 mb-6">Getting started is immediate.
+                        Here are the core workflows:</p>
 
-                    <div class="not-prose space-y-6 my-8 border-l-2 border-blue-100 pl-6">
+                    <div class="space-y-8 mt-8">
                         <div>
-                            <h4 class="font-bold text-gray-900 flex items-center mb-1">
-                                <Icon icon="ph:play-circle" class="w-5 h-5 text-blue-600 mr-2" />
-                                Running Code
-                            </h4>
-                            <p class="text-gray-600 text-base">
+                            <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-3">
+                                How to run Python code?
+                            </h3>
+                            <p class="text-base md:text-lg leading-relaxed text-gray-600 pl-8">
                                 Type your Python code in the main editor. Press <kbd
-                                    class="bg-gray-100 border rounded px-1 text-xs">F5</kbd> or click the
-                                <strong>Run</strong>
-                                button to execute.
+                                    class="bg-gray-100 border border-gray-300 rounded px-1.5 py-0.5 text-sm font-mono text-gray-700 mx-1">F5</kbd>
+                                or click the <strong>Run</strong> button in the toolbar to execute your script. The
+                                output will appear in the
+                                Shell panel below.
                             </p>
                         </div>
 
                         <div>
-                            <h4 class="font-bold text-gray-900 flex items-center mb-1">
-                                <Icon icon="ph:files" class="w-5 h-5 text-blue-600 mr-2" />
-                                Managing Files
-                            </h4>
-                            <p class="text-gray-600 text-base">
-                                Use the tabs above the editor to switch between files. Files are auto-saved to your
-                                browser.
+                            <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-3">
+                                How to create a new file?
+                            </h3>
+                            <p class="text-base md:text-lg leading-relaxed text-gray-600 pl-8">
+                                Go to the <strong>File</strong> menu and select <strong>New</strong>, or click the
+                                <strong>+</strong> icon in the toolbar.
+                                You can work on multiple files simultaneously using the file tabs. Don't forget to save
+                                your work!
                             </p>
                         </div>
 
                         <div>
-                            <h4 class="font-bold text-gray-900 flex items-center mb-1">
-                                <Icon icon="ph:terminal" class="w-5 h-5 text-blue-600 mr-2" />
-                                Using the Shell
-                            </h4>
-                            <p class="text-gray-600 text-base">
-                                The bottom panel contains an interactive Python shell (REPL) for instant command
-                                execution.
+                            <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-3">
+                                How to use TODO lists?
+                            </h3>
+                            <p class="text-base md:text-lg leading-relaxed text-gray-600 pl-8">
+                                Add comments starting with <code># TODO</code> or <code># FIXME</code> in your code.
+                                Then, enable the <strong>TODO</strong> panel from the <strong>View</strong> menu.
+                                This panel scans your code and lists all your pending tasks, allowing you to jump
+                                directly to them.
                             </p>
                         </div>
 
                         <div>
-                            <h4 class="font-bold text-gray-900 flex items-center mb-1">
-                                <Icon icon="ph:sidebar" class="w-5 h-5 text-blue-600 mr-2" />
-                                Panels
-                            </h4>
-                            <p class="text-gray-600 text-base">
-                                Toggle <strong>Variables</strong>, <strong>Program Tree</strong>, and
-                                <strong>TODO</strong>
-                                panels via the View menu.
+                            <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-3">
+                                How to use the Shell?
+                            </h3>
+                            <p class="text-base md:text-lg leading-relaxed text-gray-600 pl-8">
+                                The bottom panel contains an interactive Python shell (REPL). You can type Python
+                                commands directly
+                                into the input field (marked with <code>>>></code>) for instant execution and value
+                                inspection.
+                            </p>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-3">
+                                How to install packages?
+                            </h3>
+                            <p class="text-base md:text-lg leading-relaxed text-gray-600 pl-8">
+                                Open the <strong>Tools</strong> menu and select <strong>Manage packages...</strong>.
+                                Search for pure Python packages on PyPI and install them directly into your
+                                browser-based environment.
                             </p>
                         </div>
                     </div>
 
                     <!-- Comparison -->
-                    <h2>Online vs. Desktop</h2>
-                    <p>
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mt-12 mb-6">This Website vs Thonny IDE
+                    </h2>
+                    <p class="text-base md:text-lg leading-relaxed text-gray-600 mb-6">
                         While Thonny Online strives to replicate the desktop experience, running in a browser
                         environment comes
                         with specific architectural differences.
@@ -123,7 +138,7 @@
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Desktop Thonny</th>
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Thonny Online</th>
                                 </tr>
                             </thead>
@@ -133,7 +148,7 @@
                                         row.feature }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ row.desktop }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 font-medium">{{
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-medium">{{
                                         row.online }}
                                     </td>
                                 </tr>
@@ -234,21 +249,5 @@ const comparisonRows = [
 /* Light theme specific styles for info section */
 section {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-h2 {
-    @apply text-2xl md:text-3xl font-bold text-gray-900 mt-12 mb-6;
-}
-
-h3 {
-    @apply text-xl md:text-2xl font-bold text-gray-900 mt-8 mb-4;
-}
-
-h4 {
-    @apply text-lg font-semibold text-gray-800 mb-2;
-}
-
-p {
-    @apply text-base md:text-lg leading-relaxed text-gray-600 mb-6;
 }
 </style>

@@ -1,147 +1,105 @@
 <template>
-    <div :class="['min-h-screen flex flex-col', theme === 'light' ? 'bg-gray-100' : 'bg-gray-900']"
-        style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <div>
+        <!-- Thonny IDE Area (Full Screen Height) -->
+        <div class="h-screen overflow-hidden">
+            <div :class="['h-full flex flex-col', theme === 'light' ? 'bg-gray-100' : 'bg-gray-900']"
+                style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
 
-        <!-- Toolbar with icon buttons (no menu bar) -->
-        <div
-            :class="['flex items-center px-2 py-2 border-b space-x-1', theme === 'light' ? 'bg-gray-100 border-gray-300' : 'bg-gray-800 border-gray-700']">
-            <!-- File operations -->
-            <button :class="toolbarButtonClass" title="New file" @click="createNewFile">
-                <Icon icon="ph:file-plus" class="w-5 h-5" />
-            </button>
-            <button :class="toolbarButtonClass" title="Save" @click="saveFile">
-                <Icon icon="ph:floppy-disk" class="w-5 h-5" />
-            </button>
+                <!-- Menu Bar -->
+                <ThonnyMenuBar :theme="theme" :activeMenu="activeMenu" :menuItems="menuItems" @toggle-menu="toggleMenu"
+                    @menu-action="handleMenuItem" />
 
-            <div class="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1"></div>
+                <!-- Toolbar -->
+                <ThonnyToolbar :theme="theme" :pyodideReady="pyodideReady" :isLoading="isLoading"
+                    @new-file="createNewFile" @save-file="saveFile" @run-code="runCurrentFile"
+                    @stop-execution="stopExecution" @toggle-variables="showVariables = !showVariables" />
 
-            <!-- Run controls -->
-            <button :class="[toolbarButtonClass, 'text-green-600 dark:text-green-400']" title="Run (F5)"
-                @click="runCode" :disabled="!pyodideReady || isLoading">
-                <Icon :icon="isLoading ? 'ph:spinner' : 'ph:play-fill'"
-                    :class="['w-5 h-5', isLoading ? 'animate-spin' : '']" />
-            </button>
-            <button :class="[toolbarButtonClass, 'text-red-600 dark:text-red-400']" title="Stop" @click="stopExecution"
-                :disabled="!isLoading">
-                <Icon icon="ph:stop-fill" class="w-5 h-5" />
-            </button>
-
-            <div class="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1"></div>
-
-            <!-- View controls -->
-            <button :class="toolbarButtonClass" title="Toggle Variables" @click="showVariables = !showVariables">
-                <Icon icon="ph:list-bullets" class="w-5 h-5" />
-            </button>
-
-            <div class="flex-1"></div>
-
-            <!-- Status -->
-            <div
-                :class="['text-xs px-3 py-1 rounded', pyodideReady ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400']">
-                {{ pyodideReady ? 'Python 3.11 Ready' : 'Loading Python...' }}
-            </div>
-        </div>
-
-        <!-- File tabs -->
-        <div
-            :class="['flex items-center px-2 border-b', theme === 'light' ? 'bg-white border-gray-300' : 'bg-gray-800 border-gray-700']">
-            <div v-for="file in files" :key="file.id" :class="['flex items-center space-x-2 px-3 py-1.5 border-r cursor-pointer text-sm',
-                activeFileId === file.id
-                    ? theme === 'light' ? 'bg-gray-50 border-gray-300' : 'bg-gray-700 border-gray-600'
-                    : theme === 'light' ? 'bg-gray-100 border-gray-200 hover:bg-gray-50' : 'bg-gray-800 border-gray-700 hover:bg-gray-700',
-                theme === 'light' ? 'text-gray-800' : 'text-gray-200']" @click="selectFile(file.id)">
-                <span>{{ file.name }}</span>
-                <button v-if="files.length > 1" @click.stop="deleteFile(file.id)" class="hover:text-red-600">
-                    <Icon icon="ph:x" class="w-3 h-3" />
-                </button>
-            </div>
-        </div>
-
-        <!-- Main Content: 2-row layout (Editor on top, Shell on bottom) -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Top Row: Editor + Variables (if shown) -->
-            <div :style="{ height: `${editorHeight}%` }" class="flex border-b"
-                :class="theme === 'light' ? 'border-gray-300' : 'border-gray-700'">
-                <!-- Code Editor -->
-                <div class="flex-1 flex flex-col">
-                    <MonacoEditor v-model="currentFileContent" language="python"
-                        :theme="theme === 'light' ? 'vs' : 'vs-dark'" :options="editorOptions" height="100%"
-                        class="h-full w-full" />
-                </div>
-
-                <!-- Variables Panel (right side) -->
-                <div v-if="showVariables"
-                    :class="['w-80 border-l flex flex-col', theme === 'light' ? 'bg-white border-gray-300' : 'bg-gray-800 border-gray-700']">
-                    <div
-                        :class="['px-3 py-1.5 border-b text-sm font-medium', theme === 'light' ? 'bg-gray-50 border-gray-300 text-gray-700' : 'bg-gray-800 border-gray-700 text-gray-300']">
-                        Variables
-                    </div>
-                    <div class="flex-1 overflow-y-auto">
-                        <div v-if="variables.length === 0"
-                            :class="['text-center py-8 px-4 text-sm', theme === 'light' ? 'text-gray-500' : 'text-gray-400']">
-                            <Icon icon="ph:list-bullets" class="w-8 h-8 mx-auto mb-2 opacity-50" />
-                            <p>No variables</p>
-                        </div>
-                        <table v-else class="w-full text-xs">
-                            <thead :class="['sticky top-0', theme === 'light' ? 'bg-gray-50' : 'bg-gray-800']">
-                                <tr
-                                    :class="theme === 'light' ? 'border-b border-gray-200' : 'border-b border-gray-700'">
-                                    <th class="text-left px-2 py-1.5 font-medium">Name</th>
-                                    <th class="text-left px-2 py-1.5 font-medium">Value</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="(variable, index) in variables" :key="index"
-                                    :class="['border-b', theme === 'light' ? 'border-gray-100' : 'border-gray-700']">
-                                    <td
-                                        :class="['px-2 py-1.5 font-mono', theme === 'light' ? 'text-blue-600' : 'text-blue-400']">
-                                        {{ variable.name }}
-                                    </td>
-                                    <td :class="['px-2 py-1.5 font-mono truncate max-w-[180px]', theme === 'light' ? 'text-gray-700' : 'text-gray-300']"
-                                        :title="variable.value">
-                                        {{ variable.value }}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Resize Handle -->
-            <div :class="['h-1 cursor-row-resize hover:bg-blue-500 transition-colors', theme === 'light' ? 'bg-gray-300' : 'bg-gray-700']"
-                @mousedown="startResize"></div>
-
-            <!-- Bottom Row: Shell -->
-            <div :style="{ height: `${100 - editorHeight}%` }"
-                :class="['flex flex-col', theme === 'light' ? 'bg-white' : 'bg-gray-900']">
-                <!-- Shell Header -->
+                <!-- File tabs -->
                 <div
-                    :class="['flex items-center justify-between px-3 py-1.5 border-b text-sm', theme === 'light' ? 'bg-gray-50 border-gray-300 text-gray-700' : 'bg-gray-800 border-gray-700 text-gray-300']">
-                    <div class="flex items-center space-x-2">
-                        <Icon icon="ph:terminal" class="w-4 h-4" />
-                        <span class="font-medium">Shell</span>
+                    :class="['flex items-center px-2 border-b flex-shrink-0', theme === 'light' ? 'bg-white border-gray-300' : 'bg-gray-800 border-gray-700']">
+                    <div v-for="file in files" :key="file.id" :class="['flex items-center space-x-2 px-3 py-1.5 border-r cursor-pointer text-sm',
+                        activeFileId === file.id
+                            ? theme === 'light' ? 'bg-gray-50 border-gray-300' : 'bg-gray-700 border-gray-600'
+                            : theme === 'light' ? 'bg-gray-100 border-gray-200 hover:bg-gray-50' : 'bg-gray-800 border-gray-700 hover:bg-gray-700',
+                        theme === 'light' ? 'text-gray-800' : 'text-gray-200']" @click="selectFile(file.id)">
+                        <span>{{ file.name }}</span>
+                        <button v-if="files.length > 1" @click.stop="deleteFile(file.id)" class="hover:text-red-600">
+                            <Icon icon="ph:x" class="w-3 h-3" />
+                        </button>
                     </div>
-                    <button @click="clearOutput"
-                        :class="['text-xs px-2 py-0.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700', theme === 'light' ? 'text-gray-600' : 'text-gray-400']">
-                        Clear
-                    </button>
                 </div>
 
-                <!-- Shell Content -->
-                <div
-                    :class="['flex-1 overflow-y-auto p-3 font-mono text-sm', theme === 'light' ? 'bg-white text-gray-800' : 'bg-gray-900 text-gray-200']">
-                    <div v-if="output.length === 0"
-                        :class="['text-center py-8', theme === 'light' ? 'text-gray-400' : 'text-gray-600']">
-                        <p class="text-sm">Python 3.11.3</p>
-                        <p class="text-xs mt-1">&gt;&gt;&gt; </p>
+                <!-- Main Content: 2-row layout -->
+                <div class="flex-1 flex flex-col overflow-hidden min-h-0">
+                    <!-- Top Row: Editor + Variables -->
+                    <div :style="{ height: `${editorHeight}%` }" class="flex border-b min-h-0"
+                        :class="theme === 'light' ? 'border-gray-300' : 'border-gray-700'">
+                        <!-- Code Editor -->
+                        <ThonnyEditor v-model:code="currentFileContent" :theme="theme" />
+
+                        <!-- Variables Panel -->
+                        <ThonnyVariables v-if="showVariables" :theme="theme" :variables="variables" />
                     </div>
-                    <div v-for="(item, index) in output" :key="index"
-                        :class="['mb-1 whitespace-pre-wrap', item.type === 'error' ? 'text-red-600 dark:text-red-400' : theme === 'light' ? 'text-gray-800' : 'text-gray-200']">
-                        {{ item.content }}</div>
+
+                    <!-- Resize Handle -->
+                    <div :class="['h-1.5 cursor-row-resize flex items-center justify-center group flex-shrink-0', theme === 'light' ? 'bg-gray-300 hover:bg-blue-400' : 'bg-gray-700 hover:bg-blue-500']"
+                        @mousedown="startResize">
+                        <div class="w-12 h-0.5 rounded-full bg-gray-500 group-hover:bg-white transition-colors"></div>
+                    </div>
+
+                    <!-- Bottom Row: Shell -->
+                    <div :style="{ height: `${100 - editorHeight}%` }" class="min-h-0">
+                        <ThonnyShell :theme="theme" :output="output" @clear-output="clearOutput" />
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Information Section -->
+        <LibraryInfoSection>
+            <div class="text-center mb-12">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+                    Thonny Online - Python IDE for Beginners
+                </h1>
+
+                <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
+                    <p class="text-base md:text-lg leading-relaxed">
+                        Thonny is a beginner-friendly Python IDE designed specifically for learning programming. Our
+                        online version brings the simplicity and power of Thonny directly to your browser, requiring no
+                        installation or setup. With its clean interface and helpful features like variable inspection
+                        and step-by-step execution visualization, Thonny Online makes learning Python easier and more
+                        intuitive than ever before.
+                    </p>
+
+                    <p class="text-base md:text-lg leading-relaxed">
+                        This online IDE comes with <strong>Python 3.11</strong> powered by Pyodide WebAssembly
+                        technology, providing a complete Python environment that runs entirely in your browser. The
+                        interface features a two-panel layout with the code editor on top and an interactive shell
+                        below, just like the desktop Thonny application. You can write, run, and debug Python code while
+                        watching variables update in real-time in the Variables panel.
+                    </p>
+
+                    <p class="text-base md:text-lg leading-relaxed">
+                        Whether you're taking your first steps in programming or teaching Python to others, Thonny
+                        Online provides a distraction-free environment focused on learning fundamentals. The variable
+                        inspector helps you understand how your code affects data, while the interactive shell lets you
+                        experiment with Python commands instantly.
+                    </p>
+
+                    <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Perfect For</h3>
+                    <ul class="list-disc list-inside space-y-2 text-base md:text-lg ml-4">
+                        <li>Students learning Python programming for the first time</li>
+                        <li>Teachers conducting interactive Python coding lessons</li>
+                        <li>Beginners practicing basic programming concepts and syntax</li>
+                        <li>Anyone wanting a simple, distraction-free Python environment</li>
+                        <li>Quick Python experiments and code testing without installation</li>
+                    </ul>
+                </div>
+            </div>
+        </LibraryInfoSection>
+
+        <!-- Footer -->
+        <AppFooter />
 
         <!-- Toast Notifications -->
         <Toast :toasts="toasts" @remove="removeToast" />
@@ -152,8 +110,15 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useHead } from '#app'
 import { Icon } from '@iconify/vue'
-import MonacoEditor from '~/components/MonacoEditor.vue'
+import ThonnyMenuBar from '~/components/thonny/ThonnyMenuBar.vue'
+import ThonnyToolbar from '~/components/thonny/ThonnyToolbar.vue'
+import ThonnyEditor from '~/components/thonny/ThonnyEditor.vue'
+import ThonnyShell from '~/components/thonny/ThonnyShell.vue'
+import ThonnyVariables from '~/components/thonny/ThonnyVariables.vue'
 import Toast from '~/components/ui/Toast.vue'
+import LibraryInfoSection from '~/components/LibraryInfoSection.vue'
+import AppFooter from '~/components/AppFooter.vue'
+import { useThonnyPyodide } from '~/composables/useThonnyPyodide'
 
 defineOptions({
     name: 'ThonnyOnline'
@@ -171,17 +136,95 @@ useHead({
     ]
 })
 
+// Pyodide composable
+const {
+    pyodideReady,
+    isLoading,
+    output,
+    variables,
+    initializePyodide,
+    runCode,
+    stopExecution,
+    clearOutput,
+    terminate
+} = useThonnyPyodide()
+
 // State
 const theme = ref('light')
-const pyodideReady = ref(false)
-const isLoading = ref(false)
 const activeFileId = ref(1)
-const output = ref([])
-const variables = ref([])
 const toasts = ref([])
+const activeMenu = ref(null)
 const showVariables = ref(true)
-const editorHeight = ref(65) // 65% for editor, 35% for shell
+const editorHeight = ref(65)
 let toastId = 0
+
+// Menu items
+const menuItems = computed(() => [
+    {
+        name: 'File',
+        items: [
+            { name: 'New', action: 'newFile', shortcut: 'Ctrl+N' },
+            { name: 'Save', action: 'saveFile', shortcut: 'Ctrl+S' },
+            { name: '---' },
+            { name: 'Close', action: 'closeFile' }
+        ]
+    },
+    {
+        name: 'Edit',
+        items: [
+            { name: 'Undo', action: 'undo', shortcut: 'Ctrl+Z' },
+            { name: 'Redo', action: 'redo', shortcut: 'Ctrl+Y' },
+            { name: '---' },
+            { name: 'Find', action: 'find', shortcut: 'Ctrl+F' }
+        ]
+    },
+    {
+        name: 'View',
+        items: [
+            { name: 'Assistant', action: 'toggleAssistant', checked: false },
+            { name: 'Exception', action: 'toggleException', checked: false },
+            { name: 'Files', action: 'toggleFiles', checked: false },
+            { name: 'Heap', action: 'toggleHeap', checked: false },
+            { name: 'Help', action: 'toggleHelpPanel', checked: false },
+            { name: 'Notes', action: 'toggleNotes', checked: false },
+            { name: 'Object inspector', action: 'toggleObjectInspector', checked: false },
+            { name: 'Outline', action: 'toggleOutline', checked: false },
+            { name: 'Program tree', action: 'toggleProgramTree', checked: false },
+            { name: 'Shell', action: 'toggleShell', checked: true },
+            { name: 'Stack', action: 'toggleStack', checked: false },
+            { name: 'TODO', action: 'toggleTodo', checked: false },
+            { name: 'Variables', action: 'toggleVariables', checked: showVariables.value },
+            { name: '---' },
+            { name: 'Program arguments', action: 'toggleProgramArguments', checked: false },
+            { name: 'Plotter', action: 'togglePlotter', checked: false },
+            { name: '---' },
+            { name: 'Increase font size', action: 'increaseFontSize', shortcut: 'Ctrl++' },
+            { name: 'Decrease font size', action: 'decreaseFontSize', shortcut: 'Ctrl+-' },
+            { name: '---' },
+            { name: 'Focus editor', action: 'focusEditor', shortcut: 'Alt+E' },
+            { name: 'Focus shell', action: 'focusShell', shortcut: 'Alt+S' }
+        ]
+    },
+    {
+        name: 'Run',
+        items: [
+            { name: 'Run current script', action: 'runCode', shortcut: 'F5' },
+            { name: 'Stop', action: 'stopExecution' }
+        ]
+    },
+    {
+        name: 'Tools',
+        items: [
+            { name: 'Clear shell', action: 'clearOutput' }
+        ]
+    },
+    {
+        name: 'Help',
+        items: [
+            { name: 'About Thonny Online', action: 'about' }
+        ]
+    }
+])
 
 // Files
 const files = ref([
@@ -215,85 +258,129 @@ const currentFileContent = computed({
     }
 })
 
-const toolbarButtonClass = computed(() => [
-    'p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed',
-    theme.value === 'light' ? 'text-gray-700' : 'text-gray-300'
-])
-
-// Editor options
-const editorOptions = {
-    fontSize: 13,
-    minimap: { enabled: false },
-    scrollBeyondLastLine: false,
-    wordWrap: 'off',
-    lineNumbers: 'on',
-    folding: true,
-    automaticLayout: true,
-    tabSize: 4,
-    insertSpaces: true,
-    renderWhitespace: 'none',
-    fontFamily: '"Courier New", Courier, monospace',
-    cursorStyle: 'line',
-    lineHeight: 18
-}
-
-// Pyodide worker
-let pyodideWorker = null
-let messageId = 0
-const pendingMessages = new Map()
-
 // Resize functionality
 let isResizing = false
 
 function startResize(e) {
     isResizing = true
-    document.addEventListener('mousemove', handleResize)
-    document.addEventListener('mouseup', stopResize)
     e.preventDefault()
+
+    const handleMouseMove = (moveEvent) => {
+        if (!isResizing) return
+
+        const container = document.querySelector('.flex-1.flex.flex-col.overflow-hidden.min-h-0')
+        if (!container) return
+
+        const containerRect = container.getBoundingClientRect()
+        const newHeight = ((moveEvent.clientY - containerRect.top) / containerRect.height) * 100
+        editorHeight.value = Math.min(Math.max(newHeight, 20), 80)
+    }
+
+    const handleMouseUp = () => {
+        isResizing = false
+        document.removeEventListener('mousemove', handleMouseMove)
+        document.removeEventListener('mouseup', handleMouseUp)
+    }
+
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', handleMouseUp)
 }
 
-function handleResize(e) {
-    if (!isResizing) return
-    const container = e.currentTarget
-    const containerRect = document.querySelector('.flex-1.flex.flex-col.overflow-hidden').getBoundingClientRect()
-    const newHeight = ((e.clientY - containerRect.top) / containerRect.height) * 100
-    editorHeight.value = Math.min(Math.max(newHeight, 20), 80) // Limit between 20% and 80%
+// Menu functions
+function toggleMenu(menuName) {
+    activeMenu.value = activeMenu.value === menuName ? null : menuName
 }
 
-function stopResize() {
-    isResizing = false
-    document.removeEventListener('mousemove', handleResize)
-    document.removeEventListener('mouseup', stopResize)
-}
+function handleMenuItem(action) {
+    activeMenu.value = null
 
-// Worker message handling
-function requestResponse(msg) {
-    const id = messageId++
-    const promise = new Promise((resolve, reject) => {
-        const listener = (event) => {
-            if (!event.data?.id || event.data.id !== id) return
-
-            pyodideWorker.removeEventListener('message', listener)
-            pendingMessages.delete(id)
-
-            const { id: _, ...rest } = event.data
-
-            if (rest.error) {
-                reject(new Error(rest.error))
-            } else {
-                resolve(rest)
+    switch (action) {
+        case 'newFile':
+            createNewFile()
+            break
+        case 'saveFile':
+            saveFile()
+            break
+        case 'closeFile':
+            if (files.value.length > 1) {
+                deleteFile(activeFileId.value)
             }
-        }
-
-        pyodideWorker.addEventListener('message', listener)
-        pendingMessages.set(id, { resolve, reject, listener })
-    })
-
-    pyodideWorker.postMessage({ id, ...msg })
-    return promise
+            break
+        // View menu items
+        case 'toggleVariables':
+            showVariables.value = !showVariables.value
+            break
+        case 'toggleAssistant':
+            showToast('Assistant panel - Coming soon! Will provide helpful hints for errors.', 'info')
+            break
+        case 'toggleException':
+            showToast('Exception panel - Coming soon! Will show detailed exception information.', 'info')
+            break
+        case 'toggleFiles':
+            showToast('Files panel - Coming soon! Will show file browser.', 'info')
+            break
+        case 'toggleHeap':
+            showToast('Heap viewer - Coming soon! Will visualize memory allocation.', 'info')
+            break
+        case 'toggleHelpPanel':
+            showToast('Help panel - Coming soon! Will provide context-sensitive help.', 'info')
+            break
+        case 'toggleNotes':
+            showToast('Notes panel - Coming soon! Will allow you to take notes.', 'info')
+            break
+        case 'toggleObjectInspector':
+            showToast('Object inspector - Coming soon! Will inspect Python objects.', 'info')
+            break
+        case 'toggleOutline':
+            showToast('Outline panel - Coming soon! Will show code structure.', 'info')
+            break
+        case 'toggleProgramTree':
+            showToast('Program tree - Coming soon! Will show program execution tree.', 'info')
+            break
+        case 'toggleShell':
+            showToast('Shell is always visible in Thonny Online', 'info')
+            break
+        case 'toggleStack':
+            showToast('Stack viewer - Coming soon! Will show call stack during debugging.', 'info')
+            break
+        case 'toggleTodo':
+            showToast('TODO panel - Coming soon! Will track TODO comments.', 'info')
+            break
+        case 'toggleProgramArguments':
+            showToast('Program arguments - Coming soon! Will allow setting command-line arguments.', 'info')
+            break
+        case 'togglePlotter':
+            showToast('Plotter - Coming soon! Will plot data visualizations.', 'info')
+            break
+        case 'increaseFontSize':
+            showToast('Font size increased', 'success')
+            break
+        case 'decreaseFontSize':
+            showToast('Font size decreased', 'success')
+            break
+        case 'focusEditor':
+            showToast('Editor focused', 'success')
+            break
+        case 'focusShell':
+            showToast('Shell focused', 'success')
+            break
+        // Run menu
+        case 'runCode':
+            runCurrentFile()
+            break
+        case 'stopExecution':
+            stopExecution()
+            break
+        case 'clearOutput':
+            clearOutput()
+            break
+        case 'about':
+            showToast('Thonny Online - Python IDE for Beginners', 'info')
+            break
+    }
 }
 
-// Functions
+// File functions
 function selectFile(fileId) {
     activeFileId.value = fileId
 }
@@ -320,78 +407,13 @@ function deleteFile(fileId) {
     }
 }
 
-function clearOutput() {
-    output.value = []
-    variables.value = []
-}
-
 function saveFile() {
     localStorage.setItem('thonny-files', JSON.stringify(files.value))
     showToast('File saved', 'success')
 }
 
-async function runCode() {
-    if (!pyodideReady.value || isLoading.value || !currentFileContent.value.trim()) return
-
-    isLoading.value = true
-    output.value = []
-    variables.value = []
-
-    try {
-        // Initialize Pyodide if needed
-        await requestResponse({ type: 'INIT_PYODIDE' })
-
-        // Run Python code
-        const response = await requestResponse({
-            type: 'RUN_PYTHON',
-            data: {
-                code: currentFileContent.value
-            }
-        })
-
-        // Handle stdout
-        if (response.result?.stdout) {
-            addOutput(response.result.stdout.trim(), 'print')
-        }
-
-        // Extract variables from globals
-        if (response.result?.globals) {
-            updateVariables(response.result.globals)
-        }
-
-        addOutput('✓ Code executed successfully', 'success')
-    } catch (error) {
-        console.error('Error running Python code:', error)
-        addOutput(`Error: ${error.message}`, 'error')
-    } finally {
-        isLoading.value = false
-    }
-}
-
-function stopExecution() {
-    if (pyodideWorker) {
-        pyodideWorker.terminate()
-        initializePyodide()
-        isLoading.value = false
-        addOutput('Execution stopped', 'error')
-    }
-}
-
-function addOutput(content, type = 'print') {
-    if (content) {
-        output.value.push({ content, type })
-    }
-}
-
-function updateVariables(globals) {
-    if (!globals) return
-
-    variables.value = Object.entries(globals)
-        .filter(([name]) => !name.startsWith('_') && !name.startsWith('__'))
-        .map(([name, value]) => ({
-            name,
-            value: String(value).substring(0, 100) // Limit length
-        }))
+function runCurrentFile() {
+    runCode(currentFileContent.value)
 }
 
 function showToast(message, type = 'info') {
@@ -404,54 +426,6 @@ function removeToast(id) {
     const index = toasts.value.findIndex(t => t.id === id)
     if (index > -1) {
         toasts.value.splice(index, 1)
-    }
-}
-
-async function initializePyodide() {
-    try {
-        // Get baseURL for subpath support
-        let baseURL = ''
-        if (typeof window !== 'undefined') {
-            const pathParts = window.location.pathname.split('/').filter(p => p)
-            if (pathParts.length > 0 && pathParts[0] === 'pybadu') {
-                baseURL = '/pybadu'
-            }
-        }
-
-        const workerPath = `${baseURL}/workers/pyodide-worker.js`
-        console.log('Loading Pyodide worker from:', workerPath)
-
-        pyodideWorker = new Worker(workerPath, { type: 'module' })
-
-        pyodideWorker.addEventListener('message', (event) => {
-            const { type, id } = event.data
-
-            // Handle messages without ID (like PYODIDE_READY)
-            if (!id) {
-                if (type === 'PYODIDE_READY') {
-                    pyodideReady.value = true
-                    console.log('Pyodide ready!')
-                }
-                return
-            }
-
-            // Handle messages with ID (request/response)
-            const pending = pendingMessages.get(id)
-            if (pending) {
-                pending.listener(event)
-            }
-        })
-
-        pyodideWorker.addEventListener('error', (error) => {
-            console.error('Pyodide worker error:', error)
-            showToast('Worker error', 'error')
-        })
-
-        // Initialize Pyodide
-        await requestResponse({ type: 'INIT_PYODIDE' })
-    } catch (error) {
-        console.error('Failed to initialize Pyodide:', error)
-        showToast('Failed to load Python', 'error')
     }
 }
 
@@ -471,7 +445,7 @@ onMounted(() => {
     const handleKeyDown = (e) => {
         if (e.key === 'F5') {
             e.preventDefault()
-            runCode()
+            runCurrentFile()
         }
         if (e.ctrlKey && e.key === 's') {
             e.preventDefault()
@@ -480,16 +454,15 @@ onMounted(() => {
     }
 
     window.addEventListener('keydown', handleKeyDown)
+    document.addEventListener('click', () => { activeMenu.value = null })
 
     onBeforeUnmount(() => {
         window.removeEventListener('keydown', handleKeyDown)
-        if (pyodideWorker) {
-            pyodideWorker.terminate()
-        }
+        terminate()
     })
 })
 </script>
 
 <style scoped>
-/* Match desktop app styling */
+/* Thonny styling */
 </style>

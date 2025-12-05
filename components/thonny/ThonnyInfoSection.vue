@@ -16,112 +16,59 @@
                 <article class="max-w-3xl mx-auto prose prose-lg prose-blue text-gray-700">
                     <!-- Header -->
                     <div class="text-left mb-12 not-prose border-b pb-8">
-                        <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 tracking-tight">
+                        <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-6 tracking-tight">
                             {{ title }}
                         </h1>
-                        <p class="text-xl text-gray-500 leading-relaxed">
+                        <p class="text-base text-gray-500 leading-relaxed">
                             Experience the simplicity of Python programming directly in your browser.
                             Thonny Online brings the beloved educational IDE to the web, powered by WebAssembly.
                         </p>
                     </div>
 
                     <!-- Intro -->
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mt-12 mb-6">What is Thonny Online?</h2>
-                    <p class="text-base md:text-lg leading-relaxed text-gray-600 mb-6">
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mt-12 mb-6">What is Thonny Online?</h2>
+                    <p class="text-base leading-relaxed text-gray-600 mb-6">
                         <strong>Thonny Online</strong> is a web-based adaptation of the popular Thonny IDE, designed
                         specifically for beginners and educators. Unlike traditional cloud-based IDEs that run code
                         on remote servers, Thonny Online uses <strong>Pyodide</strong> technology to run a full
                         Python interpreter directly inside your web browser.
                     </p>
-                    <p class="text-base md:text-lg leading-relaxed text-gray-600 mb-6">
+                    <p class="text-base leading-relaxed text-gray-600 mb-6">
                         This approach means you get a responsive, private coding environment with zero setup. It's
                         perfect for quickly testing snippets, learning Python syntax, or teaching a class without
                         worrying about installation permissions or internet latency.
                     </p>
 
                     <!-- Features List -->
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mt-12 mb-6">Key Features</h2>
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mt-12 mb-6">Key Features</h2>
                     <div class="not-prose grid grid-cols-1 sm:grid-cols-2 gap-6 my-8">
                         <div v-for="(card, index) in featureCards" :key="index" class="flex flex-col">
                             <div class="flex items-center mb-2 text-gray-900 font-bold">
                                 <Icon :icon="card.icon" class="w-5 h-5 text-blue-600 mr-2" />
                                 {{ card.title }}
                             </div>
-                            <p class="text-base md:text-lg text-gray-600 leading-relaxed">{{ card.description }}</p>
+                            <p class="text-base text-gray-600 leading-relaxed">{{ card.description }}</p>
                         </div>
                     </div>
 
-                    <!-- How to Use -->
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mt-12 mb-6">How to Use Thonny Online</h2>
-                    <p class="text-base md:text-lg leading-relaxed text-gray-600 mb-6">Getting started is immediate.
+
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mt-12 mb-6">How to Use Thonny Online</h2>
+                    <p class="text-base leading-relaxed text-gray-600 mb-6">Getting started is immediate.
                         Here are the core workflows:</p>
 
                     <div class="space-y-8 mt-8">
-                        <div>
-                            <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-3">
-                                How to run Python code?
+                        <div v-for="(step, index) in howToUseSteps" :key="index">
+                            <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-3">
+                                # {{ step.title }}
                             </h3>
-                            <p class="text-base md:text-lg leading-relaxed text-gray-600 pl-8">
-                                Type your Python code in the main editor. Press <kbd
-                                    class="bg-gray-100 border border-gray-300 rounded px-1.5 py-0.5 text-sm font-mono text-gray-700 mx-1">F5</kbd>
-                                or click the <strong>Run</strong> button in the toolbar to execute your script. The
-                                output will appear in the
-                                Shell panel below.
-                            </p>
-                        </div>
-
-                        <div>
-                            <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-3">
-                                How to create a new file?
-                            </h3>
-                            <p class="text-base md:text-lg leading-relaxed text-gray-600 pl-8">
-                                Go to the <strong>File</strong> menu and select <strong>New</strong>, or click the
-                                <strong>+</strong> icon in the toolbar.
-                                You can work on multiple files simultaneously using the file tabs. Don't forget to save
-                                your work!
-                            </p>
-                        </div>
-
-                        <div>
-                            <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-3">
-                                How to use TODO lists?
-                            </h3>
-                            <p class="text-base md:text-lg leading-relaxed text-gray-600 pl-8">
-                                Add comments starting with <code># TODO</code> or <code># FIXME</code> in your code.
-                                Then, enable the <strong>TODO</strong> panel from the <strong>View</strong> menu.
-                                This panel scans your code and lists all your pending tasks, allowing you to jump
-                                directly to them.
-                            </p>
-                        </div>
-
-                        <div>
-                            <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-3">
-                                How to use the Shell?
-                            </h3>
-                            <p class="text-base md:text-lg leading-relaxed text-gray-600 pl-8">
-                                The bottom panel contains an interactive Python shell (REPL). You can type Python
-                                commands directly
-                                into the input field (marked with <code>>>></code>) for instant execution and value
-                                inspection.
-                            </p>
-                        </div>
-
-                        <div>
-                            <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-3">
-                                How to install packages?
-                            </h3>
-                            <p class="text-base md:text-lg leading-relaxed text-gray-600 pl-8">
-                                Open the <strong>Tools</strong> menu and select <strong>Manage packages...</strong>.
-                                Search for pure Python packages on PyPI and install them directly into your
-                                browser-based environment.
-                            </p>
+                            <p class="text-base leading-relaxed text-gray-600 pl-8" v-html="step.content"></p>
                         </div>
                     </div>
 
                     <!-- Comparison -->
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mt-12 mb-6">This Website vs Thonny IDE
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mt-12 mb-6">This Website vs Thonny IDE
                     </h2>
-                    <p class="text-base md:text-lg leading-relaxed text-gray-600 mb-6">
+                    <p class="text-base leading-relaxed text-gray-600 mb-6">
                         While Thonny Online strives to replicate the desktop experience, running in a browser
                         environment comes
                         with specific architectural differences.
@@ -213,6 +160,29 @@ const featureCards = [
         title: 'Package Management',
         description: 'Install and use pure Python packages from PyPI using Micropip, extending the capabilities of the editor.',
         icon: 'ph:package'
+    }
+]
+
+const howToUseSteps = [
+    {
+        title: 'How to run Python code?',
+        content: `Type your Python code in the main editor. Press <kbd class="bg-gray-100 border border-gray-300 rounded px-1.5 py-0.5 text-sm font-mono text-gray-700 mx-1">F5</kbd> or click the <strong>Run</strong> button in the toolbar to execute your script. The output will appear in the Shell panel below.`
+    },
+    {
+        title: 'How to create a new file?',
+        content: `Go to the <strong>File</strong> menu and select <strong>New</strong>, or click the <strong>+</strong> icon in the toolbar. You can work on multiple files simultaneously using the file tabs. Don't forget to save your work!`
+    },
+    {
+        title: 'How to use TODO lists?',
+        content: `Add comments starting with <code># TODO</code> or <code># FIXME</code> in your code. Then, enable the <strong>TODO</strong> panel from the <strong>View</strong> menu. This panel scans your code and lists all your pending tasks, allowing you to jump directly to them.`
+    },
+    {
+        title: 'How to use the Shell?',
+        content: `The bottom panel contains an interactive Python shell (REPL). You can type Python commands directly into the input field (marked with <code>>>></code>) for instant execution and value inspection.`
+    },
+    {
+        title: 'How to install packages?',
+        content: `Open the <strong>Tools</strong> menu and select <strong>Manage packages...</strong>. Search for pure Python packages on PyPI and install them directly into your browser-based environment.`
     }
 ]
 

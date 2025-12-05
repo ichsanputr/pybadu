@@ -20,24 +20,35 @@
                             {{ title }}
                         </h1>
                         <p class="text-base text-gray-500 leading-relaxed">
-                            Experience the simplicity of Python programming directly in your browser.
-                            Thonny Online brings the beloved educational IDE to the web, powered by WebAssembly.
+                            Thonny Online is a modern, browser-based adaptation of the Thonny IDE — offering the same
+                            simple, beginner-friendly Python editor directly on the web. Powered by WebAssembly and
+                            Pyodide, it provides a familiar Thonny-like experience without installation
                         </p>
                     </div>
 
                     <!-- Intro -->
                     <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mt-12 mb-6">What is Thonny Online?</h2>
+
                     <p class="text-base leading-relaxed text-gray-600 mb-6">
-                        <strong>Thonny Online</strong> is a web-based adaptation of the popular Thonny IDE, designed
-                        specifically for beginners and educators. Unlike traditional cloud-based IDEs that run code
-                        on remote servers, Thonny Online uses <strong>Pyodide</strong> technology to run a full
-                        Python interpreter directly inside your web browser.
+                        <strong>Thonny Online</strong> is a browser-based adaptation of the popular Thonny IDE, built
+                        for beginners,
+                        students, and educators who want a simple and accessible way to learn Python. Instead of relying
+                        on remote
+                        servers, Thonny Online uses <strong>Pyodide</strong> and <strong>WebAssembly</strong> to run
+                        Python directly
+                        inside your browser.
                     </p>
+
                     <p class="text-base leading-relaxed text-gray-600 mb-6">
-                        This approach means you get a responsive, private coding environment with zero setup. It's
-                        perfect for quickly testing snippets, learning Python syntax, or teaching a class without
-                        worrying about installation permissions or internet latency.
+                        This approach provides a fast, private, installation-free coding environment—ideal for learning
+                        Python,
+                        experimenting with code, or teaching in the classroom. While not a complete replacement for the
+                        full desktop
+                        Thonny IDE due to certain browser limitations, it successfully captures most of Thonny’s core
+                        features and
+                        offers a familiar, beginner-friendly experience entirely on the web.
                     </p>
+
 
                     <!-- Features List -->
                     <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mt-12 mb-6">Key Features</h2>

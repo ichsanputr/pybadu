@@ -1,0 +1,137 @@
+Load Pyodide engine in browser
+
+Run Python code via runPython
+
+Run Python code via runPythonAsync
+
+Capture stdout output
+
+Capture stderr output
+
+Show Python output in a console
+
+Show Python error traceback
+
+Highlight error line in the editor
+
+Provide REPL-like execution
+
+Monaco Editor integration
+
+Python syntax highlighting
+
+Auto indentation in editor
+
+Auto bracket closing
+
+Multi-tab editor support
+
+Search and replace inside editor
+
+Light and dark editor themes
+
+Editor keyboard shortcuts
+
+Create new file in virtual filesystem
+
+Create new folder in virtual filesystem
+
+Save file content to Pyodide FS
+
+Read file content from Pyodide FS
+
+Delete files or folders
+
+Rename files or folders
+
+Move files or folders
+
+List filesystem directory contents
+
+Load project structure into UI file explorer
+
+Persist filesystem using IndexedDB
+
+Reset filesystem to clean state
+
+Import Python modules from Pyodide FS
+
+Support multiple Python modules in project
+
+Support nested folders as Python packages
+
+Support init.py package structure
+
+Live module reload after file edit
+
+Install pure Python packages via micropip
+
+Use NumPy (Pyodide version)
+
+Use Pandas (Pyodide version)
+
+Use Matplotlib (Pyodide version)
+
+Render Matplotlib plot in canvas
+
+Use Python standard library (supported subset)
+
+Implement variable inspector from globals()
+
+Display variable names and values
+
+Show variable types (int, float, str, list, dict, tuple, bool)
+
+Expand nested list/dict structures
+
+Auto-update variable inspector after execution
+
+Provide interactive console panel
+
+Clear console button
+
+Auto-scroll console output
+
+Distinguish stdout vs stderr visually
+
+Upload file from user device into Pyodide FS
+
+Download file from Pyodide FS to device
+
+Export entire project as ZIP file
+
+Import ZIP archive into filesystem
+
+Provide Run button
+
+Provide Stop/Interrupt execution button
+
+Provide Save button
+
+Provide Create File button
+
+Provide Create Folder button
+
+JS-to-Python function calling
+
+Python-to-JS function calling
+
+Convert JS objects to Python objects
+
+Convert Python objects to JS objects
+
+UI layout with split panels
+
+Sidebar file explorer
+
+Collapsible file explorer panel
+
+Status bar showing Pyodide loading state
+
+Toast notifications for success/error
+
+Execution timeout protection
+
+Interrupt long-running Python execution
+
+Safe sandboxed execution inside browser

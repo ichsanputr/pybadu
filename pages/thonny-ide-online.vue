@@ -106,7 +106,7 @@ definePageMeta({
 })
 
 useHead({
-    title: 'Online Thonny IDE - Python Editor for Beginners',
+    title: 'Online Thonny IDE - Try on Browser',
     htmlAttrs: {
         lang: 'en'
     },

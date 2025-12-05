@@ -5,6 +5,9 @@
         <button :class="toolbarButtonClass" title="New file" @click="$emit('new-file')">
             <Icon icon="ph:file-plus" class="w-5 h-5" />
         </button>
+        <button :class="toolbarButtonClass" title="Upload file" @click="$emit('upload-file')">
+            <Icon icon="ph:file-arrow-up" class="w-5 h-5" />
+        </button>
         <button :class="toolbarButtonClass" title="Save" @click="$emit('save-file')">
             <Icon icon="ph:floppy-disk" class="w-5 h-5" />
         </button>
@@ -43,7 +46,7 @@ const props = defineProps({
     isLoading: { type: Boolean, required: true }
 })
 
-defineEmits(['new-file', 'save-file', 'run-code', 'stop-execution', 'toggle-variables'])
+defineEmits(['new-file', 'save-file', 'upload-file', 'run-code', 'stop-execution', 'toggle-variables'])
 
 const toolbarButtonClass = computed(() => [
     'p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed',

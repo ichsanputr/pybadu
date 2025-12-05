@@ -1,21 +1,14 @@
 <template>
   <ClientOnly>
     <div class="monaco-editor-container" :style="{ height: height }">
-      <VueMonacoEditor
-        :value="modelValue"
-        :language="language"
-        :theme="theme"
-        :options="editorOptions"
-        @change="handleChange"
-        class="w-full"
-        :style="{ height: height }"
-      />
+      <VueMonacoEditor :value="modelValue" :language="language" :theme="theme" :options="editorOptions"
+        @change="handleChange" @mount="handleMount" class="w-full" :style="{ height: height }" />
     </div>
   </ClientOnly>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const props = defineProps({
   modelValue: {
@@ -51,7 +44,7 @@ const editorOptions = computed(() => {
   if (props.options && Object.keys(props.options).length > 0) {
     return props.options
   }
-  
+
   // Fallback to default options
   return {
     automaticLayout: true,
@@ -66,10 +59,22 @@ const editorOptions = computed(() => {
   }
 })
 
+const editorRef = ref(null)
+
+const handleMount = (editor) => {
+  editorRef.value = editor
+}
+
 const handleChange = (value) => {
   emit('update:modelValue', value)
   emit('change', value)
 }
+
+defineExpose({
+  focus: () => {
+    editorRef.value?.focus()
+  }
+})
 </script>
 
 <style scoped>

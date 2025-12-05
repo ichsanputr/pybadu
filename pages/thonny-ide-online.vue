@@ -10,8 +10,8 @@
 
             <!-- Toolbar -->
             <ThonnyToolbar :theme="theme" :pyodideReady="pyodideReady" :isLoading="isLoading" @new-file="createNewFile"
-                @save-file="saveFile" @run-code="runCurrentFile" @stop-execution="stopExecution"
-                @toggle-variables="showVariables = !showVariables" />
+                @save-file="saveFile" @upload-file="handleUploadFile" @run-code="runCurrentFile"
+                @stop-execution="stopExecution" @toggle-variables="showVariables = !showVariables" />
 
             <!-- File tabs -->
             <div
@@ -36,7 +36,8 @@
                 <div class="flex overflow-hidden border-b"
                     :class="theme === 'light' ? 'border-gray-300' : 'border-gray-700'">
                     <!-- Code Editor -->
-                    <ThonnyEditor v-model:code="currentFileContent" :theme="theme" :fontSize="editorFontSize" />
+                    <ThonnyEditor ref="thonnyEditor" v-model:code="currentFileContent" :theme="theme"
+                        :fontSize="editorFontSize" />
 
                     <!-- Variables Panel -->
                     <ThonnyVariables v-if="showVariables" :theme="theme" :variables="variables" />
@@ -50,8 +51,8 @@
 
                 <!-- Bottom Row: Shell -->
                 <div class="overflow-hidden">
-                    <ThonnyShell :theme="theme" :output="output" :isExecuting="isLoading" @clear-output="clearOutput"
-                        @execute-command="handleShellCommand" />
+                    <ThonnyShell ref="thonnyShell" :theme="theme" :output="output" :isExecuting="isLoading"
+                        @clear-output="clearOutput" @execute-command="handleShellCommand" />
                 </div>
             </div>
         </div>
@@ -140,6 +141,10 @@ const saveDialog = ref({
     resolve: null
 })
 const showPackageManager = ref(false)
+
+// DOM Refs
+const thonnyEditor = ref(null)
+const thonnyShell = ref(null)
 
 // Menu items
 const menuItems = computed(() => [
@@ -327,17 +332,15 @@ function handleMenuItem(action) {
             break
         case 'increaseFontSize':
             editorFontSize.value = Math.min(editorFontSize.value + 1, 72)
-            showToast(`Font size increased to ${editorFontSize.value}`, 'success')
             break
         case 'decreaseFontSize':
             editorFontSize.value = Math.max(editorFontSize.value - 1, 8)
-            showToast(`Font size decreased to ${editorFontSize.value}`, 'success')
             break
         case 'focusEditor':
-            showToast('Editor focused', 'success')
+            thonnyEditor.value?.focus()
             break
         case 'focusShell':
-            showToast('Shell focused', 'success')
+            thonnyShell.value?.focusInput()
             break
         // Run menu
         case 'runCode':
@@ -364,6 +367,11 @@ function selectFile(fileId) {
 }
 
 function createNewFile() {
+    if (files.value.length >= 5) {
+        showToast('Maximum limit of 5 files reached', 'warning')
+        return
+    }
+
     const newId = Math.max(...files.value.map(f => f.id)) + 1
     files.value.push({
         id: newId,
@@ -372,6 +380,40 @@ function createNewFile() {
     })
     activeFileId.value = newId
     showToast('New file created', 'success')
+}
+
+function handleUploadFile() {
+    if (files.value.length >= 5) {
+        showToast('Maximum limit of 5 files reached', 'warning')
+        return
+    }
+
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = '.py,.txt'
+
+    input.onchange = (e) => {
+        const file = e.target.files[0]
+        if (!file) return
+
+        const reader = new FileReader()
+        reader.onload = (event) => {
+            const content = event.target.result
+            const newId = Math.max(...files.value.map(f => f.id)) + 1
+
+            // Check for duplicate names
+            files.value.push({
+                id: newId,
+                name: file.name,
+                content: content
+            })
+            activeFileId.value = newId
+            showToast(`File uploaded: ${file.name}`, 'success')
+        }
+        reader.readAsText(file)
+    }
+
+    input.click()
 }
 
 function deleteFile(fileId) {

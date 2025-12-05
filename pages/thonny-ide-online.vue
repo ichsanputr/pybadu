@@ -56,47 +56,7 @@
         </div>
 
         <!-- Information Section -->
-        <LibraryInfoSection>
-            <div class="text-center mb-12">
-                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-                    Online Thonny IDE - Try on Browser
-                </h1>
-
-                <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
-                    <p class="text-base md:text-lg leading-relaxed">
-                        Thonny is a beginner-friendly Python IDE designed specifically for learning programming. Our
-                        online version brings the simplicity and power of Thonny directly to your browser, requiring no
-                        installation or setup. With its clean interface and helpful features like variable inspection
-                        and step-by-step execution visualization, Thonny Online makes learning Python easier and more
-                        intuitive than ever before.
-                    </p>
-
-                    <p class="text-base md:text-lg leading-relaxed">
-                        This online IDE comes with <strong>Python 3.11</strong> powered by Pyodide WebAssembly
-                        technology, providing a complete Python environment that runs entirely in your browser. The
-                        interface features a two-panel layout with the code editor on top and an interactive shell
-                        below, just like the desktop Thonny application. You can write, run, and debug Python code while
-                        watching variables update in real-time in the Variables panel.
-                    </p>
-
-                    <p class="text-base md:text-lg leading-relaxed">
-                        Whether you're taking your first steps in programming or teaching Python to others, Thonny
-                        Online provides a distraction-free environment focused on learning fundamentals. The variable
-                        inspector helps you understand how your code affects data, while the interactive shell lets you
-                        experiment with Python commands instantly.
-                    </p>
-
-                    <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Perfect For</h3>
-                    <ul class="list-disc list-inside space-y-2 text-base md:text-lg ml-4">
-                        <li>Students learning Python programming for the first time</li>
-                        <li>Teachers conducting interactive Python coding lessons</li>
-                        <li>Beginners practicing basic programming concepts and syntax</li>
-                        <li>Anyone wanting a simple, distraction-free Python environment</li>
-                        <li>Quick Python experiments and code testing without installation</li>
-                    </ul>
-                </div>
-            </div>
-        </LibraryInfoSection>
+        <ThonnyInfoSection />
 
         <!-- Footer -->
         <AppFooter />
@@ -116,7 +76,7 @@ import ThonnyEditor from '~/components/thonny/ThonnyEditor.vue'
 import ThonnyShell from '~/components/thonny/ThonnyShell.vue'
 import ThonnyVariables from '~/components/thonny/ThonnyVariables.vue'
 import Toast from '~/components/ui/Toast.vue'
-import LibraryInfoSection from '~/components/LibraryInfoSection.vue'
+import ThonnyInfoSection from '~/components/thonny/ThonnyInfoSection.vue'
 import AppFooter from '~/components/AppFooter.vue'
 import { useThonnyPyodide } from '~/composables/useThonnyPyodide'
 
@@ -318,12 +278,6 @@ function handleMenuItem(action) {
         case 'toggleFiles':
             showToast('Files panel - Coming soon! Will show file browser.', 'info')
             break
-        case 'toggleHeap':
-            showToast('Heap viewer - Coming soon! Will visualize memory allocation.', 'info')
-            break
-        case 'toggleHelpPanel':
-            showToast('Help panel - Coming soon! Will provide context-sensitive help.', 'info')
-            break
         case 'toggleNotes':
             showToast('Notes panel - Coming soon! Will allow you to take notes.', 'info')
             break
@@ -338,9 +292,6 @@ function handleMenuItem(action) {
             break
         case 'toggleShell':
             showToast('Shell is always visible in Thonny Online', 'info')
-            break
-        case 'toggleStack':
-            showToast('Stack viewer - Coming soon! Will show call stack during debugging.', 'info')
             break
         case 'toggleTodo':
             showToast('TODO panel - Coming soon! Will track TODO comments.', 'info')

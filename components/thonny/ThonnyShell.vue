@@ -59,7 +59,7 @@ import { Icon } from '@iconify/vue'
 const props = defineProps({
     theme: { type: String, required: true },
     output: { type: Array, required: true },
-    shellHistory: { type: Array, required: true },
+    shellHistory: { type: Array, default: () => [] },
     isExecuting: { type: Boolean, default: false }
 })
 

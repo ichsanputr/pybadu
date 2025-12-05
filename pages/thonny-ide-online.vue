@@ -50,7 +50,8 @@
 
                 <!-- Bottom Row: Shell -->
                 <div class="overflow-hidden">
-                    <ThonnyShell :theme="theme" :output="output" @clear-output="clearOutput" />
+                    <ThonnyShell :theme="theme" :output="output" :isExecuting="isLoading" @clear-output="clearOutput"
+                        @execute-command="handleShellCommand" />
                 </div>
             </div>
         </div>
@@ -103,10 +104,12 @@ const {
     output,
     variables,
     initializePyodide,
-    runCode,
+    runScript,
+    runShell,
     stopExecution,
     clearOutput,
-    terminate
+    terminate,
+    addOutput
 } = useThonnyPyodide()
 
 // State
@@ -366,7 +369,21 @@ function saveFile() {
 }
 
 function runCurrentFile() {
-    runCode(currentFileContent.value)
+    if (!currentFile.value) return
+    addOutput(`%Run ${currentFile.value.name}`, 'system')
+    runScript(currentFileContent.value)
+}
+
+function handleShellCommand(command) {
+    if (command === undefined) return
+
+    // Log the command as user input
+    addOutput(command, 'input')
+
+    // Run the command
+    if (command.trim()) {
+        runShell(command)
+    }
 }
 
 function showToast(message, type = 'info') {

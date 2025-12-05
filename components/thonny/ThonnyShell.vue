@@ -16,35 +16,49 @@
         <!-- Shell Content -->
         <div ref="shellContainer"
             :class="['flex-1 overflow-y-auto p-3 font-mono text-sm', theme === 'light' ? 'bg-white text-gray-800' : 'bg-gray-900 text-gray-200']">
-            <!-- Output from editor runs -->
-            <div v-for="(item, index) in output" :key="'output-' + index"
-                :class="['mb-1 whitespace-pre-wrap', item.type === 'error' ? 'text-red-600 dark:text-red-400' : theme === 'light' ? 'text-gray-800' : 'text-gray-200']">
-                {{ item.content }}</div>
 
-            <!-- Shell command history -->
-            <div v-for="(item, index) in shellHistory" :key="'shell-' + index" class="mb-2">
-                <!-- Input line -->
-                <div v-if="item.type === 'input'" class="flex">
-                    <span class="text-green-500 mr-2">&gt;&gt;&gt;</span>
+            <!-- Unified Output Stream -->
+            <div v-for="(item, index) in output" :key="'msg-' + index" class="mb-1 font-mono">
+                <!-- User Input -->
+                <div v-if="item.type === 'input'" class="flex"
+                    :class="theme === 'light' ? 'text-gray-800' : 'text-gray-200'">
+                    <span class="text-green-500 font-bold mr-2">&gt;&gt;&gt;</span>
                     <span>{{ item.content }}</span>
                 </div>
-                <!-- Output line -->
-                <div v-else-if="item.type === 'output'" :class="['ml-6', item.isError ? 'text-red-400' : '']">
-                    <pre class="whitespace-pre-wrap">{{ item.content }}</pre>
+
+                <!-- System Info -->
+                <div v-else-if="item.type === 'info' || item.type === 'system'"
+                    class="text-blue-500 dark:text-blue-400 font-semibold italic">
+                    {{ item.content }}
+                </div>
+
+                <!-- Error -->
+                <div v-else-if="item.type === 'error'" class="text-red-600 dark:text-red-400 whitespace-pre-wrap">
+                    {{ item.content }}
+                </div>
+
+                <!-- Success -->
+                <div v-else-if="item.type === 'success'" class="text-green-600 dark:text-green-400">
+                    {{ item.content }}
+                </div>
+
+                <!-- Standard Output -->
+                <div v-else class="whitespace-pre-wrap" :class="theme === 'light' ? 'text-gray-800' : 'text-gray-200'">
+                    {{ item.content }}
                 </div>
             </div>
 
             <!-- Current input line -->
-            <div v-if="!isExecuting" class="flex items-start">
-                <span class="text-green-500 mr-2">&gt;&gt;&gt;</span>
+            <div v-if="!isExecuting" class="flex items-start mt-2">
+                <span class="text-green-500 font-bold mr-2">&gt;&gt;&gt;</span>
                 <input ref="shellInputRef" v-model="currentInput" @keydown.enter="executeShellCommand"
                     @keydown.up.prevent="navigateHistory('up')" @keydown.down.prevent="navigateHistory('down')"
-                    :class="['flex-1 bg-transparent outline-none border-none', theme === 'light' ? 'text-gray-800' : 'text-gray-200']"
-                    placeholder="Type Python code..." autocomplete="off" spellcheck="false" />
+                    :class="['flex-1 bg-transparent outline-none border-none font-mono', theme === 'light' ? 'text-gray-800' : 'text-gray-200']"
+                    placeholder="" autocomplete="off" spellcheck="false" />
             </div>
 
             <!-- Executing indicator -->
-            <div v-if="isExecuting" class="flex items-center space-x-2 text-blue-500">
+            <div v-if="isExecuting" class="flex items-center space-x-2 text-blue-500 mt-2">
                 <Icon icon="ph:spinner" class="w-4 h-4 animate-spin" />
                 <span class="text-sm">Executing...</span>
             </div>
@@ -58,8 +72,7 @@ import { Icon } from '@iconify/vue'
 
 const props = defineProps({
     theme: { type: String, required: true },
-    output: { type: Array, required: true },
-    shellHistory: { type: Array, default: () => [] },
+    output: { type: Array, required: true }, // Unified history
     isExecuting: { type: Boolean, default: false }
 })
 
@@ -68,38 +81,38 @@ const emit = defineEmits(['clear-output', 'execute-command'])
 const shellInputRef = ref(null)
 const shellContainer = ref(null)
 const currentInput = ref('')
-const commandHistory = ref([])
+const commandBuffer = ref([])
 const historyIndex = ref(-1)
 
 function executeShellCommand() {
-    if (!currentInput.value.trim() || props.isExecuting) return
-
     const command = currentInput.value
+    // Emit command even if empty
     emit('execute-command', command)
 
-    // Add to command history
-    commandHistory.value.push(command)
+    if (command.trim()) {
+        commandBuffer.value.push(command)
+    }
     historyIndex.value = -1
-
-    // Clear input
     currentInput.value = ''
 
     scrollToBottom()
 }
 
 function navigateHistory(direction) {
-    if (commandHistory.value.length === 0) return
+    if (commandBuffer.value.length === 0) return
 
     if (direction === 'up') {
-        if (historyIndex.value < commandHistory.value.length - 1) {
-            historyIndex.value++
-            currentInput.value = commandHistory.value[commandHistory.value.length - 1 - historyIndex.value]
+        const newIndex = historyIndex.value + 1
+        if (newIndex < commandBuffer.value.length) {
+            historyIndex.value = newIndex
+            currentInput.value = commandBuffer.value[commandBuffer.value.length - 1 - newIndex]
         }
     } else if (direction === 'down') {
-        if (historyIndex.value > 0) {
-            historyIndex.value--
-            currentInput.value = commandHistory.value[commandHistory.value.length - 1 - historyIndex.value]
-        } else if (historyIndex.value === 0) {
+        const newIndex = historyIndex.value - 1
+        if (newIndex >= 0) {
+            historyIndex.value = newIndex
+            currentInput.value = commandBuffer.value[commandBuffer.value.length - 1 - newIndex]
+        } else {
             historyIndex.value = -1
             currentInput.value = ''
         }
@@ -115,7 +128,7 @@ function scrollToBottom() {
 }
 
 // Auto-scroll when new output arrives
-watch(() => [props.output, props.shellHistory], scrollToBottom, { deep: true })
+watch(() => props.output, scrollToBottom, { deep: true })
 
 // Focus input on mount
 nextTick(() => {

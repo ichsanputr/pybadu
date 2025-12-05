@@ -37,6 +37,17 @@ export function useThonnyPyodide() {
     return promise
   }
 
+  const MOCK_INPUT_CODE = `
+import builtins
+def _mock_input(prompt=""):
+    if prompt:
+        print(prompt, end="")
+    print("\\n[System: Interactive input is not supported. Using default value '0']")
+    return "0"
+
+builtins.input = _mock_input
+`
+
   async function initializePyodide() {
     try {
       // Get baseURL for subpath support
@@ -78,28 +89,27 @@ export function useThonnyPyodide() {
 
       // Initialize Pyodide
       await requestResponse({ type: 'INIT_PYODIDE' })
+      
+      // Setup environment (mock input)
+      await requestResponse({
+        type: 'RUN_PYTHON',
+        data: { code: MOCK_INPUT_CODE }
+      })
+
     } catch (error) {
       console.error('Failed to initialize Pyodide:', error)
     }
   }
 
-  async function runCode(code) {
+  async function runScript(code) {
     if (!pyodideReady.value || isLoading.value || !code.trim()) return
-
     isLoading.value = true
-    output.value = []
-    variables.value = []
 
     try {
-      // Initialize Pyodide if needed
-      await requestResponse({ type: 'INIT_PYODIDE' })
-      
-      // Run Python code
+      // Run Python code with mock input prepended
       const response = await requestResponse({
         type: 'RUN_PYTHON',
-        data: {
-          code: code
-        }
+        data: { code: MOCK_INPUT_CODE + "\n" + code }
       })
       
       // Handle stdout
@@ -112,12 +122,32 @@ export function useThonnyPyodide() {
         updateVariables(response.result.globals)
       }
       
-      addOutput('✓ Code executed successfully', 'success')
     } catch (error) {
       console.error('Error running Python code:', error)
       addOutput(`Error: ${error.message}`, 'error')
     } finally {
       isLoading.value = false
+    }
+  }
+
+  async function runShell(code) {
+    if (!pyodideReady.value || isLoading.value || !code.trim()) return
+    
+    try {
+        const response = await requestResponse({
+            type: 'RUN_PYTHON',
+            data: { code: MOCK_INPUT_CODE + "\n" + code }
+        })
+
+        if (response.result?.stdout) {
+            addOutput(response.result.stdout.trim(), 'print')
+        }
+
+        if (response.result?.globals) {
+            updateVariables(response.result.globals)
+        }
+    } catch (error) {
+        addOutput(`Error: ${error.message}`, 'error')
     }
   }
 
@@ -164,9 +194,11 @@ export function useThonnyPyodide() {
     output,
     variables,
     initializePyodide,
-    runCode,
+    runScript,
+    runShell,
     stopExecution,
     clearOutput,
-    terminate
+    terminate,
+    addOutput
   }
 }

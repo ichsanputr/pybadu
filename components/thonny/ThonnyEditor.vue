@@ -17,7 +17,7 @@ const props = defineProps({
 defineEmits(['update:code'])
 
 const editorOptions = {
-    fontSize: 13,
+    fontSize: 15,
     minimap: { enabled: false },
     scrollBeyondLastLine: false,
     wordWrap: 'off',
@@ -29,6 +29,6 @@ const editorOptions = {
     renderWhitespace: 'none',
     fontFamily: '"Courier New", Courier, monospace',
     cursorStyle: 'line',
-    lineHeight: 18
+    lineHeight: 20
 }
 </script>

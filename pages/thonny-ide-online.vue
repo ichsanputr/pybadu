@@ -29,35 +29,49 @@
             </div>
 
             <!-- Main Content: 2-row layout with CSS Grid -->
-            <div class="flex-1 grid" :style="{
-                gridTemplateRows: isBottomPanelVisible ? `${editorHeight}% 6px ${100 - editorHeight}%` : '100% 0px 0px'
-            }">
-                <!-- Top Row: Editor + Variables -->
-                <div class="flex overflow-hidden border-b"
-                    :class="theme === 'light' ? 'border-gray-300' : 'border-gray-700'">
-                    <!-- Code Editor -->
-                    <ThonnyEditor ref="thonnyEditor" v-model:code="currentFileContent" :theme="theme"
-                        :fontSize="editorFontSize" />
+            <!-- Main Content: Flex Row (Left: Editor/BottomPanel, Right: Sidebar) -->
+            <div class="flex-1 flex flex-row overflow-hidden main-flex-container">
+                <!-- Left Column (Editor + Bottom Panel) -->
+                <div class="flex-1 grid grid-layout-container" :style="{
+                    gridTemplateRows: isBottomPanelVisible ? `${editorHeight}% 6px ${100 - editorHeight}%` : '100% 0px 0px'
+                }">
+                    <!-- Top Row: Code Editor -->
+                    <div class="flex overflow-hidden border-b"
+                        :class="theme === 'light' ? 'border-gray-300' : 'border-gray-700'">
+                        <ThonnyEditor ref="thonnyEditor" v-model:code="currentFileContent" :theme="theme"
+                            :fontSize="editorFontSize" />
+                    </div>
 
-                    <!-- Variables Panel -->
-                    <ThonnyVariables v-if="showVariables" :theme="theme" :variables="variables" />
+                    <!-- Vertical Resize Handle -->
+                    <div v-show="isBottomPanelVisible"
+                        :class="['cursor-row-resize flex items-center justify-center group', theme === 'light' ? 'bg-gray-300 hover:bg-blue-400' : 'bg-gray-700 hover:bg-blue-500']"
+                        @mousedown="startVerticalResize">
+                        <div class="w-12 h-0.5 rounded-full bg-gray-500 group-hover:bg-white transition-colors"></div>
+                    </div>
+
+                    <!-- Bottom Row: Bottom Panel -->
+                    <div class="overflow-hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700"
+                        v-show="isBottomPanelVisible">
+                        <ThonnyBottomPanel ref="thonnyBottomPanel" :theme="theme" :output="output"
+                            :isExecuting="isLoading" :show-shell="showShell" :show-exception="showException"
+                            :show-program-tree="showProgramTree" :show-todo="showTodo" :todo-items="todoItems"
+                            :ast-data="astData" @clear-output="clearOutput" @execute-command="handleShellCommand"
+                            @close="closeBottomPanel" @close-tab="handleCloseTab" @jump-to-line="handleJumpToLine" />
+                    </div>
                 </div>
 
-                <!-- Resize Handle -->
-                <div v-show="isBottomPanelVisible"
-                    :class="['cursor-row-resize flex items-center justify-center group', theme === 'light' ? 'bg-gray-300 hover:bg-blue-400' : 'bg-gray-700 hover:bg-blue-500']"
-                    @mousedown="startResize">
-                    <div class="w-12 h-0.5 rounded-full bg-gray-500 group-hover:bg-white transition-colors"></div>
+                <!-- Horizontal Resize Handle -->
+                <div v-if="showVariables"
+                    :class="['w-1.5 cursor-col-resize flex items-center justify-center hover:bg-blue-400 transition-colors z-10 flex-shrink-0', theme === 'light' ? 'bg-gray-200' : 'bg-gray-800']"
+                    @mousedown="startHorizontalResize">
+                    <div class="h-8 w-0.5 rounded-full bg-gray-400"></div>
                 </div>
 
-                <!-- Bottom Row: Bottom Panel (Shell & Exception & Program Tree) -->
-                <div class="overflow-hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700"
-                    v-show="isBottomPanelVisible">
-                    <ThonnyBottomPanel ref="thonnyBottomPanel" :theme="theme" :output="output" :isExecuting="isLoading"
-                        :show-shell="showShell" :show-exception="showException" :show-program-tree="showProgramTree"
-                        :show-todo="showTodo" :todo-items="todoItems" :ast-data="astData" @clear-output="clearOutput"
-                        @execute-command="handleShellCommand" @close="closeBottomPanel" @close-tab="handleCloseTab"
-                        @jump-to-line="handleJumpToLine" />
+                <!-- Right Column (Variables) -->
+                <div v-if="showVariables" class="flex flex-col border-l overflow-hidden"
+                    :class="theme === 'light' ? 'border-gray-300 bg-gray-50' : 'border-gray-700 bg-gray-800'"
+                    :style="{ width: `${sidebarWidth}%` }">
+                    <ThonnyVariables :theme="theme" :variables="variables" class="h-full w-full" />
                 </div>
             </div>
         </div>
@@ -286,16 +300,19 @@ const currentFileContent = computed({
 })
 
 // Resize functionality
-let isResizing = false
+// Resize functionality
+const sidebarWidth = ref(30)
+let isResizingVertical = false
+let isResizingHorizontal = false
 
-function startResize(e) {
-    isResizing = true
+function startVerticalResize(e) {
+    isResizingVertical = true
     e.preventDefault()
 
     const handleMouseMove = (moveEvent) => {
-        if (!isResizing) return
+        if (!isResizingVertical) return
 
-        const container = document.querySelector('.flex-1.grid')
+        const container = document.querySelector('.grid-layout-container')
         if (!container) return
 
         const containerRect = container.getBoundingClientRect()
@@ -307,7 +324,33 @@ function startResize(e) {
     }
 
     const handleMouseUp = () => {
-        isResizing = false
+        isResizingVertical = false
+        document.removeEventListener('mousemove', handleMouseMove)
+        document.removeEventListener('mouseup', handleMouseUp)
+    }
+
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', handleMouseUp)
+}
+
+function startHorizontalResize(e) {
+    isResizingHorizontal = true
+    e.preventDefault()
+
+    const handleMouseMove = (moveEvent) => {
+        if (!isResizingHorizontal) return
+
+        const container = document.querySelector('.main-flex-container')
+        if (!container) return
+
+        const containerRect = container.getBoundingClientRect()
+        // Calculate width from right edge
+        const newWidth = ((containerRect.right - moveEvent.clientX) / containerRect.width) * 100
+        sidebarWidth.value = Math.min(Math.max(newWidth, 15), 50)
+    }
+
+    const handleMouseUp = () => {
+        isResizingHorizontal = false
         document.removeEventListener('mousemove', handleMouseMove)
         document.removeEventListener('mouseup', handleMouseUp)
     }

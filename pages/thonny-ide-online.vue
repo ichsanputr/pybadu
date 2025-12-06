@@ -63,17 +63,19 @@
                 </div>
 
                 <!-- Horizontal Resize Handle -->
-                <div v-if="showVariables"
+                <div v-if="isRightPanelVisible"
                     :class="['w-1.5 cursor-col-resize flex items-center justify-center hover:bg-blue-400 transition-colors z-10 flex-shrink-0', theme === 'light' ? 'bg-gray-200' : 'bg-gray-800']"
                     @mousedown="startHorizontalResize">
                     <div class="h-8 w-0.5 rounded-full bg-gray-400"></div>
                 </div>
 
-                <!-- Right Column (Variables) -->
-                <div v-if="showVariables" class="flex flex-col border-l overflow-hidden"
+                <!-- Right Column (Variables etc) -->
+                <div v-if="isRightPanelVisible" class="flex flex-col border-l overflow-hidden"
                     :class="theme === 'light' ? 'border-gray-300 bg-gray-50' : 'border-gray-700 bg-gray-800'"
                     :style="{ width: `${sidebarWidth}%` }">
-                    <ThonnyVariables :theme="theme" :variables="variables" class="h-full w-full" />
+                    <ThonnyRightPanel ref="thonnyRightPanel" :theme="theme" :show-variables="showVariables"
+                        :show-outline="showOutline" :variables="variables" :outline-data="outlineData"
+                        @close-tab="handleCloseRightTab" @jump-to-line="handleJumpToLine" class="h-full w-full" />
                 </div>
             </div>
         </div>
@@ -106,6 +108,7 @@ import ThonnyMenuBar from '~/components/thonny/ThonnyMenuBar.vue'
 import ThonnyToolbar from '~/components/thonny/ThonnyToolbar.vue'
 import ThonnyEditor from '~/components/thonny/ThonnyEditor.vue'
 import ThonnyBottomPanel from '~/components/thonny/ThonnyBottomPanel.vue'
+import ThonnyRightPanel from '~/components/thonny/ThonnyRightPanel.vue'
 import ThonnyVariables from '~/components/thonny/ThonnyVariables.vue'
 import Toast from '~/components/ui/Toast.vue'
 import InputDialog from '~/components/ui/InputDialog.vue'
@@ -169,7 +172,8 @@ const {
     installPackage,
     removePackage,
     getInstalledPackages,
-    generateAST
+    generateAST,
+    generateOutline
 } = useThonnyPyodide()
 
 // State
@@ -184,6 +188,8 @@ const showProgramArguments = ref(false)
 const programArguments = ref('')
 const showPlotter = ref(false)
 const plotterData = ref([])
+const showOutline = ref(false)
+const outlineData = ref([])
 let toastId = 0
 
 // Dialog State
@@ -202,6 +208,7 @@ const astData = ref(null)
 // DOM Refs
 const thonnyEditor = ref(null)
 const thonnyBottomPanel = ref(null)
+const thonnyRightPanel = ref(null)
 
 // Menu items
 const menuItems = computed(() => [
@@ -231,7 +238,7 @@ const menuItems = computed(() => [
             { name: 'Files', action: 'toggleFiles', checked: false },
             { name: 'Notes', action: 'toggleNotes', checked: false },
             { name: 'Object inspector', action: 'toggleObjectInspector', checked: false },
-            { name: 'Outline', action: 'toggleOutline', checked: false },
+            { name: 'Outline', action: 'toggleOutline', checked: showOutline.value },
             { name: 'Program tree', action: 'toggleProgramTree', checked: showProgramTree.value },
             { name: 'Shell', action: 'toggleShell', checked: showShell.value },
             { name: 'TODO', action: 'toggleTodo', checked: false },
@@ -294,6 +301,7 @@ print(f"{temp_c}°C is equal to {temp_f}°F")
 
 // Computed
 const isBottomPanelVisible = computed(() => showShell.value || showException.value || showProgramTree.value || showTodo.value || showPlotter.value)
+const isRightPanelVisible = computed(() => showVariables.value || showOutline.value)
 
 const currentFile = computed(() => files.value.find(f => f.id === activeFileId.value))
 const currentFileContent = computed({
@@ -370,7 +378,13 @@ function handleCloseTab(tabName) {
     if (tabName === 'exception') showException.value = false
     if (tabName === 'program-tree') showProgramTree.value = false
     if (tabName === 'todo') showTodo.value = false
+    if (tabName === 'todo') showTodo.value = false
     if (tabName === 'plotter') showPlotter.value = false
+}
+
+function handleCloseRightTab(tabName) {
+    if (tabName === 'variables') showVariables.value = false
+    if (tabName === 'outline') showOutline.value = false
 }
 
 function detectNumbers(line) {
@@ -393,6 +407,12 @@ async function updateAst() {
     }
 }
 
+async function updateOutline() {
+    if (showOutline.value && currentFileContent.value) {
+        outlineData.value = await generateOutline(currentFileContent.value)
+    }
+}
+
 function updateTodos() {
     if (showTodo.value && currentFileContent.value) {
         const lines = currentFileContent.value.split('\n')
@@ -411,13 +431,11 @@ function updateTodos() {
     }
 }
 
-watch([showProgramTree, showTodo, currentFileContent], () => {
-    if (showProgramTree.value) {
-        updateAst()
-    }
-    if (showTodo.value) {
-        updateTodos()
-    }
+// Watch visibility toggles to update immediately when opened
+watch([showProgramTree, showTodo, showOutline], ([newTree, newTodo, newOutline]) => {
+    if (newTree) updateAst()
+    if (newTodo) updateTodos()
+    if (newOutline) updateOutline()
 })
 
 // Menu functions
@@ -464,7 +482,11 @@ function handleMenuItem(action) {
             showToast('Object inspector - Coming soon! Will inspect Python objects.', 'info')
             break
         case 'toggleOutline':
-            showToast('Outline panel - Coming soon! Will show code structure.', 'info')
+            showOutline.value = !showOutline.value
+            if (showOutline.value) {
+                updateOutline()
+                setTimeout(() => thonnyRightPanel.value?.openTab('outline'), 0)
+            }
             break
         case 'toggleProgramTree':
             showProgramTree.value = !showProgramTree.value
@@ -662,6 +684,7 @@ async function runCurrentFile() {
 
     await runScript(currentFileContent.value, args)
     updateAst()
+    updateOutline()
 }
 
 function handleShellCommand(command) {

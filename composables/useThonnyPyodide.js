@@ -323,6 +323,85 @@ except Exception as e:
     return null
   }
 
+  async function generateOutline(userCode) {
+    if (!pyodideReady.value) return null
+
+    const pyCode = `
+import ast
+import json
+
+def get_outline(source_code):
+    try:
+        tree = ast.parse(source_code)
+    except SyntaxError as e:
+        return json.dumps({"error": str(e)})
+
+    outline = []
+
+    class OutlineVisitor(ast.NodeVisitor):
+        def visit_FunctionDef(self, node):
+            outline.append({
+                "type": "function",
+                "name": node.name,
+                "lineno": node.lineno
+            })
+            self.generic_visit(node)
+        
+        def visit_AsyncFunctionDef(self, node):
+            outline.append({
+                "type": "function",
+                "name": node.name,
+                "lineno": node.lineno
+            })
+            self.generic_visit(node)
+
+        def visit_ClassDef(self, node):
+            class_entry = {
+                "type": "class",
+                "name": node.name,
+                "lineno": node.lineno,
+                "methods": []
+            }
+
+            # detect methods inside class
+            for item in node.body:
+                if isinstance(item, ast.FunctionDef):
+                    class_entry["methods"].append({
+                        "type": "method",
+                        "name": item.name,
+                        "lineno": item.lineno
+                    })
+                elif isinstance(item, ast.AsyncFunctionDef):
+                    class_entry["methods"].append({
+                        "type": "method",
+                        "name": item.name,
+                        "lineno": item.lineno
+                    })
+            
+            outline.append(class_entry)
+            # self.generic_visit(node) # Don't visit children else we duplicate methods as functions if not careful
+
+    OutlineVisitor().visit(tree)
+    return json.dumps(outline)
+
+print(get_outline(${JSON.stringify(userCode)}))
+`
+    try {
+        const response = await requestResponse({
+            type: 'RUN_PYTHON',
+            data: { code: pyCode }
+        })
+
+        if (response.result?.stdout) {
+            const lines = response.result.stdout.trim().split('\n')
+            return JSON.parse(lines[lines.length - 1])
+        }
+    } catch (e) {
+        console.error("Outline Generation failed", e)
+    }
+    return []
+  }
+
   return {
     pyodideReady,
     isLoading,
@@ -338,6 +417,7 @@ except Exception as e:
     installPackage,
     removePackage,
     getInstalledPackages,
-    generateAST
+    generateAST,
+    generateOutline
   }
 }

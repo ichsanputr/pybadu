@@ -1,10 +1,6 @@
 <template>
-    <div
-        :class="['w-80 border-l flex flex-col h-full flex-shrink-0', theme === 'light' ? 'bg-white border-gray-300' : 'bg-gray-800 border-gray-700']">
-        <div
-            :class="['px-3 py-1.5 border-b text-sm font-medium flex-shrink-0', theme === 'light' ? 'bg-gray-50 border-gray-300 text-gray-700' : 'bg-gray-800 border-gray-700 text-gray-300']">
-            Variables
-        </div>
+    <div :class="['flex flex-col h-full flex-shrink-0', theme === 'light' ? 'bg-white' : 'bg-gray-800']">
+
         <div class="flex-1 overflow-y-auto">
             <div v-if="variables.length === 0"
                 :class="['text-center py-8 px-4 text-sm', theme === 'light' ? 'text-gray-500' : 'text-gray-400']">

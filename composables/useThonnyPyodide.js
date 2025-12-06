@@ -237,10 +237,22 @@ for name, meta in packages.items():
 
   function stopExecution() {
     if (pyodideWorker) {
+      // Terminate the worker immediately
       pyodideWorker.terminate()
-      initializePyodide()
+      
+      // Reject any pending messages (promises)
+      for (const [id, { reject }] of pendingMessages.entries()) {
+        reject(new Error('Execution stopped by user'))
+      }
+      pendingMessages.clear()
+      
+      // Reset state
+      pyodideReady.value = false
       isLoading.value = false
       addOutput('Execution stopped', 'error')
+      
+      // Re-initialize a fresh worker
+      initializePyodide()
     }
   }
 

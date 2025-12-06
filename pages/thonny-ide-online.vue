@@ -31,7 +31,7 @@
 
             <!-- Main Content: 2-row layout with CSS Grid -->
             <!-- Main Content: Flex Row (Left: Editor/BottomPanel, Right: Sidebar) -->
-            <div class="flex-1 flex flex-row overflow-hidden main-flex-container">
+            <div class="flex-1 flex flex-col md:flex-row overflow-hidden main-flex-container">
                 <!-- Left Column (Editor + Bottom Panel) -->
                 <div class="flex-1 grid grid-layout-container" :style="{
                     gridTemplateRows: isBottomPanelVisible ? `${editorHeight}% 6px ${100 - editorHeight}%` : '100% 0px 0px'
@@ -64,13 +64,13 @@
 
                 <!-- Horizontal Resize Handle -->
                 <div v-if="isRightPanelVisible"
-                    :class="['w-1.5 cursor-col-resize flex items-center justify-center hover:bg-blue-400 transition-colors z-10 flex-shrink-0', theme === 'light' ? 'bg-gray-200' : 'bg-gray-800']"
+                    :class="['hidden md:flex w-1.5 cursor-col-resize items-center justify-center hover:bg-blue-400 transition-colors z-10 flex-shrink-0', theme === 'light' ? 'bg-gray-200' : 'bg-gray-800']"
                     @mousedown="startHorizontalResize">
                     <div class="h-8 w-0.5 rounded-full bg-gray-400"></div>
                 </div>
 
                 <!-- Right Column (Variables etc) -->
-                <div v-if="isRightPanelVisible" class="flex flex-col border-l overflow-hidden"
+                <div v-if="isRightPanelVisible" class="flex flex-col border-l overflow-hidden right-panel-responsive"
                     :class="theme === 'light' ? 'border-gray-300 bg-gray-50' : 'border-gray-700 bg-gray-800'"
                     :style="{ width: `${sidebarWidth}%` }">
                     <ThonnyRightPanel ref="thonnyRightPanel" :theme="theme" :show-variables="showVariables"
@@ -784,6 +784,33 @@ onMounted(() => {
 })
 </script>
 
+
+
 <style scoped>
-/* Thonny styling */
+@media (max-width: 768px) {
+    .main-flex-container {
+        flex-direction: column !important;
+        height: auto !important;
+        min-height: 100vh;
+    }
+
+    .grid-layout-container {
+        height: 60vh !important;
+        min-height: 400px;
+    }
+
+    .right-panel-responsive {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 300px;
+        border-left: none !important;
+        border-top: 1px solid #e5e7eb;
+        overflow: visible !important;
+    }
+
+    /* Dark mode override for border */
+    .dark .right-panel-responsive {
+        border-top-color: #374151;
+    }
+}
 </style>

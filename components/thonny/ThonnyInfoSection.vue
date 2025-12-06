@@ -20,7 +20,8 @@
                             {{ title }}
                         </h1>
                         <p class="text-base text-gray-500 leading-relaxed">
-                            Thonny Online is a modern, browser-based adaptation of the Thonny IDE — offering the same
+                            Thonny Online is a modern, browser-based adaptation of the Thonny Python IDE — offering the
+                            same
                             simple, beginner-friendly Python editor directly on the web. Powered by WebAssembly and
                             Pyodide, it provides a familiar Thonny-like experience without installation
                         </p>

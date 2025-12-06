@@ -50,6 +50,17 @@
                         <Icon icon="ph:x" class="w-3 h-3" />
                     </div>
                 </button>
+                <button v-if="showPlotter" @click="activeTab = 'plotter'" :class="['px-4 py-1.5 border-r font-medium text-xs uppercase tracking-wide transition-colors flex items-center group',
+                    activeTab === 'plotter'
+                        ? (theme === 'light' ? 'bg-white text-blue-600 border-b-2 border-b-blue-600' : 'bg-gray-900 text-blue-400 border-b-2 border-b-blue-400')
+                        : (theme === 'light' ? 'bg-gray-50 text-gray-500 hover:bg-gray-100' : 'bg-gray-800 text-gray-400 hover:bg-gray-700')
+                ]" style="margin-bottom: -1px;">
+                    <span class="mr-2">Plotter</span>
+                    <div @click.stop="$emit('close-tab', 'plotter')"
+                        :class="['p-0.5 rounded-full opacity-60 group-hover:opacity-100', theme === 'light' ? 'hover:bg-gray-200 text-gray-600' : 'hover:bg-gray-700 text-gray-400']">
+                        <Icon icon="ph:x" class="w-3 h-3" />
+                    </div>
+                </button>
             </div>
 
         </div>
@@ -109,6 +120,12 @@
                         <span class="text-sm">Executing...</span>
                     </div>
                 </div>
+            </div>
+
+            <!-- Plotter Tab Content -->
+            <div v-show="activeTab === 'plotter'"
+                :class="['absolute inset-0 overflow-auto flex flex-col min-h-0', theme === 'light' ? 'bg-white' : 'bg-gray-900']">
+                <ThonnyPlotter :dataPoints="plotterData" :theme="theme" class="flex-1" />
             </div>
 
             <!-- Exception Tab Content -->
@@ -181,6 +198,7 @@
 import { ref, nextTick, watch, computed } from 'vue'
 import { Icon } from '@iconify/vue'
 import AstTree from './AstTree.vue'
+import ThonnyPlotter from './ThonnyPlotter.vue'
 
 const props = defineProps({
     theme: { type: String, required: true },
@@ -190,36 +208,48 @@ const props = defineProps({
     showException: { type: Boolean, default: false },
     showProgramTree: { type: Boolean, default: false },
     showTodo: { type: Boolean, default: false },
+    showPlotter: { type: Boolean, default: false },
     astData: { type: Object, default: null },
-    todoItems: { type: Array, default: () => [] }
+    todoItems: { type: Array, default: () => [] },
+    plotterData: { type: Array, default: () => [] }
 })
 
 const emit = defineEmits(['clear-output', 'execute-command', 'close', 'close-tab', 'jump-to-line'])
 
 const activeTab = ref('shell')
 // Watch props to ensure active tab is visible
-watch(() => [props.showShell, props.showException, props.showProgramTree, props.showTodo], ([newShell, newException, newTree, newTodo]) => {
+watch(() => [props.showShell, props.showException, props.showProgramTree, props.showTodo, props.showPlotter], ([newShell, newException, newTree, newTodo, newPlotter]) => {
     if (activeTab.value === 'shell' && !newShell) {
         if (newException) activeTab.value = 'exception'
         else if (newTree) activeTab.value = 'program-tree'
         else if (newTodo) activeTab.value = 'todo'
+        else if (newPlotter) activeTab.value = 'plotter'
     } else if (activeTab.value === 'exception' && !newException) {
         if (newShell) activeTab.value = 'shell'
         else if (newTree) activeTab.value = 'program-tree'
         else if (newTodo) activeTab.value = 'todo'
+        else if (newPlotter) activeTab.value = 'plotter'
     } else if (activeTab.value === 'program-tree' && !newTree) {
         if (newShell) activeTab.value = 'shell'
         else if (newException) activeTab.value = 'exception'
         else if (newTodo) activeTab.value = 'todo'
+        else if (newPlotter) activeTab.value = 'plotter'
     } else if (activeTab.value === 'todo' && !newTodo) {
         if (newShell) activeTab.value = 'shell'
         else if (newException) activeTab.value = 'exception'
         else if (newTree) activeTab.value = 'program-tree'
+        else if (newPlotter) activeTab.value = 'plotter'
+    } else if (activeTab.value === 'plotter' && !newPlotter) {
+        if (newShell) activeTab.value = 'shell'
+        else if (newException) activeTab.value = 'exception'
+        else if (newTree) activeTab.value = 'program-tree'
+        else if (newTodo) activeTab.value = 'todo'
     } else if (!activeTab.value) {
         if (newShell) activeTab.value = 'shell'
         else if (newException) activeTab.value = 'exception'
         else if (newTree) activeTab.value = 'program-tree'
         else if (newTodo) activeTab.value = 'todo'
+        else if (newPlotter) activeTab.value = 'plotter'
     }
 }, { immediate: true })
 
@@ -244,7 +274,7 @@ const lastException = computed(() => {
 
 // Expose openTab method for parent to control
 const openTab = (tabName) => {
-    if (['shell', 'exception', 'program-tree', 'todo'].includes(tabName)) {
+    if (['shell', 'exception', 'program-tree', 'todo', 'plotter'].includes(tabName)) {
         activeTab.value = tabName
     }
 }

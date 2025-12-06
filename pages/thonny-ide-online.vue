@@ -55,9 +55,10 @@
                         v-show="isBottomPanelVisible">
                         <ThonnyBottomPanel ref="thonnyBottomPanel" :theme="theme" :output="output"
                             :isExecuting="isLoading" :show-shell="showShell" :show-exception="showException"
-                            :show-program-tree="showProgramTree" :show-todo="showTodo" :todo-items="todoItems"
-                            :ast-data="astData" @clear-output="clearOutput" @execute-command="handleShellCommand"
-                            @close="closeBottomPanel" @close-tab="handleCloseTab" @jump-to-line="handleJumpToLine" />
+                            :show-program-tree="showProgramTree" :show-todo="showTodo" :show-plotter="showPlotter"
+                            :todo-items="todoItems" :ast-data="astData" :plotter-data="plotterData"
+                            @clear-output="clearOutput" @execute-command="handleShellCommand" @close="closeBottomPanel"
+                            @close-tab="handleCloseTab" @jump-to-line="handleJumpToLine" />
                     </div>
                 </div>
 
@@ -181,6 +182,8 @@ const editorHeight = ref(65)
 const editorFontSize = ref(15)
 const showProgramArguments = ref(false)
 const programArguments = ref('')
+const showPlotter = ref(false)
+const plotterData = ref([])
 let toastId = 0
 
 // Dialog State
@@ -235,7 +238,7 @@ const menuItems = computed(() => [
             { name: 'Variables', action: 'toggleVariables', checked: showVariables.value },
             { name: '---' },
             { name: 'Program arguments', action: 'toggleProgramArguments', checked: showProgramArguments.value },
-            { name: 'Plotter', action: 'togglePlotter', checked: false },
+            { name: 'Plotter', action: 'togglePlotter', checked: showPlotter.value },
             { name: '---' },
             { name: 'Increase font size', action: 'increaseFontSize', shortcut: 'Ctrl++' },
             { name: 'Decrease font size', action: 'decreaseFontSize', shortcut: 'Ctrl+-' },
@@ -290,7 +293,7 @@ print(f"{temp_c}°C is equal to {temp_f}°F")
 
 
 // Computed
-const isBottomPanelVisible = computed(() => showShell.value || showException.value || showProgramTree.value || showTodo.value)
+const isBottomPanelVisible = computed(() => showShell.value || showException.value || showProgramTree.value || showTodo.value || showPlotter.value)
 
 const currentFile = computed(() => files.value.find(f => f.id === activeFileId.value))
 const currentFileContent = computed({
@@ -367,6 +370,21 @@ function handleCloseTab(tabName) {
     if (tabName === 'exception') showException.value = false
     if (tabName === 'program-tree') showProgramTree.value = false
     if (tabName === 'todo') showTodo.value = false
+    if (tabName === 'plotter') showPlotter.value = false
+}
+
+function detectNumbers(line) {
+    if (typeof line !== 'string') return null
+    const parts = line.trim().split(/\s+/)
+    const nums = []
+
+    for (let part of parts) {
+        if (part === "") continue
+        const value = Number(part)
+        if (isNaN(value)) return null  // Invalid → ignore
+        nums.push(value)
+    }
+    return nums.length ? nums : null
 }
 
 async function updateAst() {
@@ -472,7 +490,10 @@ function handleMenuItem(action) {
             showProgramArguments.value = !showProgramArguments.value
             break
         case 'togglePlotter':
-            showToast('Plotter - Coming soon! Will plot data visualizations.', 'info')
+            showPlotter.value = !showPlotter.value
+            if (showPlotter.value) {
+                setTimeout(() => thonnyBottomPanel.value?.openTab('plotter'), 0)
+            }
             break
         case 'increaseFontSize':
             editorFontSize.value = Math.min(editorFontSize.value + 1, 72)
@@ -630,6 +651,9 @@ async function runCurrentFile() {
     await new Promise(resolve => setTimeout(resolve, 500))
     isLoading.value = false
 
+    // Clear plotter data on new run
+    plotterData.value = []
+
     addOutput(`%Run ${currentFile.value.name}${programArguments.value ? ' ' + programArguments.value : ''}`, 'system')
 
     // Parse arguments: handle quotes carefully
@@ -646,11 +670,32 @@ function handleShellCommand(command) {
     // Log the command as user input
     addOutput(command, 'input')
 
+    // Detect numbers for plotter
+    if (showPlotter.value) {
+        const nums = detectNumbers(command)
+        if (nums) {
+            plotterData.value.push(...nums)
+        }
+    }
+
     // Run the command
     if (command.trim()) {
         runShell(command)
     }
 }
+
+// Watch output for new lines to feed plotter
+watch(() => output.value.length, () => {
+    if (!showPlotter.value || output.value.length === 0) return
+
+    const lastMsg = output.value[output.value.length - 1]
+    if (lastMsg.type === 'print') { // Only check standard output
+        const nums = detectNumbers(lastMsg.content)
+        if (nums) {
+            plotterData.value.push(...nums)
+        }
+    }
+})
 
 function showToast(message, type = 'info') {
     const id = toastId++

@@ -25,6 +25,8 @@
     "@iconify/vue": "^5.0.0",
     "@vueuse/core": "^14.0.0",
     "@vueuse/nuxt": "^14.0.0",
-    "motion-v": "^1.7.4"
+    "chart.js": "^4.5.1",
+    "motion-v": "^1.7.4",
+    "vue-chartjs": "^5.3.3"
   }
 }

@@ -682,9 +682,15 @@ async function runCurrentFile() {
     // Regex matches quoted strings or non-whitespace sequences
     const args = programArguments.value.match(/(?:[^\s"]+|"[^"]*")+/g)?.map(a => a.replace(/^"|"$/g, '')) || []
 
+    // Generate AST and Outline BEFORE running the script
+    // This ensures we have the latest structure even if the script blocks (e.g. infinite loop)
+    // We run them concurrently to save time, but await them so they finish before execution starts
+    await Promise.all([
+        updateAst(),
+        updateOutline()
+    ])
+
     await runScript(currentFileContent.value, args)
-    updateAst()
-    updateOutline()
 }
 
 function handleShellCommand(command) {

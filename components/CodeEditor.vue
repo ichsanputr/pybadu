@@ -702,14 +702,6 @@
       </main>
     </div>
 
-    <!-- Bottom Ad (Above Compiler Title) -->
-    <div class="w-full max-w-7xl mx-auto px-4 py-6 min-h-[120px]">
-      <ClientOnly>
-        <Adsense key="bottom-ad" label="bottom-ad" client="ca-pub-1356911639243870" ad-slot="3430238458"
-          style="display:block" format="auto" responsive="true" />
-      </ClientOnly>
-    </div>
-
     <!-- Delete Confirmation Dialog -->
     <Dialog v-model="deleteDialog.show" size="sm" title="Delete File" subtitle="This action cannot be undone"
       icon="ph:trash" icon-variant="error" :theme="theme">

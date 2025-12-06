@@ -55,12 +55,12 @@
         </div>
 
         <!-- Content Area -->
-        <div class="flex-1 overflow-hidden relative">
+        <div class="flex-1 overflow-hidden relative w-full">
 
             <!-- Shell Tab Content -->
-            <div v-show="activeTab === 'shell'" class="h-full flex flex-col">
+            <div v-show="activeTab === 'shell'" class="absolute inset-0 flex flex-col min-h-0">
                 <div ref="shellContainer"
-                    :class="['flex-1 overflow-y-auto p-3 font-mono text-sm', theme === 'light' ? 'bg-white text-gray-800' : 'bg-gray-900 text-gray-200']">
+                    :class="['flex-1 overflow-auto p-3 font-mono text-sm min-h-0', theme === 'light' ? 'bg-white text-gray-800' : 'bg-gray-900 text-gray-200']">
 
                     <!-- Unified Output Stream -->
                     <div v-for="(item, index) in output" :key="'msg-' + index" class="mb-1 font-mono">
@@ -78,8 +78,7 @@
                         </div>
 
                         <!-- Error -->
-                        <div v-else-if="item.type === 'error'"
-                            class="text-red-600 dark:text-red-400 whitespace-pre-wrap">
+                        <div v-else-if="item.type === 'error'" class="text-red-600 dark:text-red-400 whitespace-pre">
                             {{ item.content }}
                         </div>
 
@@ -89,7 +88,7 @@
                         </div>
 
                         <!-- Standard Output -->
-                        <div v-else class="whitespace-pre-wrap"
+                        <div v-else class="whitespace-pre"
                             :class="theme === 'light' ? 'text-gray-800' : 'text-gray-200'">
                             {{ item.content }}
                         </div>
@@ -114,11 +113,11 @@
 
             <!-- Exception Tab Content -->
             <div v-show="activeTab === 'exception'"
-                :class="['h-full overflow-y-auto p-4 font-mono text-sm', theme === 'light' ? 'bg-white text-gray-800' : 'bg-gray-900 text-gray-200']">
+                :class="['absolute inset-0 overflow-auto p-4 font-mono text-sm min-h-0', theme === 'light' ? 'bg-white text-gray-800' : 'bg-gray-900 text-gray-200']">
                 <div v-if="lastException" class="text-red-600 dark:text-red-400 space-y-2">
                     <h4 class="font-bold border-b border-red-200 dark:border-red-800 pb-2 mb-2">Most Recent Exception
                     </h4>
-                    <pre class="whitespace-pre-wrap">{{ lastException }}</pre>
+                    <pre class="whitespace-pre">{{ lastException }}</pre>
                 </div>
                 <div v-else class="flex flex-col items-center justify-center h-full text-gray-400">
                     <Icon icon="ph:check-circle" class="w-12 h-12 mb-2 opacity-50" />
@@ -129,7 +128,7 @@
 
             <!-- Program Tree Tab Content -->
             <div v-show="activeTab === 'program-tree'"
-                :class="['h-full overflow-y-auto p-4 font-mono text-sm', theme === 'light' ? 'bg-white text-gray-800' : 'bg-gray-900 text-gray-200']">
+                :class="['absolute inset-0 overflow-auto p-4 font-mono text-sm min-h-0', theme === 'light' ? 'bg-white text-gray-800' : 'bg-gray-900 text-gray-200']">
                 <div v-if="astData && !astData.error">
                     <AstTree :node="astData" :theme="theme" />
                 </div>
@@ -144,7 +143,7 @@
 
             <!-- TODO Tab Content -->
             <div v-show="activeTab === 'todo'"
-                :class="['h-full overflow-y-auto font-mono text-sm', theme === 'light' ? 'bg-white text-gray-800' : 'bg-gray-900 text-gray-200']">
+                :class="['absolute inset-0 overflow-auto font-mono text-sm min-h-0', theme === 'light' ? 'bg-white text-gray-800' : 'bg-gray-900 text-gray-200']">
                 <div v-if="todoItems && todoItems.length > 0">
                     <table class="w-full text-left border-collapse">
                         <thead :class="['sticky top-0 z-10', theme === 'light' ? 'bg-gray-50' : 'bg-gray-800']">
@@ -340,19 +339,19 @@ defineExpose({
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 5px;
+    background: #929292;
+    border-radius: 0;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-    background: #475569;
+    background: #929292;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+    background: #737373;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-    background: #64748b;
+    background: #a3a3a3;
 }
 </style>

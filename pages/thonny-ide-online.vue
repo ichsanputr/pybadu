@@ -50,7 +50,7 @@
                     </div>
 
                     <!-- Bottom Row: Bottom Panel -->
-                    <div class="overflow-hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700"
+                    <div class="overflow-hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 h-full w-full"
                         v-show="isBottomPanelVisible">
                         <ThonnyBottomPanel ref="thonnyBottomPanel" :theme="theme" :output="output"
                             :isExecuting="isLoading" :show-shell="showShell" :show-exception="showException"

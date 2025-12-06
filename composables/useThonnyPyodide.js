@@ -101,16 +101,24 @@ builtins.input = _mock_input
     }
   }
 
-  async function runScript(code) {
+  async function runScript(code, args = []) {
     if (!pyodideReady.value || isLoading.value || !code.trim()) return
     isLoading.value = true
 
     try {
-      // Run Python code with mock input prepended
+      // Set sys.argv if provided
+      // Default sys.argv[0] is usually the script name, we'll set it to 'main.py'
+      const argv = ['main.py', ...args]
+      const argvSetupCode = `
+import sys
+sys.argv = ${JSON.stringify(argv)}
+`
+      
+      // Run Python code with mock input prepended and argv setup
       const response = await requestResponse({
         type: 'RUN_PYTHON',
         data: { 
-          code: MOCK_INPUT_CODE + "\n" + code,
+          code: MOCK_INPUT_CODE + argvSetupCode + "\n" + code,
           mode: 'script'
         }
       })

@@ -9,9 +9,10 @@
                 @menu-action="handleMenuItem" />
 
             <!-- Toolbar -->
-            <ThonnyToolbar :theme="theme" :pyodideReady="pyodideReady" :isLoading="isLoading" @new-file="createNewFile"
-                @save-file="saveFile" @upload-file="handleUploadFile" @run-code="runCurrentFile"
-                @stop-execution="stopExecution" />
+            <ThonnyToolbar :theme="theme" :pyodideReady="pyodideReady" :isLoading="isLoading"
+                :showProgramArguments="showProgramArguments" v-model:programArguments="programArguments"
+                @new-file="createNewFile" @save-file="saveFile" @upload-file="handleUploadFile"
+                @run-code="runCurrentFile" @stop-execution="stopExecution" />
 
             <!-- File tabs -->
             <div
@@ -178,6 +179,8 @@ const activeMenu = ref(null)
 const showVariables = ref(true)
 const editorHeight = ref(65)
 const editorFontSize = ref(15)
+const showProgramArguments = ref(false)
+const programArguments = ref('')
 let toastId = 0
 
 // Dialog State
@@ -231,7 +234,7 @@ const menuItems = computed(() => [
             { name: 'TODO', action: 'toggleTodo', checked: false },
             { name: 'Variables', action: 'toggleVariables', checked: showVariables.value },
             { name: '---' },
-            { name: 'Program arguments', action: 'toggleProgramArguments', checked: false },
+            { name: 'Program arguments', action: 'toggleProgramArguments', checked: showProgramArguments.value },
             { name: 'Plotter', action: 'togglePlotter', checked: false },
             { name: '---' },
             { name: 'Increase font size', action: 'increaseFontSize', shortcut: 'Ctrl++' },
@@ -466,7 +469,7 @@ function handleMenuItem(action) {
             }
             break
         case 'toggleProgramArguments':
-            showToast('Program arguments - Coming soon! Will allow setting command-line arguments.', 'info')
+            showProgramArguments.value = !showProgramArguments.value
             break
         case 'togglePlotter':
             showToast('Plotter - Coming soon! Will plot data visualizations.', 'info')
@@ -627,8 +630,13 @@ async function runCurrentFile() {
     await new Promise(resolve => setTimeout(resolve, 500))
     isLoading.value = false
 
-    addOutput(`%Run ${currentFile.value.name}`, 'system')
-    await runScript(currentFileContent.value)
+    addOutput(`%Run ${currentFile.value.name}${programArguments.value ? ' ' + programArguments.value : ''}`, 'system')
+
+    // Parse arguments: handle quotes carefully
+    // Regex matches quoted strings or non-whitespace sequences
+    const args = programArguments.value.match(/(?:[^\s"]+|"[^"]*")+/g)?.map(a => a.replace(/^"|"$/g, '')) || []
+
+    await runScript(currentFileContent.value, args)
     updateAst()
 }
 

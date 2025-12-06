@@ -330,8 +330,8 @@ defineExpose({
 <style scoped>
 /* Scrollbar styling for consistent look */
 ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 15px;
+    height: 13px;
 }
 
 ::-webkit-scrollbar-track {
@@ -339,12 +339,8 @@ defineExpose({
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #929292;
+    background: #CBCBCB;
     border-radius: 0;
-}
-
-.dark ::-webkit-scrollbar-thumb {
-    background: #929292;
 }
 
 ::-webkit-scrollbar-thumb:hover {

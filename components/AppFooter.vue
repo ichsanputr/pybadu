@@ -90,6 +90,10 @@
                 class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
                 Barcode Generator
               </NuxtLink>
+              <NuxtLink to="/thonny-ide-online" @click="handleSmoothScroll"
+                class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
+                Thonny IDE Online
+              </NuxtLink>
             </div>
           </div>
         </div>

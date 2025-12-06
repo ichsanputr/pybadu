@@ -7,6 +7,56 @@ import { loadPyodide } from 'https://cdn.jsdelivr.net/pyodide/v0.29.0/full/pyodi
 let pyodide = null
 let pyodideReadyPromise = null
 
+
+const HELPER_CODE = `
+import sys
+import json
+import traceback
+
+if 'USER_GLOBALS' not in globals():
+    USER_GLOBALS = {}
+
+def serialize_value(v):
+    if isinstance(v, (int, float, str, bool)) or v is None:
+        return v
+    if isinstance(v, (list, tuple, set)):
+        return [serialize_value(i) for i in v]
+    if isinstance(v, dict):
+        return {str(k): serialize_value(val) for k, val in v.items()}
+    return repr(v)
+
+def serialize_globals(env):
+    output = {}
+    for name, value in env.items():
+        if name.startswith("__"):
+            continue
+        output[name] = serialize_value(value)
+    return output
+
+def run_user_code(code, reset_globals=True):
+    global USER_GLOBALS
+    if reset_globals:
+        USER_GLOBALS = {}
+    
+    try:
+        exec(code, USER_GLOBALS)
+        
+        return json.dumps({
+            "ok": True,
+            "variables": serialize_globals(USER_GLOBALS),
+            "error": None
+        })
+    except Exception:
+        exc_type, exc_value, tb = sys.exc_info()
+        error_text = "".join(traceback.format_exception(exc_type, exc_value, tb))
+        
+        return json.dumps({
+            "ok": False,
+            "variables": serialize_globals(USER_GLOBALS),
+            "error": error_text
+        })
+`
+
 // Initialize Pyodide when worker starts
 async function initPyodide() {
   if (!pyodideReadyPromise) {
@@ -297,7 +347,11 @@ self.onmessage = async (event) => {
       case 'RUN_PYTHON':
         // Execute Python code
         const pyodideForRun = await initPyodide()
-        const { code, packageName: pkgName } = data
+        const { code, packageName: pkgName, mode } = data
+        const isScript = mode === 'script'
+
+        // Initialize helper code
+        await pyodideForRun.runPythonAsync(HELPER_CODE)
 
         // Setup stdout capture
         await pyodideForRun.runPythonAsync(`
@@ -310,8 +364,13 @@ plt.close('all')
 sys.stdout = StringIO()
         `)
 
-        // Run the user's code
-        await pyodideForRun.runPythonAsync(code)
+        // Run the user's code using the helper
+        pyodideForRun.globals.set('_user_code', code)
+        // Reset globals if running a script, keep them for shell/repl
+        const shouldReset = isScript
+        
+        const jsonResult = await pyodideForRun.runPythonAsync(`run_user_code(_user_code, reset_globals=${shouldReset ? 'True' : 'False'})`)
+        const execResult = JSON.parse(jsonResult)
 
         // Capture stdout
         const stdout = await pyodideForRun.runPythonAsync(`
@@ -358,7 +417,9 @@ for fig in figs:
           result: {
             stdout: stdout ? stdout.trim() : '',
             images: images,
-            success: true
+            success: execResult.ok,
+            variables: execResult.variables,
+            error: execResult.error
           }
         })
         break

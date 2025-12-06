@@ -109,7 +109,10 @@ builtins.input = _mock_input
       // Run Python code with mock input prepended
       const response = await requestResponse({
         type: 'RUN_PYTHON',
-        data: { code: MOCK_INPUT_CODE + "\n" + code }
+        data: { 
+          code: MOCK_INPUT_CODE + "\n" + code,
+          mode: 'script'
+        }
       })
       
       // Handle stdout
@@ -117,8 +120,15 @@ builtins.input = _mock_input
         addOutput(response.result.stdout.trim(), 'print')
       }
       
-      // Extract variables from globals
-      if (response.result?.globals) {
+      // Handle error from Python execution
+      if (response.result?.error) {
+        addOutput(response.result.error, 'error')
+      }
+
+      // Extract variables
+      if (response.result?.variables) {
+        updateVariables(response.result.variables)
+      } else if (response.result?.globals) {
         updateVariables(response.result.globals)
       }
       
@@ -136,14 +146,23 @@ builtins.input = _mock_input
     try {
         const response = await requestResponse({
             type: 'RUN_PYTHON',
-            data: { code: MOCK_INPUT_CODE + "\n" + code }
+            data: { 
+              code: MOCK_INPUT_CODE + "\n" + code,
+              mode: 'shell'
+            }
         })
 
         if (response.result?.stdout) {
             addOutput(response.result.stdout.trim(), 'print')
         }
 
-        if (response.result?.globals) {
+        if (response.result?.error) {
+            addOutput(response.result.error, 'error')
+        }
+
+        if (response.result?.variables) {
+            updateVariables(response.result.variables)
+        } else if (response.result?.globals) {
             updateVariables(response.result.globals)
         }
     } catch (error) {
@@ -228,10 +247,16 @@ for name, meta in packages.items():
     
     variables.value = Object.entries(globals)
       .filter(([name]) => !name.startsWith('_') && !name.startsWith('__'))
-      .map(([name, value]) => ({
-        name,
-        value: String(value).substring(0, 100) // Limit length
-      }))
+      .map(([name, value]) => {
+        let displayValue = value
+        if (typeof value === 'object' && value !== null) {
+            displayValue = JSON.stringify(value)
+        }
+        return {
+            name,
+            value: String(displayValue).substring(0, 100)
+        }
+      })
   }
 
   function clearOutput() {

@@ -377,6 +377,11 @@ const additionalLibraries = [
     name: 'python-dateutil',
     description: 'Powerful extensions to the standard datetime module. Parse dates from strings, calculate relative deltas, work with timezones, and handle recurrence rules for advanced date manipulation.',
     path: '/dateutil'
+  },
+  {
+    name: 'Statsmodels',
+    description: 'Estimate statistical models, conduct tests, and explore data. Includes regression (OLS, GLM), time series analysis, and various statistical tests.',
+    path: '/statsmodels'
   }
 ]
 

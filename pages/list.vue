@@ -417,6 +417,10 @@ useHead({
     {
       property: 'og:description',
       content: 'Browse all available Python library compilers on Pybadu'
+    },
+    {
+      property: 'og:image',
+      content: '/pybadu.png'
     }
   ]
 })

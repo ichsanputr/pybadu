@@ -7,10 +7,10 @@
         y: 0,
         filter: 'blur(0px)',
       }" :transition="{
-          delay: 0.2,
-          duration: 0.8,
-          ease: 'easeInOut',
-        }" class="relative z-10 flex flex-col items-center justify-center gap-6 px-4 py-32">
+        delay: 0.2,
+        duration: 0.8,
+        ease: 'easeInOut',
+      }" class="relative z-10 flex flex-col items-center justify-center gap-6 px-4 py-32">
         <!-- Animated Title with Sparkles -->
         <SparklesText text="Pybadu" :colors="{ first: '#3776ab', second: '#ffd43b' }" :sparkles-count="15"
           class="text-5xl md:text-7xl lg:text-8xl font-extrabold" />
@@ -369,6 +369,10 @@ useHead({
     {
       property: 'og:url',
       content: 'https://pybadu.com'
+    },
+    {
+      property: 'og:image',
+      content: '/pybadu.png'
     }
   ]
 })

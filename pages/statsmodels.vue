@@ -90,7 +90,8 @@ useHead({
         { name: 'keywords', content: 'statsmodels online, python statistics, OLS regression online, GLM, time series analysis, python compiler, pyodide' },
         { property: 'og:title', content: 'Online Statsmodels Compiler' },
         { property: 'og:description', content: 'Perform statistical analysis and modeling with Statsmodels in your browser.' },
-        { property: 'og:type', content: 'website' }
+        { property: 'og:type', content: 'website' },
+        { property: 'og:image', content: '/pybadu.png' }
     ]
 })
 

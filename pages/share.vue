@@ -181,7 +181,11 @@ useHead({
   title: computed(() => `Shared Code (${shareId.value}) - Pybadu`),
   meta: [
     { name: 'description', content: 'View shared Python code on Pybadu' },
-    { name: 'robots', content: 'noindex, nofollow' }
+    { name: 'robots', content: 'noindex, nofollow' },
+    { property: 'og:title', content: computed(() => `Shared Code (${shareId.value}) - Pybadu`) },
+    { property: 'og:description', content: 'View shared Python code on Pybadu' },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:image', content: '/pybadu.png' }
   ],
   script: [
     {

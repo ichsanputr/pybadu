@@ -15,7 +15,7 @@
         <SparklesText text="Pybadu" :colors="{ first: '#3776ab', second: '#ffd43b' }" :sparkles-count="15"
           class="text-5xl md:text-7xl lg:text-8xl font-extrabold" />
 
-        <Motion as="h2" :initial="{ opacity: 0, y: 20 }" :while-in-view="{ opacity: 1, y: 0 }"
+        <Motion as="h1" :initial="{ opacity: 0, y: 20 }" :while-in-view="{ opacity: 1, y: 0 }"
           :transition="{ delay: 0.4, duration: 0.6 }"
           class="text-xl md:text-2xl lg:text-3xl font-bold text-center text-gray-800 dark:text-gray-200">
           Dedicated Python Library Compilers

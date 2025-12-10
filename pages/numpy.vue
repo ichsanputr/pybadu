@@ -2,27 +2,11 @@
   <div>
     <!-- Editor Area -->
     <div class="sm:min-h-screen">
-      <CodeEditor 
-        libraryName="NumPy"
-        :theme="theme" 
-        :files="files"
-        :activeFileId="activeFileId"
-        :code="currentFileContent"
-        :output="output" 
-        :isLoading="isLoading" 
-        :pyodideReady="pyodideReady"
-        :monacoTheme="monacoTheme"
-        :examples="examples"
-        @update:code="updateCurrentFile"
-        @toggleTheme="toggleTheme"
-        @runCode="runCode" 
-        @clearCode="clearCode"
-        @clearOutput="clearOutput"
-        @loadExample="loadExample"
-        @newFile="createNewFile"
-        @selectFile="selectFile"
-        @deleteFile="deleteFile"
-        @renameFile="renameFile"
+      <CodeEditor libraryName="NumPy" :theme="theme" :files="files" :activeFileId="activeFileId"
+        :code="currentFileContent" :output="output" :isLoading="isLoading" :pyodideReady="pyodideReady"
+        :monacoTheme="monacoTheme" :examples="examples" @update:code="updateCurrentFile" @toggleTheme="toggleTheme"
+        @runCode="runCode" @clearCode="clearCode" @clearOutput="clearOutput" @loadExample="loadExample"
+        @newFile="createNewFile" @selectFile="selectFile" @deleteFile="deleteFile" @renameFile="renameFile"
         @saveToStorage="saveToStorage" />
 
     </div>
@@ -33,33 +17,38 @@
         <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
           Online NumPy Compiler
         </h1>
-        
+
         <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
           <p class="text-base md:text-lg leading-relaxed">
-            NumPy (Numerical Python) is the fundamental package for scientific computing in Python and serves as the 
-            foundation for the entire Python data science ecosystem. Our dedicated online NumPy compiler provides a 
-            complete browser environment for working with large, multi-dimensional arrays and matrices, along with a 
-            comprehensive collection of mathematical functions to operate on these arrays. NumPy's powerful ndarray 
+            NumPy (Numerical Python) is the fundamental package for scientific computing in Python and serves as the
+            foundation for the entire Python data science ecosystem. Our dedicated online NumPy compiler provides a
+            complete browser environment for working with large, multi-dimensional arrays and matrices, along with a
+            comprehensive collection of mathematical functions to operate on these arrays. NumPy's powerful ndarray
             object is the cornerstone of modern data analysis, machine learning, and scientific computing in Python.
           </p>
-          
+
           <p class="text-base md:text-lg leading-relaxed">
-            This compiler includes <strong>NumPy 1.14+</strong> with full support for ndarray operations, linear algebra, 
-            Fourier transforms, and random number generation, all powered by Pyodide WebAssembly technology. The compiler 
-            supports all core NumPy features including array creation, manipulation with powerful indexing and slicing, 
-            broadcasting for efficient element-wise operations, and a comprehensive library of mathematical functions 
-            covering trigonometric, exponential, and logarithmic operations. Whether you're performing matrix operations, 
-            statistical analysis, or scientific computations, our NumPy playground offers instant execution without any setup. 
-            You can also upload and use files or folders directly in your code for data processing and numerical workflows. 
+            This compiler includes <strong>NumPy 1.14+</strong> with full support for ndarray operations, linear
+            algebra,
+            Fourier transforms, and random number generation, all powered by Pyodide WebAssembly technology. The
+            compiler
+            supports all core NumPy features including array creation, manipulation with powerful indexing and slicing,
+            broadcasting for efficient element-wise operations, and a comprehensive library of mathematical functions
+            covering trigonometric, exponential, and logarithmic operations. Whether you're performing matrix
+            operations,
+            statistical analysis, or scientific computations, our NumPy playground offers instant execution without any
+            setup.
+            You can also upload and use files or folders directly in your code for data processing and numerical
+            workflows.
             This compiler is online and completely free to use.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
-            Our platform comes with carefully crafted examples covering essential NumPy topics such as array basics, 
-            array creation using zeros, ones, identity matrices, random arrays, arange, and linspace functions. You'll 
-            learn matrix operations including multiplication, transpose, determinant, and inverse operations, as well as 
-            statistical analysis techniques for computing mean, median, standard deviation, percentiles, and correlation 
-            coefficients. The examples also demonstrate NumPy's broadcasting rules for efficient computations and linear 
+            Our platform comes with carefully crafted examples covering essential NumPy topics such as array basics,
+            array creation using zeros, ones, identity matrices, random arrays, arange, and linspace functions. You'll
+            learn matrix operations including multiplication, transpose, determinant, and inverse operations, as well as
+            statistical analysis techniques for computing mean, median, standard deviation, percentiles, and correlation
+            coefficients. The examples also demonstrate NumPy's broadcasting rules for efficient computations and linear
             algebra operations like solving linear equations, eigenvalue problems, and SVD decomposition.
           </p>
 
@@ -120,6 +109,8 @@ const examples = [
   {
     title: "Array Basics",
     code: `# Create arrays
+import numpy as np
+
 arr1 = np.array([1, 2, 3, 4, 5])
 arr2 = np.array([[1, 2, 3], [4, 5, 6]])
 
@@ -139,6 +130,8 @@ print("Min:", arr1.min())`
   {
     title: "Array Creation",
     code: `# Different ways to create arrays
+import numpy as np
+
 zeros = np.zeros((3, 4))
 ones = np.ones((2, 3))
 identity = np.eye(4)
@@ -160,6 +153,8 @@ print("Linspace:", linspace)`
   {
     title: "Matrix Operations",
     code: `# Matrix multiplication
+import numpy as np
+
 A = np.array([[1, 2], [3, 4]])
 B = np.array([[5, 6], [7, 8]])
 
@@ -192,6 +187,8 @@ print(inv)`
   {
     title: "Statistical Operations",
     code: `# Generate random data
+import numpy as np
+
 np.random.seed(42)
 data = np.random.randn(100)
 
@@ -216,6 +213,8 @@ print(f"\\nCorrelation coefficient: {correlation:.4f}")`
   {
     title: "Broadcasting",
     code: `# Broadcasting example
+import numpy as np
+
 arr = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
 print("Original array:")
 print(arr)
@@ -240,6 +239,8 @@ print(result3)`
   {
     title: "Linear Algebra",
     code: `# Solve linear equations: Ax = b
+import numpy as np
+
 A = np.array([[3, 1], [1, 2]])
 b = np.array([9, 8])
 
@@ -266,6 +267,8 @@ print("Singular values:", s)`
 ]
 
 const defaultCode = `# Create a sample array
+import numpy as np
+
 arr = np.array([1, 2, 3, 4, 5])
 
 print("Array:", arr)
@@ -333,4 +336,3 @@ onBeforeUnmount(() => {
   opacity: 0;
 }
 </style>
-

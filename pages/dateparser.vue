@@ -2,33 +2,13 @@
   <div>
     <!-- Editor Area -->
     <div class="min-h-screen">
-      <CodeEditor 
-        libraryName="Dateparser"
-        :theme="theme" 
-        :files="files"
-        :activeFileId="activeFileId"
-        :code="currentFileContent"
-        :output="output" 
-        :isLoading="isLoading" 
-        :pyodideReady="pyodideReady"
-        :monacoTheme="monacoTheme"
-        :examples="examples"
-        :assets="assets"
-        :assetsUploading="assetsUploading"
-        @update:code="updateCurrentFile"
-        @toggleTheme="toggleTheme"
-        @runCode="runCode" 
-        @clearCode="clearCode"
-        @clearOutput="clearOutput"
-        @loadExample="loadExample"
-        @newFile="createNewFile"
-        @selectFile="selectFile"
-        @deleteFile="deleteFile"
-        @renameFile="renameFile"
-        @saveToStorage="saveToStorage"
-        @uploadAssets="uploadAssets"
-        @deleteAsset="deleteAsset" @downloadAsset="downloadAsset"
-        @refreshAssets="refreshAssets"
+      <CodeEditor libraryName="Dateparser" :theme="theme" :files="files" :activeFileId="activeFileId"
+        :code="currentFileContent" :output="output" :isLoading="isLoading" :pyodideReady="pyodideReady"
+        :monacoTheme="monacoTheme" :examples="examples" :assets="assets" :assetsUploading="assetsUploading"
+        @update:code="updateCurrentFile" @toggleTheme="toggleTheme" @runCode="runCode" @clearCode="clearCode"
+        @clearOutput="clearOutput" @loadExample="loadExample" @newFile="createNewFile" @selectFile="selectFile"
+        @deleteFile="deleteFile" @renameFile="renameFile" @saveToStorage="saveToStorage" @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset" @downloadAsset="downloadAsset" @refreshAssets="refreshAssets"
         @createAssetFolder="createAssetFolder" />
     </div>
 
@@ -38,18 +18,30 @@
         <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
           Online Python Dateparser Compiler
         </h1>
-        
+
         <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
           <p class="text-base md:text-lg leading-relaxed">
-            Dateparser is a Python library for parsing human-readable date and time expressions into timezone-aware <code>datetime</code> objects. It understands natural language phrases such as “tomorrow at 5pm”, “next Friday”, or “two weeks ago”, along with formatted dates in dozens of locales. Dateparser intelligently interprets incomplete information, applies configurable parsing preferences, and returns precise Python datetime values that you can use for scheduling, reminders, logging, and analytics.
-          </p>
-          
-          <p class="text-base md:text-lg leading-relaxed">
-            This compiler bundles Dateparser, allowing you to experiment with natural language date parsing directly in your browser. Upload files and folders to work with local date data, parse relative expressions, control preferred date order, work with multiple languages, auto-detect time zones, and search entire paragraphs for embedded dates. The playground exposes the full API including the dateparser.parse helper, advanced settings, and the search_dates utility for extracting multiple matches. This online compiler is completely free and requires no installation.
+            Dateparser is a Python library for parsing human-readable date and time expressions into timezone-aware
+            <code>datetime</code> objects. It understands natural language phrases such as “tomorrow at 5pm”, “next
+            Friday”, or “two weeks ago”, along with formatted dates in dozens of locales. Dateparser intelligently
+            interprets incomplete information, applies configurable parsing preferences, and returns precise Python
+            datetime values that you can use for scheduling, reminders, logging, and analytics.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
-            The included examples demonstrate everyday workflows such as parsing reminders, handling localized input, working with timezone-aware outputs, configuring relative base dates, scanning text for multiple timestamps, and customizing parser settings. These patterns map directly to real-world use cases like chatbots, automation scripts, productivity tools, logging pipelines, and any system that accepts free-form date input.
+            This compiler bundles Dateparser, allowing you to experiment with natural language date parsing directly in
+            your browser. Upload files and folders to work with local date data, parse relative expressions, control
+            preferred date order, work with multiple languages, auto-detect time zones, and search entire paragraphs for
+            embedded dates. The playground exposes the full API including the dateparser.parse helper, advanced
+            settings, and the search_dates utility for extracting multiple matches. This online compiler is completely
+            free and requires no installation.
+          </p>
+
+          <p class="text-base md:text-lg leading-relaxed">
+            The included examples demonstrate everyday workflows such as parsing reminders, handling localized input,
+            working with timezone-aware outputs, configuring relative base dates, scanning text for multiple timestamps,
+            and customizing parser settings. These patterns map directly to real-world use cases like chatbots,
+            automation scripts, productivity tools, logging pipelines, and any system that accepts free-form date input.
           </p>
 
           <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Who Should Use This</h3>
@@ -106,7 +98,9 @@ useHead({
 const examples = [
   {
     title: "Parse Relative Dates",
-    code: `inputs = [
+    code: `import dateparser
+
+inputs = [
     "tomorrow at 5pm",
     "next friday 9:30",
     "in 3 weeks",
@@ -119,7 +113,9 @@ for text in inputs:
   },
   {
     title: "Localized Parsing",
-    code: `phrases = [
+    code: `import dateparser
+
+phrases = [
     "mañana a las 10",
     "demain à midi",
     "morgen um 8 uhr",
@@ -133,7 +129,9 @@ for phrase, lang in zip(phrases, languages):
   },
   {
     title: "Search Dates In Text",
-    code: `text = "Kickoff on 5 Jan 2025, follow-up next Monday at noon, final review in 2 weeks."
+    code: `from dateparser.search import search_dates
+
+text = "Kickoff on 5 Jan 2025, follow-up next Monday at noon, final review in 2 weeks."
 matches = search_dates(text)
 
 for match, parsed in matches:
@@ -141,7 +139,9 @@ for match, parsed in matches:
   },
   {
     title: "Timezone-Aware Results",
-    code: `settings = {
+    code: `import dateparser
+
+settings = {
     "RETURN_AS_TIMEZONE_AWARE": True,
     "TIMEZONE": "UTC",
     "TO_TIMEZONE": "Asia/Jakarta"
@@ -154,7 +154,10 @@ print("Timezone:", parsed.tzinfo)`
   },
   {
     title: "Custom Relative Base",
-    code: `base = datetime(2025, 1, 10, 9, 0)
+    code: `import dateparser
+from datetime import datetime
+
+base = datetime(2025, 1, 10, 9, 0)
 settings = { "RELATIVE_BASE": base }
 
 phrases = ["next monday", "two days later", "friday 6pm"]
@@ -164,7 +167,9 @@ for phrase in phrases:
   },
   {
     title: "Prefer Future Dates",
-    code: `settings = { "PREFER_DATES_FROM": "future" }
+    code: `import dateparser
+
+settings = { "PREFER_DATES_FROM": "future" }
 
 phrases = ["Saturday", "Jan 5", "10/12"]
 for phrase in phrases:
@@ -174,6 +179,8 @@ for phrase in phrases:
 ]
 
 const defaultCode = `# Parse a human-friendly date expression
+import dateparser
+
 text = "tomorrow at 5pm"
 parsed = dateparser.parse(text)
 
@@ -207,7 +214,7 @@ const {
   refreshAssets,
   uploadAssets,
   deleteAsset,
-  
+
   downloadAsset,
   createAssetFolder,
   initializePyodide,
@@ -244,4 +251,3 @@ onBeforeUnmount(() => {
   opacity: 0;
 }
 </style>
-

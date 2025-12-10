@@ -2,33 +2,13 @@
   <div>
     <!-- Editor Area -->
     <div class="min-h-screen">
-      <CodeEditor 
-        libraryName="ShortUUID"
-        :theme="theme" 
-        :files="files"
-        :activeFileId="activeFileId"
-        :code="currentFileContent"
-        :output="output" 
-        :isLoading="isLoading" 
-        :pyodideReady="pyodideReady"
-        :monacoTheme="monacoTheme"
-        :examples="examples"
-        :assets="assets"
-        :assetsUploading="assetsUploading"
-        @update:code="updateCurrentFile"
-        @toggleTheme="toggleTheme"
-        @runCode="runCode" 
-        @clearCode="clearCode"
-        @clearOutput="clearOutput"
-        @loadExample="loadExample"
-        @newFile="createNewFile"
-        @selectFile="selectFile"
-        @deleteFile="deleteFile"
-        @renameFile="renameFile"
-        @saveToStorage="saveToStorage"
-        @uploadAssets="uploadAssets"
-        @deleteAsset="deleteAsset" @downloadAsset="downloadAsset"
-        @refreshAssets="refreshAssets"
+      <CodeEditor libraryName="ShortUUID" :theme="theme" :files="files" :activeFileId="activeFileId"
+        :code="currentFileContent" :output="output" :isLoading="isLoading" :pyodideReady="pyodideReady"
+        :monacoTheme="monacoTheme" :examples="examples" :assets="assets" :assetsUploading="assetsUploading"
+        @update:code="updateCurrentFile" @toggleTheme="toggleTheme" @runCode="runCode" @clearCode="clearCode"
+        @clearOutput="clearOutput" @loadExample="loadExample" @newFile="createNewFile" @selectFile="selectFile"
+        @deleteFile="deleteFile" @renameFile="renameFile" @saveToStorage="saveToStorage" @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset" @downloadAsset="downloadAsset" @refreshAssets="refreshAssets"
         @createAssetFolder="createAssetFolder" />
     </div>
 
@@ -38,18 +18,33 @@
         <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
           Online Python ShortUUID Compiler
         </h1>
-        
+
         <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
           <p class="text-base md:text-lg leading-relaxed">
-            ShortUUID is a Python library that generates shorter, URL-safe UUIDs. Unlike standard UUIDs which are 36 characters long, ShortUUID creates compact identifiers that are perfect for use in URLs, database keys, and anywhere you need unique identifiers that are both shorter and URL-safe. The library provides a simple API for generating and working with these compact UUIDs while maintaining uniqueness and compatibility with standard UUIDs.
-          </p>
-          
-          <p class="text-base md:text-lg leading-relaxed">
-            This compiler includes <strong>ShortUUID</strong>, enabling you to generate shorter, URL-safe UUIDs directly in your browser. You can create compact unique identifiers, convert between standard UUIDs and short UUIDs, generate random short UUIDs, and work with custom alphabets. The platform provides all the tools you need for comprehensive UUID generation including URL-safe encoding, alphabet customization, and bidirectional conversion between standard and short UUID formats. You can also upload and use files or folders directly in your code for UUID generation and identifier management workflows. This compiler is online and completely free to use.
+            ShortUUID is a Python library that generates shorter, URL-safe UUIDs. Unlike standard UUIDs which are 36
+            characters long, ShortUUID creates compact identifiers that are perfect for use in URLs, database keys, and
+            anywhere you need unique identifiers that are both shorter and URL-safe. The library provides a simple API
+            for generating and working with these compact UUIDs while maintaining uniqueness and compatibility with
+            standard UUIDs.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
-            Our comprehensive example collection covers essential UUID generation techniques including basic short UUID creation, generating multiple UUIDs, converting between standard and short UUIDs, using custom alphabets, and generating URL-safe identifiers. You'll also learn how to use short UUIDs in practical scenarios like generating unique IDs for database records, creating short links, and managing unique identifiers in web applications. The examples demonstrate practical applications commonly used in web development, database design, and distributed systems.
+            This compiler includes <strong>ShortUUID</strong>, enabling you to generate shorter, URL-safe UUIDs directly
+            in your browser. You can create compact unique identifiers, convert between standard UUIDs and short UUIDs,
+            generate random short UUIDs, and work with custom alphabets. The platform provides all the tools you need
+            for comprehensive UUID generation including URL-safe encoding, alphabet customization, and bidirectional
+            conversion between standard and short UUID formats. You can also upload and use files or folders directly in
+            your code for UUID generation and identifier management workflows. This compiler is online and completely
+            free to use.
+          </p>
+
+          <p class="text-base md:text-lg leading-relaxed">
+            Our comprehensive example collection covers essential UUID generation techniques including basic short UUID
+            creation, generating multiple UUIDs, converting between standard and short UUIDs, using custom alphabets,
+            and generating URL-safe identifiers. You'll also learn how to use short UUIDs in practical scenarios like
+            generating unique IDs for database records, creating short links, and managing unique identifiers in web
+            applications. The examples demonstrate practical applications commonly used in web development, database
+            design, and distributed systems.
           </p>
 
           <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Who Should Use This</h3>
@@ -107,6 +102,8 @@ const examples = [
   {
     title: "Basic Short UUID Generation",
     code: `# Generate a short UUID
+import shortuuid
+
 uuid = shortuuid.uuid()
 print("Short UUID:", uuid)
 print("Length:", len(uuid))
@@ -119,6 +116,8 @@ print("Length:", len(uuid2))`
   {
     title: "Multiple UUIDs",
     code: `# Generate multiple short UUIDs
+import shortuuid
+
 print("Generating 5 short UUIDs:\\n")
 for i in range(5):
     uuid = shortuuid.uuid()
@@ -127,6 +126,7 @@ for i in range(5):
   {
     title: "Convert Standard UUID to Short",
     code: `# Convert a standard UUID to short UUID
+import shortuuid
 import uuid as std_uuid
 
 # Create a standard UUID
@@ -143,6 +143,8 @@ print(f"  Short: {len(short)} characters")`
   {
     title: "Convert Short UUID Back to Standard",
     code: `# Convert short UUID back to standard UUID
+import shortuuid
+
 short = shortuuid.uuid()
 print("Short UUID:", short)
 
@@ -154,6 +156,8 @@ print("Type:", type(standard))`
   {
     title: "Custom Alphabet",
     code: `# Use a custom alphabet for shorter IDs
+import shortuuid
+
 # Default alphabet includes lowercase, uppercase, and digits
 default_uuid = shortuuid.uuid()
 print("Default alphabet UUID:", default_uuid)
@@ -165,6 +169,8 @@ print("\\nUUID length with default alphabet:", len(default_uuid))`
   {
     title: "URL-Safe Identifiers",
     code: `# Generate URL-safe identifiers
+import shortuuid
+
 # ShortUUID is URL-safe by default (no special characters)
 
 url_ids = []
@@ -179,6 +185,8 @@ print(f"https://example.com/item/{url_ids[0]}")`
 ]
 
 const defaultCode = `# Generate a shorter, URL-safe UUID
+import shortuuid
+
 # ShortUUID creates compact identifiers perfect for URLs and database keys
 
 uuid = shortuuid.uuid()
@@ -218,7 +226,7 @@ const {
   refreshAssets,
   uploadAssets,
   deleteAsset,
-  
+
   downloadAsset,
   createAssetFolder
 } = useLibraryPlayground({
@@ -251,4 +259,3 @@ onBeforeUnmount(() => {
   opacity: 0;
 }
 </style>
-

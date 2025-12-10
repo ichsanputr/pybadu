@@ -106,7 +106,9 @@ useHead({
 const examples = [
   {
     title: "Basic Table Creation",
-    code: `# Create a simple table from a list of lists
+    code: `from tabulate import tabulate
+
+# Create a simple table from a list of lists
 data = [
     ['Name', 'Age', 'City'],
     ['Alice', 25, 'New York'],
@@ -120,7 +122,9 @@ print(table)`
   },
   {
     title: "Different Table Formats",
-    code: `# Try different table formats
+    code: `from tabulate import tabulate
+
+# Try different table formats
 data = [
     ['Product', 'Price', 'Stock'],
     ['Laptop', 999, 15],
@@ -135,7 +139,9 @@ for fmt in formats:
   },
   {
     title: "Table from Dictionary",
-    code: `# Create table from dictionary
+    code: `from tabulate import tabulate
+
+# Create table from dictionary
 data = {
     'Name': ['Alice', 'Bob', 'Charlie'],
     'Age': [25, 30, 35],
@@ -148,7 +154,9 @@ print(table)`
   },
   {
     title: "Column Alignment",
-    code: `# Customize column alignment
+    code: `from tabulate import tabulate
+
+# Customize column alignment
 data = [
     ['Item', 'Price', 'Quantity'],
     ['Laptop', 999.99, 15],
@@ -164,7 +172,9 @@ print(table)`
   },
   {
     title: "Number Formatting",
-    code: `# Format numbers in table
+    code: `from tabulate import tabulate
+
+# Format numbers in table
 data = [
     ['Product', 'Sales', 'Revenue'],
     ['Product A', 150, 15000.50],
@@ -179,7 +189,9 @@ print(table)`
   },
   {
     title: "Complex Table",
-    code: `# Create a more complex table
+    code: `from tabulate import tabulate
+
+# Create a more complex table
 headers = ['Name', 'Department', 'Salary', 'Bonus']
 data = [
     ['Alice', 'Engineering', 75000, 5000],
@@ -195,7 +207,9 @@ print(table)`
   }
 ]
 
-const defaultCode = `# Create a simple table from a list of lists
+const defaultCode = `from tabulate import tabulate
+
+# Create a simple table from a list of lists
 data = [
     ['Name', 'Age', 'City'],
     ['Alice', 25, 'New York'],

@@ -106,7 +106,9 @@ useHead({
 const examples = [
   {
     title: "Basic URL Parsing",
-    code: `# Parse a URL and access its components
+    code: `from yarl import URL
+
+# Parse a URL and access its components
 url = URL('https://www.python.org/~guido?arg=1#frag')
 
 print("Full URL:", url)
@@ -118,7 +120,9 @@ print("Fragment:", url.fragment)`
   },
   {
     title: "Accessing URL Components",
-    code: `# Access various URL components
+    code: `from yarl import URL
+
+# Access various URL components
 url = URL('https://user:pass@example.com:8080/path/to/page?key=value&foo=bar#section')
 
 print("Scheme:", url.scheme)
@@ -133,7 +137,9 @@ print("Authority:", url.authority)`
   },
   {
     title: "Modifying URLs",
-    code: `# Create new URLs by modifying existing ones
+    code: `from yarl import URL
+
+# Create new URLs by modifying existing ones
 base_url = URL('https://example.com/api/v1')
 
 # Change path
@@ -150,7 +156,9 @@ print("With fragment:", with_fragment)`
   },
   {
     title: "Building URLs from Components",
-    code: `# Build a URL from components
+    code: `from yarl import URL
+
+# Build a URL from components
 url = URL.build(
     scheme='https',
     host='api.example.com',
@@ -163,7 +171,9 @@ print("Full URL string:", str(url))`
   },
   {
     title: "Query Parameter Manipulation",
-    code: `# Work with query parameters
+    code: `from yarl import URL
+
+# Work with query parameters
 url = URL('https://example.com/search?q=python&page=1')
 
 # Access query as dict
@@ -180,7 +190,9 @@ print("Without page:", no_page)`
   },
   {
     title: "Joining URLs",
-    code: `# Join URLs and paths
+    code: `from yarl import URL
+
+# Join URLs and paths
 base = URL('https://example.com/api')
 
 # Join with path
@@ -198,7 +210,9 @@ print("Relative join:", relative)`
   }
 ]
 
-const defaultCode = `# Parse and manipulate URLs with Yarl
+const defaultCode = `from yarl import URL
+
+# Parse and manipulate URLs with Yarl
 # Yarl provides immutable URL objects for safe URL manipulation
 
 # Parse a URL

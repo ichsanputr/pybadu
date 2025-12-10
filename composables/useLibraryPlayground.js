@@ -345,6 +345,15 @@ export function useLibraryPlayground(config = {}) {
         })
       }
       
+      // Surface Python-side errors (previously hidden)
+      if (response.result?.error) {
+        outputItems.push({
+          type: 'error',
+          content: response.result.error,
+          timestamp: new Date().toLocaleTimeString()
+        })
+      }
+      
       // Wait for minimum delay before finishing
       const elapsed = Date.now() - startTime
       if (elapsed < minDelay) {
@@ -352,11 +361,13 @@ export function useLibraryPlayground(config = {}) {
       }
       
       const totalTime = Date.now() - startTime
-      outputItems.push({
-        type: 'success', 
-        content: `✓ Code executed successfully in ${totalTime}ms`,
-        timestamp: new Date().toLocaleTimeString()
-      })
+      if (!response.result?.error) {
+        outputItems.push({
+          type: 'success', 
+          content: `✓ Code executed successfully in ${totalTime}ms`,
+          timestamp: new Date().toLocaleTimeString()
+        })
+      }
       
       // Wait 500ms before showing output
       await new Promise(resolve => setTimeout(resolve, 500))

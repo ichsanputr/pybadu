@@ -2,33 +2,13 @@
   <div>
     <!-- Editor Area -->
     <div class="min-h-screen">
-      <CodeEditor 
-        libraryName="Faker"
-        :theme="theme" 
-        :files="files"
-        :activeFileId="activeFileId"
-        :code="currentFileContent"
-        :output="output" 
-        :isLoading="isLoading" 
-        :pyodideReady="pyodideReady"
-        :monacoTheme="monacoTheme"
-        :examples="examples"
-        :assets="assets"
-        :assetsUploading="assetsUploading"
-        @update:code="updateCurrentFile"
-        @toggleTheme="toggleTheme"
-        @runCode="runCode" 
-        @clearCode="clearCode"
-        @clearOutput="clearOutput"
-        @loadExample="loadExample"
-        @newFile="createNewFile"
-        @selectFile="selectFile"
-        @deleteFile="deleteFile"
-        @renameFile="renameFile"
-        @saveToStorage="saveToStorage"
-        @uploadAssets="uploadAssets"
-        @deleteAsset="deleteAsset" @downloadAsset="downloadAsset"
-        @refreshAssets="refreshAssets"
+      <CodeEditor libraryName="Faker" :theme="theme" :files="files" :activeFileId="activeFileId"
+        :code="currentFileContent" :output="output" :isLoading="isLoading" :pyodideReady="pyodideReady"
+        :monacoTheme="monacoTheme" :examples="examples" :assets="assets" :assetsUploading="assetsUploading"
+        @update:code="updateCurrentFile" @toggleTheme="toggleTheme" @runCode="runCode" @clearCode="clearCode"
+        @clearOutput="clearOutput" @loadExample="loadExample" @newFile="createNewFile" @selectFile="selectFile"
+        @deleteFile="deleteFile" @renameFile="renameFile" @saveToStorage="saveToStorage" @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset" @downloadAsset="downloadAsset" @refreshAssets="refreshAssets"
         @createAssetFolder="createAssetFolder" />
     </div>
 
@@ -38,18 +18,33 @@
         <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
           Online Python Faker Compiler
         </h1>
-        
+
         <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
           <p class="text-base md:text-lg leading-relaxed">
-            Faker is a powerful Python library that generates fake data for various purposes including unit testing, performance testing, building demos, and anonymizing production data. It can produce realistic data across a wide range of categories such as names, addresses, emails, phone numbers, company information, dates, credit card numbers, and much more. Faker is particularly useful for developers who need to populate databases, create test fixtures, or generate sample data for development and testing purposes.
-          </p>
-          
-          <p class="text-base md:text-lg leading-relaxed">
-            This compiler includes <strong>Faker</strong>, enabling you to generate fake data directly in your browser. The library supports multiple locales, allowing you to generate data appropriate for different regions and languages. You can create realistic names, addresses, emails, phone numbers, company information, job titles, dates, times, text content, and many other data types. The platform provides all the tools you need for comprehensive fake data generation including localization support, diverse data providers, and extensible architecture for custom data generation. You can also upload and use files or folders directly in your code for data generation and testing workflows. This compiler is online and completely free to use.
+            Faker is a powerful Python library that generates fake data for various purposes including unit testing,
+            performance testing, building demos, and anonymizing production data. It can produce realistic data across a
+            wide range of categories such as names, addresses, emails, phone numbers, company information, dates, credit
+            card numbers, and much more. Faker is particularly useful for developers who need to populate databases,
+            create test fixtures, or generate sample data for development and testing purposes.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
-            Our comprehensive example collection covers essential fake data generation techniques including basic data generation, working with different data types, using multiple locales, generating dates and times, creating text content, and working with company and financial data. You'll also learn how to use Faker for testing, database seeding, creating demo applications, and generating realistic sample data. The examples demonstrate practical applications commonly used in software development, testing, data anonymization, and application prototyping.
+            This compiler includes <strong>Faker</strong>, enabling you to generate fake data directly in your browser.
+            The library supports multiple locales, allowing you to generate data appropriate for different regions and
+            languages. You can create realistic names, addresses, emails, phone numbers, company information, job
+            titles, dates, times, text content, and many other data types. The platform provides all the tools you need
+            for comprehensive fake data generation including localization support, diverse data providers, and
+            extensible architecture for custom data generation. You can also upload and use files or folders directly in
+            your code for data generation and testing workflows. This compiler is online and completely free to use.
+          </p>
+
+          <p class="text-base md:text-lg leading-relaxed">
+            Our comprehensive example collection covers essential fake data generation techniques including basic data
+            generation, working with different data types, using multiple locales, generating dates and times, creating
+            text content, and working with company and financial data. You'll also learn how to use Faker for testing,
+            database seeding, creating demo applications, and generating realistic sample data. The examples demonstrate
+            practical applications commonly used in software development, testing, data anonymization, and application
+            prototyping.
           </p>
 
           <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Who Should Use This</h3>
@@ -107,6 +102,8 @@ const examples = [
   {
     title: "Basic Fake Data Generation",
     code: `# Generate basic fake data
+from faker import Faker
+
 fake = Faker()
 
 print("Name:", fake.name())
@@ -119,6 +116,8 @@ print("Job:", fake.job())`
   {
     title: "Multiple Data Types",
     code: `# Generate various types of fake data
+from faker import Faker
+
 fake = Faker()
 
 print("Personal Information:")
@@ -141,6 +140,8 @@ print("  User Agent:", fake.user_agent())`
   {
     title: "Localization",
     code: `# Generate data in different locales
+from faker import Faker
+
 # English (default)
 fake_en = Faker('en_US')
 print("English Name:", fake_en.name())
@@ -159,6 +160,8 @@ print("German Address:", fake_de.address())`
   {
     title: "Dates and Times",
     code: `# Generate dates and times
+from faker import Faker
+
 fake = Faker()
 
 print("Date between 2020-2023:")
@@ -179,6 +182,8 @@ print(fake.future_date())`
   {
     title: "Text Generation",
     code: `# Generate text content
+from faker import Faker
+
 fake = Faker()
 
 print("Word:", fake.word())
@@ -192,6 +197,8 @@ print(fake.text())`
   {
     title: "Company and Financial Data",
     code: `# Generate company and financial information
+from faker import Faker
+
 fake = Faker()
 
 print("Company Information:")
@@ -209,6 +216,7 @@ print("  Currency Name:", fake.currency_name())`
 
 const defaultCode = `# Generate fake data with Faker
 # Faker is useful for testing, demos, and data anonymization
+from faker import Faker
 
 fake = Faker()
 
@@ -251,7 +259,7 @@ const {
   refreshAssets,
   uploadAssets,
   deleteAsset,
-  
+
   downloadAsset,
   createAssetFolder
 } = useLibraryPlayground({
@@ -285,4 +293,3 @@ onBeforeUnmount(() => {
   opacity: 0;
 }
 </style>
-

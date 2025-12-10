@@ -8,8 +8,8 @@
                 @update:code="updateCurrentFile" @toggleTheme="toggleTheme" @runCode="runCode" @clearCode="clearCode"
                 @clearOutput="clearOutput" @loadExample="loadExample" @newFile="createNewFile" @selectFile="selectFile"
                 @deleteFile="deleteFile" @renameFile="renameFile" @saveToStorage="saveToStorage"
-                @uploadAssets="uploadAssets" @deleteAsset="deleteAsset" @downloadAsset="downloadAsset" @refreshAssets="refreshAssets"
-                @createAssetFolder="createAssetFolder" />
+                @uploadAssets="uploadAssets" @deleteAsset="deleteAsset" @downloadAsset="downloadAsset"
+                @refreshAssets="refreshAssets" @createAssetFolder="createAssetFolder" />
 
         </div>
 
@@ -125,7 +125,8 @@ useHead({
 const examples = [
     {
         title: "Basic Sankey Diagram",
-        code: `from matplotlib.sankey import Sankey
+        code: `import matplotlib.pyplot as plt
+from matplotlib.sankey import Sankey
 
 # Create a simple Sankey diagram
 fig = plt.figure(figsize=(10, 6))
@@ -151,7 +152,8 @@ print("Basic Sankey diagram created!")`
     },
     {
         title: "Energy Flow Diagram",
-        code: `from matplotlib.sankey import Sankey
+        code: `import matplotlib.pyplot as plt
+from matplotlib.sankey import Sankey
 
 # Energy distribution Sankey diagram
 fig = plt.figure(figsize=(12, 8))
@@ -182,7 +184,8 @@ print("Energy flow Sankey diagram created!")`
     },
     {
         title: "Multi-Stage Process",
-        code: `from matplotlib.sankey import Sankey
+        code: `import matplotlib.pyplot as plt
+from matplotlib.sankey import Sankey
 
 # Multi-stage manufacturing process
 fig = plt.figure(figsize=(14, 8))
@@ -227,7 +230,8 @@ print("Multi-stage process Sankey diagram created!")`
     },
     {
         title: "Budget Allocation",
-        code: `from matplotlib.sankey import Sankey
+        code: `import matplotlib.pyplot as plt
+from matplotlib.sankey import Sankey
 
 # Budget allocation Sankey diagram
 fig = plt.figure(figsize=(12, 9))
@@ -259,7 +263,8 @@ print("Budget allocation Sankey diagram created!")`
     },
     {
         title: "Water Treatment Plant",
-        code: `from matplotlib.sankey import Sankey
+        code: `import matplotlib.pyplot as plt
+from matplotlib.sankey import Sankey
 
 # Water treatment flow diagram
 fig = plt.figure(figsize=(14, 10))
@@ -321,7 +326,8 @@ print("Water treatment Sankey diagram created!")`
     },
     {
         title: "Website Traffic Flow",
-        code: `from matplotlib.sankey import Sankey
+        code: `import matplotlib.pyplot as plt
+from matplotlib.sankey import Sankey
 
 # Website visitor flow
 fig = plt.figure(figsize=(13, 9))
@@ -372,7 +378,8 @@ print("Website traffic flow Sankey diagram created!")`
     }
 ]
 
-const defaultCode = `from matplotlib.sankey import Sankey
+const defaultCode = `import matplotlib.pyplot as plt
+from matplotlib.sankey import Sankey
 
 # Create a simple Sankey diagram
 fig = plt.figure(figsize=(10, 6))
@@ -425,7 +432,7 @@ const {
     refreshAssets,
     uploadAssets,
     deleteAsset,
-    
+
     downloadAsset,
     createAssetFolder
 } = useLibraryPlayground({

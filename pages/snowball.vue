@@ -2,27 +2,11 @@
   <div>
     <!-- Editor Area -->
     <div class="min-h-screen">
-      <CodeEditor 
-        libraryName="Snowball Stemmer"
-        :theme="theme" 
-        :files="files"
-        :activeFileId="activeFileId"
-        :code="currentFileContent"
-        :output="output" 
-        :isLoading="isLoading" 
-        :pyodideReady="pyodideReady"
-        :monacoTheme="monacoTheme"
-        :examples="examples"
-        @update:code="updateCurrentFile"
-        @toggleTheme="toggleTheme"
-        @runCode="runCode" 
-        @clearCode="clearCode"
-        @clearOutput="clearOutput"
-        @loadExample="loadExample"
-        @newFile="createNewFile"
-        @selectFile="selectFile"
-        @deleteFile="deleteFile"
-        @renameFile="renameFile"
+      <CodeEditor libraryName="Snowball Stemmer" :theme="theme" :files="files" :activeFileId="activeFileId"
+        :code="currentFileContent" :output="output" :isLoading="isLoading" :pyodideReady="pyodideReady"
+        :monacoTheme="monacoTheme" :examples="examples" @update:code="updateCurrentFile" @toggleTheme="toggleTheme"
+        @runCode="runCode" @clearCode="clearCode" @clearOutput="clearOutput" @loadExample="loadExample"
+        @newFile="createNewFile" @selectFile="selectFile" @deleteFile="deleteFile" @renameFile="renameFile"
         @saveToStorage="saveToStorage" />
     </div>
 
@@ -32,30 +16,43 @@
         <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
           Online Python Snowball Stemmer Compiler
         </h1>
-        
+
         <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
           <p class="text-base md:text-lg leading-relaxed">
-            Snowball Stemmer is a powerful text processing library that reduces words to their root forms through stemming algorithms. 
-            Stemming is essential in natural language processing, information retrieval, and search engines, as it helps normalize text 
-            by removing word suffixes and prefixes. For example, words like "running", "runs", and "ran" can all be reduced to their 
+            Snowball Stemmer is a powerful text processing library that reduces words to their root forms through
+            stemming algorithms.
+            Stemming is essential in natural language processing, information retrieval, and search engines, as it helps
+            normalize text
+            by removing word suffixes and prefixes. For example, words like "running", "runs", and "ran" can all be
+            reduced to their
             common root "run", making text analysis more efficient and accurate.
           </p>
-          
+
           <p class="text-base md:text-lg leading-relaxed">
-            This compiler includes <strong>Snowball Stemmer</strong> with support for multiple languages including English, Spanish, 
-            French, German, Italian, Portuguese, and Russian. The library implements the Snowball stemming algorithm, which is an 
-            improved version of the Porter stemming algorithm. You can perform text normalization, reduce word variations to their 
-            base forms, and improve the accuracy of text matching and search operations. The platform provides all the tools you 
-            need for comprehensive text processing including multi-language support, batch processing capabilities, and efficient 
-            stemming algorithms optimized for performance. You can also upload and use files or folders directly in your code for 
+            This compiler includes <strong>Snowball Stemmer</strong> with support for multiple languages including
+            English, Spanish,
+            French, German, Italian, Portuguese, and Russian. The library implements the Snowball stemming algorithm,
+            which is an
+            improved version of the Porter stemming algorithm. You can perform text normalization, reduce word
+            variations to their
+            base forms, and improve the accuracy of text matching and search operations. The platform provides all the
+            tools you
+            need for comprehensive text processing including multi-language support, batch processing capabilities, and
+            efficient
+            stemming algorithms optimized for performance. You can also upload and use files or folders directly in your
+            code for
             text processing and NLP workflows. This compiler is online and completely free to use.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
-            Our comprehensive example collection covers essential text processing techniques including basic word stemming, 
-            batch processing of word lists, multi-language stemming operations, and text normalization workflows. You'll also 
-            learn how to stem words in different languages, process text documents, and integrate stemming into larger text 
-            processing pipelines. The examples demonstrate practical applications commonly used in search engines, document 
+            Our comprehensive example collection covers essential text processing techniques including basic word
+            stemming,
+            batch processing of word lists, multi-language stemming operations, and text normalization workflows. You'll
+            also
+            learn how to stem words in different languages, process text documents, and integrate stemming into larger
+            text
+            processing pipelines. The examples demonstrate practical applications commonly used in search engines,
+            document
             classification systems, and natural language processing applications.
           </p>
 
@@ -113,7 +110,9 @@ useHead({
 const examples = [
   {
     title: "Basic Word Stemming",
-    code: `# Stem words in English
+    code: `import snowballstemmer
+
+# Stem words in English
 words = ['running', 'runs', 'ran', 'easily', 'fairly', 'programming', 'programs']
 stemmer = snowballstemmer.stemmer('english')
 stemmed = stemmer.stemWords(words)
@@ -126,7 +125,9 @@ for original, stemmed_word in zip(words, stemmed):
   },
   {
     title: "Multi-Language Stemming",
-    code: `# Stem words in different languages
+    code: `import snowballstemmer
+
+# Stem words in different languages
 english_words = ['running', 'jumping', 'beautiful']
 spanish_words = ['corriendo', 'programación', 'desarrollo']
 french_words = ['courant', 'programmation', 'développement']
@@ -148,7 +149,9 @@ print("French:", dict(zip(french_words, fr_stemmed)))`
   },
   {
     title: "Text Normalization",
-    code: `# Normalize a sentence by stemming all words
+    code: `import snowballstemmer
+
+# Normalize a sentence by stemming all words
 sentence = "The running program runs programs that are running programs"
 words = sentence.lower().split()
 
@@ -162,7 +165,9 @@ print("Normalized sentence:", ' '.join(stemmed_words))`
   },
   {
     title: "Batch Processing",
-    code: `# Process multiple word lists
+    code: `import snowballstemmer
+
+# Process multiple word lists
 word_lists = [
     ['running', 'jumping', 'walking'],
     ['programming', 'developing', 'coding'],
@@ -180,7 +185,9 @@ for i, word_list in enumerate(word_lists, 1):
   },
   {
     title: "Language Comparison",
-    code: `# Compare stemming across languages
+    code: `import snowballstemmer
+
+# Compare stemming across languages
 test_words = {
     'english': ['running', 'programming', 'development'],
     'spanish': ['corriendo', 'programación', 'desarrollo'],
@@ -197,7 +204,9 @@ for lang, words in test_words.items():
   },
   {
     title: "Verb Forms Stemming",
-    code: `# Stem different verb forms
+    code: `import snowballstemmer
+
+# Stem different verb forms
 verb_forms = [
     'run', 'runs', 'running', 'ran',
     'walk', 'walks', 'walking', 'walked',
@@ -213,7 +222,9 @@ for original, stemmed_word in zip(verb_forms, stemmed):
   }
 ]
 
-const defaultCode = `# Stem words in English
+const defaultCode = `import snowballstemmer
+
+# Stem words in English
 words = ['running', 'runs', 'ran', 'easily', 'fairly', 'programming', 'programs']
 stemmer = snowballstemmer.stemmer('english')
 stemmed = stemmer.stemWords(words)

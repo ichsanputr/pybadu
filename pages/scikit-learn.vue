@@ -2,27 +2,11 @@
   <div>
     <!-- Editor Area -->
     <div class="sm:min-h-screen">
-      <CodeEditor 
-        libraryName="Scikit-learn"
-        :theme="theme" 
-        :files="files"
-        :activeFileId="activeFileId"
-        :code="currentFileContent"
-        :output="output" 
-        :isLoading="isLoading" 
-        :pyodideReady="pyodideReady"
-        :monacoTheme="monacoTheme"
-        :examples="examples"
-        @update:code="updateCurrentFile"
-        @toggleTheme="toggleTheme"
-        @runCode="runCode" 
-        @clearCode="clearCode"
-        @clearOutput="clearOutput"
-        @loadExample="loadExample"
-        @newFile="createNewFile"
-        @selectFile="selectFile"
-        @deleteFile="deleteFile"
-        @renameFile="renameFile"
+      <CodeEditor libraryName="Scikit-learn" :theme="theme" :files="files" :activeFileId="activeFileId"
+        :code="currentFileContent" :output="output" :isLoading="isLoading" :pyodideReady="pyodideReady"
+        :monacoTheme="monacoTheme" :examples="examples" @update:code="updateCurrentFile" @toggleTheme="toggleTheme"
+        @runCode="runCode" @clearCode="clearCode" @clearOutput="clearOutput" @loadExample="loadExample"
+        @newFile="createNewFile" @selectFile="selectFile" @deleteFile="deleteFile" @renameFile="renameFile"
         @saveToStorage="saveToStorage" />
 
     </div>
@@ -33,36 +17,44 @@
         <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
           Online Scikit-learn Compiler
         </h1>
-        
+
         <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
           <p class="text-base md:text-lg leading-relaxed">
-            Scikit-learn is Python's most accessible and widely-used machine learning library, offering simple yet powerful 
-            tools for predictive data analysis. As the de facto standard for machine learning in Python, Scikit-learn is 
-            used by Fortune 500 companies, leading research institutions, and individual developers worldwide. Our dedicated 
-            online Scikit-learn compiler provides a complete browser environment for building, training, and evaluating 
-            machine learning models without any installation or setup requirements. The library's consistent API design 
+            Scikit-learn is Python's most accessible and widely-used machine learning library, offering simple yet
+            powerful
+            tools for predictive data analysis. As the de facto standard for machine learning in Python, Scikit-learn is
+            used by Fortune 500 companies, leading research institutions, and individual developers worldwide. Our
+            dedicated
+            online Scikit-learn compiler provides a complete browser environment for building, training, and evaluating
+            machine learning models without any installation or setup requirements. The library's consistent API design
             makes it easy to learn and apply various machine learning algorithms to solve real-world problems.
           </p>
-          
+
           <p class="text-base md:text-lg leading-relaxed">
-            This compiler includes <strong>Scikit-learn 1.7+</strong> with <strong>NumPy</strong>, powered by Pyodide 
-            WebAssembly technology, providing instant access to classification, regression, clustering, and dimensionality 
-            reduction algorithms. The platform supports both supervised learning with algorithms for labeled data and 
-            unsupervised learning for pattern discovery. You can perform model selection using cross-validation and grid 
-            search for hyperparameter tuning, apply preprocessing techniques like data scaling and normalization, use 
-            feature selection tools, experiment with ensemble methods including Random Forests and Gradient Boosting, and 
-            evaluate models using comprehensive performance metrics such as accuracy, precision, recall, and F1-score. 
-            You can also upload and use files or folders directly in your code for machine learning workflows and data processing. 
+            This compiler includes <strong>Scikit-learn 1.7+</strong> with <strong>NumPy</strong>, powered by Pyodide
+            WebAssembly technology, providing instant access to classification, regression, clustering, and
+            dimensionality
+            reduction algorithms. The platform supports both supervised learning with algorithms for labeled data and
+            unsupervised learning for pattern discovery. You can perform model selection using cross-validation and grid
+            search for hyperparameter tuning, apply preprocessing techniques like data scaling and normalization, use
+            feature selection tools, experiment with ensemble methods including Random Forests and Gradient Boosting,
+            and
+            evaluate models using comprehensive performance metrics such as accuracy, precision, recall, and F1-score.
+            You can also upload and use files or folders directly in your code for machine learning workflows and data
+            processing.
             This compiler is online and completely free to use.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
-            Our interactive examples cover a wide range of machine learning algorithms including Linear Regression, 
-            Logistic Regression for classification, K-Means Clustering, Decision Trees, Random Forest ensemble learning, 
-            Support Vector Machines, and Principal Component Analysis (PCA). Each example demonstrates key concepts like 
-            training and evaluating models, regression analysis and prediction, clustering and pattern recognition, feature 
-            engineering and selection, cross-validation techniques, and handling overfitting and underfitting. The examples 
-            are designed to help you understand both the theory and practical implementation of machine learning algorithms.
+            Our interactive examples cover a wide range of machine learning algorithms including Linear Regression,
+            Logistic Regression for classification, K-Means Clustering, Decision Trees, Random Forest ensemble learning,
+            Support Vector Machines, and Principal Component Analysis (PCA). Each example demonstrates key concepts like
+            training and evaluating models, regression analysis and prediction, clustering and pattern recognition,
+            feature
+            engineering and selection, cross-validation techniques, and handling overfitting and underfitting. The
+            examples
+            are designed to help you understand both the theory and practical implementation of machine learning
+            algorithms.
           </p>
 
           <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Target Audience</h3>
@@ -122,6 +114,10 @@ const examples = [
   {
     title: "Linear Regression",
     code: `# Generate sample data
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score, mean_squared_error
+
 np.random.seed(42)
 X = np.array([[1], [2], [3], [4], [5], [6], [7], [8], [9], [10]])
 y = 2 * X.flatten() + 1 + np.random.randn(10) * 0.5
@@ -147,6 +143,11 @@ for i in range(5):
   {
     title: "Classification with Logistic Regression",
     code: `# Generate sample data
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, classification_report
+
 np.random.seed(42)
 X = np.random.randn(100, 2)
 y = (X[:, 0] + X[:, 1] > 0).astype(int)
@@ -173,6 +174,10 @@ print(classification_report(y_test, y_pred))`
   {
     title: "K-Means Clustering",
     code: `# Generate sample data
+import numpy as np
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+
 np.random.seed(42)
 X = np.vstack([
     np.random.randn(30, 2) + [2, 2],
@@ -200,6 +205,11 @@ for cluster, count in zip(unique, counts):
   {
     title: "Decision Tree Classifier",
     code: `# Generate sample data
+import numpy as np
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, confusion_matrix
+
 np.random.seed(42)
 X = np.random.randn(150, 4)
 y = (X[:, 0] + X[:, 1] > X[:, 2] + X[:, 3]).astype(int)
@@ -228,6 +238,11 @@ print(confusion_matrix(y_test, y_pred))`
   {
     title: "Random Forest",
     code: `# Generate sample data
+import numpy as np
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
 np.random.seed(42)
 X = np.random.randn(200, 5)
 y = ((X[:, 0] + X[:, 1]) > (X[:, 2] + X[:, 3])).astype(int)
@@ -260,6 +275,10 @@ for i, importance in enumerate(rf.feature_importances_):
   {
     title: "Principal Component Analysis",
     code: `# Generate sample data
+import numpy as np
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+
 np.random.seed(42)
 X = np.random.randn(100, 5)
 
@@ -286,6 +305,10 @@ print(f"\\nTransformed data shape: {X_pca.shape}")`
 ]
 
 const defaultCode = `# Generate sample data
+import numpy as np
+from sklearn.linear_model import LinearRegression  
+from sklearn.metrics import r2_score
+
 np.random.seed(42)
 X = np.array([[1], [2], [3], [4], [5]])
 y = np.array([2, 4, 5, 4, 5])
@@ -368,4 +391,3 @@ onBeforeUnmount(() => {
   opacity: 0;
 }
 </style>
-

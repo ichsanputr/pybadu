@@ -2,35 +2,14 @@
   <div>
     <!-- Editor Area -->
     <div class="min-h-screen">
-      <CodeEditor
-        libraryName="JMESPath"
-        :theme="theme"
-        :files="files"
-        :activeFileId="activeFileId"
-        :code="currentFileContent"
-        :output="output"
-        :isLoading="isLoading"
-        :pyodideReady="pyodideReady"
-        :monacoTheme="monacoTheme"
-        :examples="examples"
-        :assets="assets"
-        :assetsUploading="assetsUploading"
-        @update:code="updateCurrentFile"
-        @toggleTheme="toggleTheme"
-        @runCode="runCode"
-        @clearCode="clearCode"
-        @clearOutput="clearOutput"
-        @loadExample="loadExample"
-        @newFile="createNewFile"
-        @selectFile="selectFile"
-        @deleteFile="deleteFile"
-        @renameFile="renameFile"
-        @saveToStorage="saveToStorage"
-        @uploadAssets="uploadAssets"
-        @deleteAsset="deleteAsset" @downloadAsset="downloadAsset"
-        @refreshAssets="refreshAssets"
-        @createAssetFolder="createAssetFolder"
-      />
+      <CodeEditor libraryName="JMESPath" :theme="theme" :files="files" :activeFileId="activeFileId"
+        :code="currentFileContent" :output="output" :isLoading="isLoading" :pyodideReady="pyodideReady"
+        :monacoTheme="monacoTheme" :examples="examples" :assets="assets" :assetsUploading="assetsUploading"
+        @update:code="updateCurrentFile" @toggleTheme="toggleTheme" @runCode="runCode" @clearCode="clearCode"
+        @clearOutput="clearOutput" @loadExample="loadExample" @newFile="createNewFile" @selectFile="selectFile"
+        @deleteFile="deleteFile" @renameFile="renameFile" @saveToStorage="saveToStorage" @uploadAssets="uploadAssets"
+        @deleteAsset="deleteAsset" @downloadAsset="downloadAsset" @refreshAssets="refreshAssets"
+        @createAssetFolder="createAssetFolder" />
     </div>
 
     <!-- Information Section -->
@@ -42,15 +21,26 @@
 
         <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
           <p class="text-base md:text-lg leading-relaxed">
-            JMESPath is a declarative query language for JSON, similar to XPath but designed specifically for structured JSON data. You express what you want to retrieve, and the engine efficiently extracts it—handling nesting, arrays, filters, projections, and built-in functions in a single expression. It ships with concise syntax for traversing deeply nested objects, reshaping payloads, and computing derived values without writing imperative parsing code.
+            JMESPath is a declarative query language for JSON, similar to XPath but designed specifically for structured
+            JSON data. You express what you want to retrieve, and the engine efficiently extracts it—handling nesting,
+            arrays, filters, projections, and built-in functions in a single expression. It ships with concise syntax
+            for traversing deeply nested objects, reshaping payloads, and computing derived values without writing
+            imperative parsing code.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
-            This playground bundles jmespath so you can explore queries entirely in the browser using Pyodide. Upload files and folders to work with local JSON data, load sample payloads, refine expressions, and print the JSON result instantly. Experiment with filters, wildcards, slicing, function pipelines like max_by or sort_by, and multi-select projections in a safe sandbox without touching your backend. This online compiler is completely free and requires no installation.
+            This playground bundles jmespath so you can explore queries entirely in the browser using Pyodide. Upload
+            files and folders to work with local JSON data, load sample payloads, refine expressions, and print the JSON
+            result instantly. Experiment with filters, wildcards, slicing, function pipelines like max_by or sort_by,
+            and multi-select projections in a safe sandbox without touching your backend. This online compiler is
+            completely free and requires no installation.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
-            The curated examples cover everyday tasks: grabbing nested keys, filtering arrays, flattening collections, summarizing data, running function-based aggregations, and building reusable helper utilities. These techniques map directly to tooling such as AWS CLI output parsing, log processors, ETL scripts, API integrations, and any automation that needs predictable JSON querying.
+            The curated examples cover everyday tasks: grabbing nested keys, filtering arrays, flattening collections,
+            summarizing data, running function-based aggregations, and building reusable helper utilities. These
+            techniques map directly to tooling such as AWS CLI output parsing, log processors, ETL scripts, API
+            integrations, and any automation that needs predictable JSON querying.
           </p>
 
           <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Who Should Use This</h3>
@@ -106,7 +96,9 @@ useHead({
 const examples = [
   {
     title: 'Basic Search',
-    code: `data = {"foo": {"bar": 1}}
+    code: `import jmespath
+
+data = {"foo": {"bar": 1}}
 expr = "foo.bar"
 
 result = jmespath.search(expr, data)
@@ -114,7 +106,9 @@ print(result)`
   },
   {
     title: 'Filter Books By Price',
-    code: `store = {
+    code: `import jmespath
+
+store = {
     "book": [
         {"title": "Clean Code", "price": 30},
         {"title": "Effective Python", "price": 22},
@@ -127,7 +121,9 @@ print(jmespath.search(expr, store))`
   },
   {
     title: 'Project Fields From Collection',
-    code: `people = {
+    code: `import jmespath
+
+people = {
     "employees": [
         {"name": "Ava", "dept": "Data"},
         {"name": "Noah", "dept": "Infra"},
@@ -140,7 +136,9 @@ print(jmespath.search(expr, people))`
   },
   {
     title: 'Use Built-in Functions',
-    code: `inventory = {
+    code: `import jmespath
+
+inventory = {
     "items": [
         {"name": "laptop", "stock": 3},
         {"name": "monitor", "stock": 8},
@@ -153,7 +151,9 @@ print(jmespath.search(expr, inventory))`
   },
   {
     title: 'Slice Arrays And Combine',
-    code: `payload = {"values": [10, 20, 30, 40, 50]}
+    code: `import jmespath
+
+payload = {"values": [10, 20, 30, 40, 50]}
 
 expr = "values[1:4]"
 print(jmespath.search(expr, payload))
@@ -163,7 +163,9 @@ print("sum:", jmespath.search(expr, payload))`
   },
   {
     title: 'Reusable Helper Function',
-    code: `def ensure(expr, data, default=None):
+    code: `import jmespath
+
+def ensure(expr, data, default=None):
     result = jmespath.search(expr, data)
     return default if result is None else result
 
@@ -208,7 +210,7 @@ const {
   refreshAssets,
   uploadAssets,
   deleteAsset,
-  
+
   downloadAsset,
   createAssetFolder,
   initializePyodide,
@@ -243,4 +245,3 @@ onBeforeUnmount(() => {
   opacity: 0;
 }
 </style>
-

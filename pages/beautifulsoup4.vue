@@ -2,27 +2,11 @@
   <div>
     <!-- Editor Area -->
     <div class="min-h-screen">
-      <CodeEditor 
-        libraryName="BeautifulSoup4"
-        :theme="theme" 
-        :files="files"
-        :activeFileId="activeFileId"
-        :code="currentFileContent"
-        :output="output" 
-        :isLoading="isLoading" 
-        :pyodideReady="pyodideReady"
-        :monacoTheme="monacoTheme"
-        :examples="examples"
-        @update:code="updateCurrentFile"
-        @toggleTheme="toggleTheme"
-        @runCode="runCode" 
-        @clearCode="clearCode"
-        @clearOutput="clearOutput"
-        @loadExample="loadExample"
-        @newFile="createNewFile"
-        @selectFile="selectFile"
-        @deleteFile="deleteFile"
-        @renameFile="renameFile"
+      <CodeEditor libraryName="BeautifulSoup4" :theme="theme" :files="files" :activeFileId="activeFileId"
+        :code="currentFileContent" :output="output" :isLoading="isLoading" :pyodideReady="pyodideReady"
+        :monacoTheme="monacoTheme" :examples="examples" @update:code="updateCurrentFile" @toggleTheme="toggleTheme"
+        @runCode="runCode" @clearCode="clearCode" @clearOutput="clearOutput" @loadExample="loadExample"
+        @newFile="createNewFile" @selectFile="selectFile" @deleteFile="deleteFile" @renameFile="renameFile"
         @saveToStorage="saveToStorage" />
     </div>
 
@@ -32,18 +16,33 @@
         <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
           Online Python BeautifulSoup4 Compiler
         </h1>
-        
+
         <div class="max-w-4xl mx-auto text-left space-y-6 text-gray-700 dark:text-gray-300">
           <p class="text-base md:text-lg leading-relaxed">
-            BeautifulSoup4 is a powerful Python library for parsing HTML and XML documents, making it easy to extract data from web pages and structured markup. As one of the most popular web scraping and data extraction tools in Python, BeautifulSoup4 provides an intuitive API for navigating, searching, and modifying parse trees. Whether you're scraping websites, processing HTML content, or extracting structured data from markup, BeautifulSoup4 simplifies the complex task of parsing HTML into a straightforward Python interface.
-          </p>
-          
-          <p class="text-base md:text-lg leading-relaxed">
-            This compiler includes <strong>BeautifulSoup4</strong> (bs4), enabling you to parse and extract data from HTML strings directly in your browser. You can work with HTML content without needing external files—simply provide HTML strings inline and BeautifulSoup4 will parse them into a navigable tree structure. The platform provides all the tools you need for comprehensive HTML parsing including tag searching, attribute extraction, CSS selector support, text extraction, and tree navigation. You can find elements by tag name, class, ID, attributes, or use CSS selectors for complex queries. You can also upload and use files or folders directly in your code for web scraping and HTML processing workflows. This compiler is online and completely free to use.
+            BeautifulSoup4 is a powerful Python library for parsing HTML and XML documents, making it easy to extract
+            data from web pages and structured markup. As one of the most popular web scraping and data extraction tools
+            in Python, BeautifulSoup4 provides an intuitive API for navigating, searching, and modifying parse trees.
+            Whether you're scraping websites, processing HTML content, or extracting structured data from markup,
+            BeautifulSoup4 simplifies the complex task of parsing HTML into a straightforward Python interface.
           </p>
 
           <p class="text-base md:text-lg leading-relaxed">
-            Our comprehensive example collection covers essential HTML parsing techniques including basic HTML parsing, finding elements by tag and attributes, extracting text and attributes, using CSS selectors for advanced queries, navigating the parse tree, and handling nested structures. You'll also learn how to extract links, images, and other specific elements, work with HTML tables, and process complex HTML structures commonly found in real-world web scraping scenarios.
+            This compiler includes <strong>BeautifulSoup4</strong> (bs4), enabling you to parse and extract data from
+            HTML strings directly in your browser. You can work with HTML content without needing external files—simply
+            provide HTML strings inline and BeautifulSoup4 will parse them into a navigable tree structure. The platform
+            provides all the tools you need for comprehensive HTML parsing including tag searching, attribute
+            extraction, CSS selector support, text extraction, and tree navigation. You can find elements by tag name,
+            class, ID, attributes, or use CSS selectors for complex queries. You can also upload and use files or
+            folders directly in your code for web scraping and HTML processing workflows. This compiler is online and
+            completely free to use.
+          </p>
+
+          <p class="text-base md:text-lg leading-relaxed">
+            Our comprehensive example collection covers essential HTML parsing techniques including basic HTML parsing,
+            finding elements by tag and attributes, extracting text and attributes, using CSS selectors for advanced
+            queries, navigating the parse tree, and handling nested structures. You'll also learn how to extract links,
+            images, and other specific elements, work with HTML tables, and process complex HTML structures commonly
+            found in real-world web scraping scenarios.
           </p>
 
           <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Who Should Use This</h3>
@@ -101,6 +100,8 @@ const examples = [
   {
     title: "Basic HTML Parsing",
     code: `# Parse HTML string
+from bs4 import BeautifulSoup
+
 html = """
 <html>
 <head><title>Sample Page</title></head>
@@ -126,6 +127,8 @@ for p in paragraphs:
   {
     title: "Finding Elements by Tag",
     code: `# Find elements by tag name
+from bs4 import BeautifulSoup
+
 html = """
 <div>
   <h2>Section 1</h2>
@@ -150,6 +153,8 @@ print(f"\\nFirst paragraph: {first_p.get_text()}")`
   {
     title: "Extracting Attributes",
     code: `# Extract attributes from elements
+from bs4 import BeautifulSoup
+
 html = """
 <a href="https://example.com" class="link" id="main-link">Example</a>
 <img src="image.jpg" alt="Sample Image" width="200" height="100">
@@ -174,6 +179,8 @@ print(f"  width: {img.get('width')}")`
   {
     title: "CSS Selectors",
     code: `# Use CSS selectors to find elements
+from bs4 import BeautifulSoup
+
 html = """
 <div class="container">
   <p class="highlight">Important text</p>
@@ -203,6 +210,8 @@ for p in container_p:
   {
     title: "Extracting Links",
     code: `# Extract all links from HTML
+from bs4 import BeautifulSoup
+
 html = """
 <div>
   <a href="/page1">Page 1</a>
@@ -224,6 +233,8 @@ for link in links:
   {
     title: "Parsing HTML Tables",
     code: `# Parse HTML table data
+from bs4 import BeautifulSoup
+
 html = """
 <table>
   <tr>
@@ -258,6 +269,8 @@ for row in rows:
 ]
 
 const defaultCode = `# Parse HTML string
+from bs4 import BeautifulSoup
+
 html = """
 <html>
 <head><title>Sample Page</title></head>
@@ -340,4 +353,3 @@ onBeforeUnmount(() => {
   opacity: 0;
 }
 </style>
-

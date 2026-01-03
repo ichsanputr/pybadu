@@ -29,10 +29,6 @@
               class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
               Quizibadu ↗
             </a>
-            <a href="https://budibadu.com/toolbadu" target="_blank"
-              class="block text-gray-400 hover:text-python-yellow-400 text-sm transition-colors">
-              Toolbadu ↗
-            </a>
           </div>
         </div>
 
